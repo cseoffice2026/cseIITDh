@@ -76,22 +76,28 @@ export default function TalksAndEventsSection() {
     error: talksError,
   } = useTalksAndEvents();
 
-  // Filter events based on endDate within 1 month from today
+  // Show upcoming or ongoing events that fall within the current month.
   const getRecentTalks = () => {
     if (!talksAndEvents || talksAndEvents.length === 0) return [];
 
     const now = new Date();
-    const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
-    const oneMonthFromNow = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-    return talksAndEvents.filter((item) => {
-      // Use endDate if available, otherwise use startDate
-      const eventDate = item.endDate || item.startDate;
-      if (!eventDate) return false;
-      
-      // Include events where endDate is within 1 month window
-      return eventDate >= oneMonthAgo && eventDate <= oneMonthFromNow;
-    }).slice(0, 3); // Show only top 3 recent events
+    return talksAndEvents
+      .filter((item) => {
+        const startDate = item.startDate;
+        const endDate = item.endDate;
+
+        if (startDate && endDate) {
+          return startDate <= endOfMonth && endDate >= today;
+        }
+
+        const eventDate = startDate || endDate;
+        return eventDate && eventDate >= today && eventDate <= endOfMonth;
+      })
+      .sort((a, b) => (a.startDate || a.endDate) - (b.startDate || b.endDate))
+      .slice(0, 3);
   };
 
   const recentTalks = getRecentTalks();
@@ -128,7 +134,7 @@ export default function TalksAndEventsSection() {
         ) : (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
             <p className="text-gray-600 mb-4">
-              No upcoming talks or events in the next month.
+              No upcoming talks or events this month.
             </p>
             <Link
               to="/allTalksEvents"

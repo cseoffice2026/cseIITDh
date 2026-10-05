@@ -261,6 +261,84 @@ export const getTalksAndEvents = async () => {
 	}
 };
 
+export const getStudents = async () => {
+	const response = await axios.get(constant.studentsSheetCSV, {
+		responseType: "text",
+	});
+
+	const parsed = Papa.parse(response.data, {
+		header: true,
+		skipEmptyLines: true,
+		transformHeader: (header) => header.trim().toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0) {
+		throw new Error(`Failed to parse student roster CSV: ${parsed.errors[0].message}`);
+	}
+
+	const rows = parsed.data;
+	const headers = new Set(Object.keys(rows[0] || {}));
+	const requiredHeaders = ["degree", "branch", "roll no", "name"];
+	const missingHeaders = requiredHeaders.filter((header) => !headers.has(header));
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`Student roster is missing required columns: ${missingHeaders.join(", ")}`,
+		);
+	}
+
+	const studentsByDivision = {
+		"btech-cse": [],
+		"btech-mnc": [],
+		"mtech-cse": [],
+		mfr: [],
+	};
+
+	const normalize = (value) => (value || "").toLowerCase().replace(/[^a-z0-9]/g, "");
+
+	const getDivision = (row) => {
+		const rollNo = (row["roll no"] || "").trim().toUpperCase();
+		if (/^MC\d+BT/.test(rollNo)) return "btech-mnc";
+		if (/^CS\d+BT/.test(rollNo)) return "btech-cse";
+		if (/^CS\d+MT/.test(rollNo)) return "mtech-cse";
+		if (/^CS\d+MR/.test(rollNo)) return "mfr";
+
+		const degree = normalize(row.degree);
+		const branch = normalize(row.branch);
+		const isBtech = degree === "btech";
+		const isMtech = degree === "mtech" || degree === "mtechbyresearch";
+
+		if (isBtech && ["cse", "computerscience", "computerscienceengineering"].includes(branch)) {
+			return "btech-cse";
+		}
+		if (isBtech && ["mnc", "mathcomputing", "mathematicscomputing"].includes(branch)) {
+			return "btech-mnc";
+		}
+		if (isMtech && (branch === "mtr" || degree === "mtechbyresearch")) {
+			return "mfr";
+		}
+		if (isMtech && ["cse", "computerscience", "computerscienceengineering"].includes(branch)) {
+			return "mtech-cse";
+		}
+
+		return null;
+	};
+
+	for (const row of rows) {
+		const division = getDivision(row);
+		const rollNo = (row["roll no"] || "").trim();
+		const name = (row.name || "").trim();
+		if (division && rollNo && name) {
+			studentsByDivision[division].push({ rollNo, name });
+		}
+	}
+
+	if (!Object.values(studentsByDivision).some((students) => students.length > 0)) {
+		throw new Error("No students in the roster matched the supported CSE divisions.");
+	}
+
+	return studentsByDivision;
+};
+
 export const getAboutPageData = async () => {
 	const { data } = await axiosInstance.get("/about-pages");
 	return data?.data;

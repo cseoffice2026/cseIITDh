@@ -53,6 +53,14 @@ const TalksLoading = () => (
 
 export default function AllTalksEventsPage() {
   const { data: talks, isLoading, error } = useTalksAndEvents();
+  const sortedTalks = [...(talks || [])].sort((a, b) => {
+    const dateA = a.endDate || a.startDate;
+    const dateB = b.endDate || b.startDate;
+
+    if (!dateA) return dateB ? 1 : 0;
+    if (!dateB) return -1;
+    return dateB - dateA;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-8 md:px-16">
@@ -72,9 +80,9 @@ export default function AllTalksEventsPage() {
               There was an error loading the events. Please try refreshing the page.
             </p>
           </div>
-        ) : talks && talks.length > 0 ? (
+        ) : sortedTalks.length > 0 ? (
           <div className="space-y-8">
-            {talks.map((item) => (
+            {sortedTalks.map((item) => (
               <TalkCard key={`talk-${item.id || v4()}`} {...item} />
             ))}
           </div>

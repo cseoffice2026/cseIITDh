@@ -85,7 +85,7 @@ export default function CoursesSection() {
     You can access the complete course list here:
   </p>
   <a
-    href="https://www.iitdh.ac.in/sites/default/files/2025-07/Computer%20Science%20Engineering.pdf"
+    href="https://www.iitdh.ac.in/sites/default/files/2026-04/Computer%20Science%20Engineering%20Dept%20Wise.pdf"
     target="_blank"
     rel="noopener noreferrer"
     className="inline-block px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow hover:bg-indigo-700 transition"

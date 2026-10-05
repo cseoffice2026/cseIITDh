@@ -6,6 +6,9 @@ const NewsSection = lazy(() => import("../components/Home/NewsSection"));
 const TalksAndEventsSection = lazy(() =>
   import("../components/Home/TalksAndEventsSection")
 );
+const PlacementSection = lazy(() =>
+  import("../components/Academics/PlacementSection")
+);
 
 const fallback = (
   <div className="text-center py-8 text-gray-400">Loading...</div>
@@ -30,6 +33,11 @@ const Home = () => {
             <TalksAndEventsSection />
           </Suspense>
         </div>
+      </div>
+      <div className="border-t border-gray-200 mt-8">
+        <Suspense fallback={fallback}>
+          <PlacementSection />
+        </Suspense>
       </div>
       <div className="border-t border-gray-200 mt-8">
         <Suspense fallback={fallback}>

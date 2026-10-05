@@ -24,6 +24,7 @@ const SearchResults = lazy(() => import("./pages/SearchResults"));
 const Allnews = lazy(() => import("./pages/Allnews"));
 const AllTalksEvents = lazy(() => import("./pages/AllTalksEventsPage"));
 const CseConclave = lazy(() => import("./pages/CseConclave"));
+const CseConclave2 = lazy(() => import("./pages/CseConclave2"));
 
 
 const queryClient = new QueryClient();
@@ -123,6 +124,10 @@ function App() {
                 <Route
                   path="/cse-conclave-2026"
                   element={<LazyRoute element={CseConclave} />}
+                />
+                <Route
+                  path="/cse-conclave-2026-2.0"
+                  element={<LazyRoute element={CseConclave2} />}
                 />
               </Routes>
             </div>

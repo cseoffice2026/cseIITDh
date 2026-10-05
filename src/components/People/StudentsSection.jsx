@@ -1,11 +1,18 @@
 import { useState } from "react";
 import Section from "../Section";
-import { DIVISIONS, studentsData } from "../../data/studentsData";
+import { DIVISIONS } from "../../data/studentsData";
+import { useStudentsData } from "../../hooks/useStudentsData";
 
 export default function StudentsSection() {
   const [activeDivision, setActiveDivision] = useState(DIVISIONS[0].key);
-
-  const students = studentsData[activeDivision] || [];
+  const {
+    data: studentsData,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useStudentsData();
+  const students = studentsData?.[activeDivision] || [];
 
   return (
     <Section id="students" title="Students">
@@ -36,7 +43,26 @@ export default function StudentsSection() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {students.length === 0 ? (
+            {isLoading ? (
+              <tr>
+                <td colSpan={3} className="px-4 py-6 text-center text-gray-500">
+                  Loading student list...
+                </td>
+              </tr>
+            ) : isError ? (
+              <tr>
+                <td colSpan={3} className="px-4 py-6 text-center text-red-600">
+                  <p>Unable to load the student list: {error.message}</p>
+                  <button
+                    type="button"
+                    onClick={() => refetch()}
+                    className="mt-2 font-medium text-blue-700 underline hover:text-blue-900"
+                  >
+                    Try again
+                  </button>
+                </td>
+              </tr>
+            ) : students.length === 0 ? (
               <tr>
                 <td colSpan={3} className="px-4 py-6 text-center text-gray-400">
                   Student list coming soon.
