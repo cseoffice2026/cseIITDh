@@ -123,24 +123,19 @@ console.log("Schedule:", schedule);
               <li>
                         
                  <a
-                  href="https://people.iith.ac.in/aravind/"
+                  href="https://www.iitg.ac.in/hemangee/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
                  Prof. Hemangee Kapoor
-
-
-
-
-
                 </a>{" "}
               – IIT Guwahati
               </li>
 
               <li>
                 <a
-                  href="https://www.cse.iitm.ac.in/~hema/"
+                  href="https://scholar.google.co.in/citations?hl=en&user=lJbcSBUAAAAJ&view_op=list_works&sortby=pubdate"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
@@ -152,19 +147,19 @@ console.log("Schedule:", schedule);
 
               <li>
                 <a
-                  href="https://in.linkedin.com/in/naveen-sivadasan-b71027b2?trk=people-guest_people_search-card"
+                  href="https://www.microsoft.com/en-us/research/people/karam/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
                   Dr. Karthik Ramachandra
                 </a>{" "}
-                – Microsoft Research 
+                – Microsoft 
               </li>
 
               <li>
                  <a
-                  href="https://www.iitg.ac.in/awekar/"
+                  href="https://research.ibm.com/people/padmanabha-venkatagiri-seshadri"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
@@ -176,7 +171,7 @@ console.log("Schedule:", schedule);
 
               <li>
                 <a
-                  href="https://www.linkedin.com/in/ashish-mishra-bb378050/"
+                  href="https://kumarmadhukar.github.io/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
@@ -188,7 +183,7 @@ console.log("Schedule:", schedule);
 
               <li>
                 <a
-                  href="https://in.linkedin.com/in/chitradeep-majumdar-27689113"
+                  href="https://www.linkedin.com/in/prabu-chandran-aab7253b/?isSelfProfile=false"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
@@ -274,7 +269,7 @@ console.log("Schedule:", schedule);
                   <tr>
                     <th scope="col" className="px-4 py-3">Date</th>
                     <th scope="col" className="px-4 py-3">Time</th>
-                    <th scope="col" className="px-4 py-3">Duration (Min)</th>
+                
                     <th scope="col" className="px-4 py-3">Particulars</th>                  
                     <th scope="col" className="px-4 py-3">Title </th>                                          
                   </tr>
@@ -291,7 +286,7 @@ console.log("Schedule:", schedule);
                           ? `${item.startTime || "—"} – ${item.endTime || "—"}`
                           : "—"}
                       </td>
-                      <td className="px-4 py-3 whitespace-nowrap">{item.duration || "—"}</td>
+                      
                       <td className="px-4 py-3">{item.particulars || "—"}</td>
                      
                       <td className="px-4 py-3">{item.title || "—"}</td>                      

@@ -359,8 +359,7 @@ export const getCseConclaveSchedule = async () => {
 	const requiredHeaders = [
 		"date",
 		"start time",
-		"end time",
-		"duration (min)",
+		"end time",		
 		"particulars",
 		"anchor",
 		"title",
@@ -377,8 +376,7 @@ export const getCseConclaveSchedule = async () => {
 		.map((row) => ({
 			date: row.date.trim(),
 			startTime: row["start time"].trim(),
-			endTime: row["end time"].trim(),
-			duration: row["duration (min)"].trim(),
+			endTime: row["end time"].trim(),			
 			particulars: row.particulars.trim(),
 			anchor: row.anchor.trim(),
 			title: row["title"].trim(),
