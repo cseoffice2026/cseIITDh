@@ -8,6 +8,8 @@ const programStats = {
     { label: "Opted for competitive exams", value: "0" },
     { label: "Opted for higher education", value: "1" },
     { label: "Placement rate", value: "94.8%" },
+    { label: "Average CTC", value: "22 LPA" },
+    { label: "Median CTC", value: "20 LPA" },
   ],
   "M.Tech": [
     { label: "Registered", value: "21" },

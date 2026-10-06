@@ -22,7 +22,7 @@ export default function ScrollToTop() {
       }
       attempts += 1;
       // Section content is lazy-loaded, so keep retrying briefly until it mounts.
-      if (attempts < 30) {
+      if (attempts < 120) {
         frameId = requestAnimationFrame(scrollToHash);
       }
     };

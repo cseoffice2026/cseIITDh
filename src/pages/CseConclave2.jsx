@@ -1,11 +1,25 @@
 import React from 'react';
 import { lazy, Suspense } from "react";
-import poster from "../content/cse-conclave.jpeg";
+import { useQuery } from "@tanstack/react-query";
+import { getCseConclaveSchedule } from "../api/api";
+import poster from "../content/conclave2_0.png";
 const fallback = (
   <div className="text-center py-8 text-gray-400">Loading...</div>
 );
 
 const CseConclave = () => {
+  const {
+    data: schedule = [],
+    error: scheduleError,
+    isError: scheduleHasError,
+    isLoading: scheduleIsLoading,
+    refetch: refetchSchedule,
+  } = useQuery({
+    queryKey: ["cse-conclave-schedule"],
+    queryFn: getCseConclaveSchedule,
+    staleTime: 5 * 60 * 1000,
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-amber-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
 
@@ -51,7 +65,7 @@ const CseConclave = () => {
                   Dates
                 </span>
                 <span className="font-medium text-gray-900 text-right">
-                  7–8 March 2026
+                  10-11 October 2026
                 </span>
               </div>
 
@@ -60,7 +74,7 @@ const CseConclave = () => {
                   Venue
                 </span>
                 <span className="font-medium text-gray-900 text-right max-w-md">
-                  106, 1st Floor, Central Learning Theatre, IIT Dharwad
+                  107, 1st Floor, Central Learning Theatre, IIT Dharwad
                 </span>
               </div>
 
@@ -75,10 +89,10 @@ const CseConclave = () => {
 
               <div className="flex justify-between items-start">
                 <span className="uppercase tracking-wider text-xs text-gray-500">
-                  Last Date
+                  Last Date For  Registration
                 </span>
                 <span className="font-semibold text-gray-900 text-right">
-                  4 March 2026
+                  8 October 2026
                 </span>
               </div>
 
@@ -114,9 +128,14 @@ const CseConclave = () => {
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
-                 Prof. N. R. Aravind
+                 Prof. Hemangee Kapoor
+
+
+
+
+
                 </a>{" "}
-              – IIT Hyderabad
+              – IIT Guwahati
               </li>
 
               <li>
@@ -126,9 +145,9 @@ const CseConclave = () => {
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
-                  Prof. Hema Murthy
+                  Prof. Dipti Prasad Mukherjee
                 </a>{" "}
-                – IIT Madras
+                – ISI-K
               </li>
 
               <li>
@@ -138,9 +157,9 @@ const CseConclave = () => {
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
-                  Dr. Naveen Sivadasan
+                  Dr. Karthik Ramachandra
                 </a>{" "}
-                – TCS Research Labs
+                – Microsoft Research 
               </li>
 
               <li>
@@ -150,9 +169,9 @@ const CseConclave = () => {
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
-                  Prof. Amit Awekar
+                  Dr. Padmanabha Sheshadri
                 </a>{" "}
-                 – IIT Guwahati
+                 – IBM
               </li>
 
               <li>
@@ -162,9 +181,9 @@ const CseConclave = () => {
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
-                  Dr. Ashish Mishra
+                  Dr. Kumar Madhukar
                 </a>{" "}
-                – HP R&D
+                – IIT Delhi
               </li>
 
               <li>
@@ -174,45 +193,10 @@ const CseConclave = () => {
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
-                Dr. Chitradeep M </a>{" "} – Nokia
+                Dr. Prabhuchandran K </a>{" "} – Adobe
               </li>
 
-              <li>
-                <a
-                  href="https://www.linkedin.com/in/j13mehul/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
-                >
-                  Mr. Mehul Jain
-                </a>{" "}
-                – Microsoft
-              </li>
-
-              <li>
-                <a
-                  href="https://www.linkedin.com/in/sushim/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
-                >
-                  Sushim Shrivastava
-                </a>{" "}
-                – Qualcomm
-              </li>
-
-              <li>
-                <a
-                  href="https://www.linkedin.com/in/himanshu-gautam-69647289/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
-                >
-                  Mr. Himanshu Gautam
-                </a>{" "}
-                – SecureDApp
-              </li>
-
+             
             </ul>
           </div>
 
@@ -254,166 +238,77 @@ const CseConclave = () => {
             <li>• Networking opportunities</li>
           </ul>
         </div>
-      
-{/* Schedule */}
-<div className="border-t border-gray-200 pt-10">
-  <h2 className="text-2xl font-semibold text-gray-900 mb-6">
-    Event Schedule
-  </h2>
+        {/* Schedule */}
+        <div className="border-t border-gray-200 pt-10">
+          <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+            Event Schedule
+          </h2>
 
-  <div className="overflow-x-auto">
-    <table className="min-w-full text-sm text-left border border-gray-200 rounded-lg overflow-hidden">
-      
-      <thead className="bg-purple-50 text-gray-700 uppercase text-xs tracking-wider">
-        <tr>
-          <th className="px-4 py-3">Date</th>
-          <th className="px-4 py-3">Time</th>
-          <th className="px-4 py-3">Speaker / Session</th>
-          <th className="px-4 py-3">Title</th>
-        </tr>
-      </thead>
-
-      <tbody className="divide-y divide-gray-200">
-
-        {/* Day 1 */}
-        <tr className="bg-gray-50">
-          <td className="px-4 py-3 font-medium">7 March 2026</td>
-          <td className="px-4 py-3">9:30 – 10:00 AM</td>
-          <td className="px-4 py-3">Registration and Opening Remarks</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">10:00 – 11:00 AM</td>
-          <td className="px-4 py-3">Dr. Naveen Sivadasan</td>
-          <td className="px-4 py-3">Biological Data Analysis with Applications in Medicine</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">11:00 – 11:15 AM</td>
-          <td className="px-4 py-3">Switching / Buffer Time</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">11:15 – 12:15 PM</td>
-          <td className="px-4 py-3">Prof. N. R. Aravind</td>
-          <td className="px-4 py-3">Algorithms Using Predictions</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">12:15 – 2:00 PM</td>
-          <td className="px-4 py-3">Lunch Break</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">2:00 – 3:00 PM</td>
-          <td className="px-4 py-3">Mr. Mehul Jain</td>
-          <td className="px-4 py-3">Building Smart Agents with MCP and SSH</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">3:00 – 3:15 PM</td>
-          <td className="px-4 py-3">Switching / Buffer Time</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">3:15 – 4:15 PM</td>
-          <td className="px-4 py-3">Dr. Ashish Mishra</td>
-          <td className="px-4 py-3">Revolution of Limited Supervision in Computer Vision</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">4:15 – 5:15 PM</td>
-          <td className="px-4 py-3">Tea Break-cum-Poster Session</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">5:15 – 6:15 PM</td>
-          <td className="px-4 py-3">Sushim Shrivastava</td>
-          <td className="px-4 py-3">Constrained Compute: Challenges and Opportunities</td>
-        </tr>
-
-        {/* Day 2 */}
-        <tr className="bg-purple-50">
-          <td className="px-4 py-3 font-medium">8 March 2026</td>
-          <td className="px-4 py-3">9:00 – 10:00 AM</td>
-          <td className="px-4 py-3">Prof. Hema Murthy</td>
-          <td className="px-4 py-3">Beyond Backpropagation: Exact and Random Feedback Alignment</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">10:00 – 10:15 AM</td>
-          <td className="px-4 py-3">Switching / Buffer Time</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">10:15 – 11:15 AM</td>
-          <td className="px-4 py-3">Dr. Chitradeep M</td>
-          <td className="px-4 py-3">Building the AI-Native 6G Era</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">11:15 – 11:45 AM</td>
-          <td className="px-4 py-3">Tea Break</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">11:45 – 12:45 PM</td>
-          <td className="px-4 py-3">Prof. Amit Awekar</td>
-          <td className="px-4 py-3">Model Compression</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">12:45 – 2:00 PM</td>
-          <td className="px-4 py-3">Lunch Break</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">2:00 – 3:00 PM</td>
-          <td className="px-4 py-3">Mr. Himanshu Gautam</td>
-          <td className="px-4 py-3">Blockchain Security: From Foundations to Post-Quantum Resilience</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">3:00 – 3:30 PM</td>
-          <td className="px-4 py-3">Tea Break</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-      </tbody>
-    </table>
-  </div>
-</div>
+          {scheduleIsLoading ? (
+            <p className="py-8 text-center text-gray-500" role="status">
+              Loading event schedule...
+            </p>
+          ) : scheduleHasError ? (
+            <div className="py-6 text-center text-red-700" role="alert">
+              <p>
+                Unable to load the event schedule
+                {scheduleError instanceof Error ? `: ${scheduleError.message}` : "."}
+              </p>
+              <button
+                type="button"
+                onClick={() => refetchSchedule()}
+                className="mt-3 rounded-md bg-purple-700 px-4 py-2 text-white hover:bg-purple-800"
+              >
+                Try again
+              </button>
+            </div>
+          ) : schedule.length === 0 ? (
+            <p className="py-8 text-center text-gray-500">
+              No schedule details are available yet.
+            </p>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-left text-sm border border-gray-200 rounded-lg overflow-hidden">
+                <thead className="bg-purple-50 text-gray-700 uppercase text-xs tracking-wider">
+                  <tr>
+                    <th scope="col" className="px-4 py-3">Date</th>
+                    <th scope="col" className="px-4 py-3">Time</th>
+                    <th scope="col" className="px-4 py-3">Duration (Min)</th>
+                    <th scope="col" className="px-4 py-3">Particulars</th>
+                    <th scope="col" className="px-4 py-3">Anchor</th>
+                    <th scope="col" className="px-4 py-3">Title &amp; Abstract</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200">
+                  {schedule.map((item, index) => (
+                    <tr
+                      key={`${item.date}-${item.startTime}-${index}`}
+                      className="odd:bg-gray-50"
+                    >
+                      <td className="px-4 py-3 whitespace-nowrap">{item.date || "—"}</td>
+                      <td className="px-4 py-3 whitespace-nowrap">
+                        {item.startTime || item.endTime
+                          ? `${item.startTime || "—"} – ${item.endTime || "—"}`
+                          : "—"}
+                      </td>
+                      <td className="px-4 py-3 whitespace-nowrap">{item.duration || "—"}</td>
+                      <td className="px-4 py-3">{item.particulars || "—"}</td>
+                      <td className="px-4 py-3">{item.anchor || "—"}</td>
+                      <td className="px-4 py-3">{item.titleAndAbstract || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
         {/* CTA */}
         <div className="text-center pt-4">
           <a
-            href=""
+            href="https://docs.google.com/forms/d/e/1FAIpQLSeOFteVo1GLJ8zG0yIN-83w3pY-FxsZ4Cam8kRyWSrfhRtfAQ/viewform?usp=publish-editor"
             className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-purple-700 text-white rounded-lg font-medium shadow-md hover:bg-purple-800 transition"
           >
-            Registration Closed
+            Register
         </a>
 
           <p className="text-xs text-gray-500 mt-3">

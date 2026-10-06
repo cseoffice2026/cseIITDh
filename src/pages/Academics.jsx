@@ -64,12 +64,7 @@ const Academics = () => {
               targetId="rules"
               viewText={"View Details"}
             />
-            <NavCard
-              title="Placements"
-              icon={<i className="fas fa-briefcase"></i>}
-              targetId="placements"
-              viewText={"View Details"}
-            />
+            
             <NavCard
               title="FAQs"
               icon={<i className="fas fa-question-circle"></i>}
@@ -100,11 +95,7 @@ const Academics = () => {
         <AcademicRules />
       </Suspense>
 
-      {/* Placements Section */}
-      <Suspense fallback={fallback}>
-        <PlacementSection />
-      </Suspense>
-
+      
       {/* FAQs Section */}
       <Suspense fallback={fallback}>
         <FAQs />

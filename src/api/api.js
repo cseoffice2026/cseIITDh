@@ -339,6 +339,52 @@ export const getStudents = async () => {
 	return studentsByDivision;
 };
 
+export const getCseConclaveSchedule = async () => {
+	const response = await axios.get(constant.cseConclaveScheduleSheetCSV, {
+		responseType: "text",
+	});
+
+	const parsed = Papa.parse(response.data, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) => header.replace(/^\uFEFF/, "").trim().toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0) {
+		throw new Error(`Failed to parse CSE Conclave schedule CSV: ${parsed.errors[0].message}`);
+	}
+
+	const rows = parsed.data;
+	const headers = new Set(parsed.meta.fields || []);
+	const requiredHeaders = [
+		"date",
+		"start time",
+		"end time",
+		"duration (min)",
+		"particulars",
+		"anchor",
+		"title & abstract",
+	];
+	const missingHeaders = requiredHeaders.filter((header) => !headers.has(header));
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`CSE Conclave schedule is missing required columns: ${missingHeaders.join(", ")}`,
+		);
+	}
+
+	return rows
+		.filter((row) => Object.values(row).some((value) => value.trim() !== ""))
+		.map((row) => ({
+			date: row.date.trim(),
+			startTime: row["start time"].trim(),
+			endTime: row["end time"].trim(),
+			duration: row["duration (min)"].trim(),
+			particulars: row.particulars.trim(),
+			anchor: row.anchor.trim(),
+			titleAndAbstract: row["title & abstract"].trim(),
+		}));
+};
+
 export const getAboutPageData = async () => {
 	const { data } = await axiosInstance.get("/about-pages");
 	return data?.data;

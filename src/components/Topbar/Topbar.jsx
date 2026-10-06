@@ -1,12 +1,15 @@
 // src/components/Topbar.jsx
 import SearchInput from "./SearchInput";
+import { useNavigate } from "react-router-dom";
 
 // import logo from "../../assets/institute-logo.png";
 
 function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
+  const navigate = useNavigate();
+
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 bg-[#fafaff] backdrop-blur-sm py-2 px-4 sm:px-6 flex items-center justify-between shadow-sm z-50 h-[70px] transition-all duration-300">
+      <header className="fixed top-0 left-0 right-0 bg-white py-2 px-4 sm:px-6 flex items-center justify-between border-t-[5px] border-[#263c38] shadow-sm z-50 h-[70px]">
         {/* Mobile menu button and Logo */}
         <div className="flex items-center">
           <button
@@ -83,7 +86,7 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="cursor-pointer text-[0.9rem] md:text-[1.1rem] lg:text-[1.2rem] font-semibold text-[#1a1a1a] tracking-wide text-center bg-transparent border-none p-0"
+            className="cursor-pointer text-[0.8rem] md:text-[0.95rem] lg:text-[1rem] font-semibold text-purple-900 tracking-wide text-center bg-transparent border-none p-0"
             style={{ outline: "none" }}
           >
             <h1 className="pointer-events-none m-0">
@@ -97,7 +100,7 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
           <button
             type="button"
             onClick={() => navigate("/")}
-            className="cursor-pointer text-[0.65rem] font-semibold text-[#1a1a1a] tracking-wide text-center bg-transparent border-none p-0"
+            className="cursor-pointer text-[0.65rem] font-semibold text-purple-900 tracking-wide text-center bg-transparent border-none p-0"
             style={{ outline: "none" }}
           >
             <h1 className="pointer-events-none m-0">

@@ -62,22 +62,13 @@ function App() {
           }}
         />
 
-        <div className="flex flex-grow relative" style={{ paddingTop: "70px" }}>
-          {/* Sidebar navigation */}
-          <div
-            className={`fixed top-[70px] left-0 bottom-0 w-[280px] sm:w-[220px] lg:w-[250px] z-40 
-            bg-white shadow-md transition-transform duration-300 ease-in-out
-            ${
-              isMobileMenuOpen
-                ? "translate-x-0"
-                : "-translate-x-full sm:translate-x-0"
-            }`}
-          >
-            <Navbar closeMenu={() => setIsMobileMenuOpen(false)} />
-          </div>
+        <div className="flex flex-grow relative" style={{ paddingTop: "124px" }}>
+          <Navbar
+            closeMenu={() => setIsMobileMenuOpen(false)}
+            isMobileMenuOpen={isMobileMenuOpen}
+          />
 
-          {/* Main content - explicit margin to avoid sidebar overlap */}
-          <div className="w-full sm:pl-[220px] lg:pl-[250px] flex flex-col min-h-full">
+          <div className="w-full flex flex-col min-h-full">
             <div className="max-w-full overflow-x-hidden flex-grow">
               <Routes>
                 {/* Home page loaded eagerly */}
