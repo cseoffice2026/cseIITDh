@@ -363,7 +363,7 @@ export const getCseConclaveSchedule = async () => {
 		"duration (min)",
 		"particulars",
 		"anchor",
-		"title & abstract",
+		"title",
 	];
 	const missingHeaders = requiredHeaders.filter((header) => !headers.has(header));
 	if (missingHeaders.length > 0) {
@@ -381,7 +381,7 @@ export const getCseConclaveSchedule = async () => {
 			duration: row["duration (min)"].trim(),
 			particulars: row.particulars.trim(),
 			anchor: row.anchor.trim(),
-			titleAndAbstract: row["title & abstract"].trim(),
+			title: row["title"].trim(),
 		}));
 };
 

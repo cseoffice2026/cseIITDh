@@ -19,7 +19,7 @@ const CseConclave = () => {
     queryFn: getCseConclaveSchedule,
     staleTime: 5 * 60 * 1000,
   });
-
+console.log("Schedule:", schedule);
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-amber-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
 
@@ -276,7 +276,7 @@ const CseConclave = () => {
                     <th scope="col" className="px-4 py-3">Time</th>
                     <th scope="col" className="px-4 py-3">Duration (Min)</th>
                     <th scope="col" className="px-4 py-3">Particulars</th>                  
-                    <th scope="col" className="px-4 py-3">Title &amp; Abstract</th>
+                    <th scope="col" className="px-4 py-3">Title </th>                                          
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
@@ -294,7 +294,7 @@ const CseConclave = () => {
                       <td className="px-4 py-3 whitespace-nowrap">{item.duration || "—"}</td>
                       <td className="px-4 py-3">{item.particulars || "—"}</td>
                      
-                      <td className="px-4 py-3">{item.titleAndAbstract || "—"}</td>
+                      <td className="px-4 py-3">{item.title || "—"}</td>                      
                     </tr>
                   ))}
                 </tbody>
