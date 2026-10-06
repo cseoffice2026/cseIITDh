@@ -147,7 +147,7 @@ const CseConclave = () => {
                 >
                   Prof. Dipti Prasad Mukherjee
                 </a>{" "}
-                – ISI-K
+                – ISI-Kolkata
               </li>
 
               <li>
@@ -207,11 +207,12 @@ const CseConclave = () => {
             </h2>
 
             <ul className="space-y-2 text-gray-700 text-sm sm:text-base">
-              <li>Theoretical Computer Science</li>
+              <li>Computer Architecture</li>
               <li>Artificial Intelligence & Machine Learning</li>
-              <li>Networks & Systems</li>
-              <li>Industry Research & Innovation</li>
-              <li>Emerging Technologies</li>
+              <li>DBMS</li>
+              <li>Machine Learning, Cloud Computing</li>
+              <li>Formal verification (AI, ML, Logic)</li>
+              <li>Reinforcement Learning</li>
             </ul>
 
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mt-8 mb-4">
@@ -274,8 +275,7 @@ const CseConclave = () => {
                     <th scope="col" className="px-4 py-3">Date</th>
                     <th scope="col" className="px-4 py-3">Time</th>
                     <th scope="col" className="px-4 py-3">Duration (Min)</th>
-                    <th scope="col" className="px-4 py-3">Particulars</th>
-                    <th scope="col" className="px-4 py-3">Anchor</th>
+                    <th scope="col" className="px-4 py-3">Particulars</th>                  
                     <th scope="col" className="px-4 py-3">Title &amp; Abstract</th>
                   </tr>
                 </thead>
@@ -293,7 +293,7 @@ const CseConclave = () => {
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">{item.duration || "—"}</td>
                       <td className="px-4 py-3">{item.particulars || "—"}</td>
-                      <td className="px-4 py-3">{item.anchor || "—"}</td>
+                     
                       <td className="px-4 py-3">{item.titleAndAbstract || "—"}</td>
                     </tr>
                   ))}
@@ -312,7 +312,7 @@ const CseConclave = () => {
         </a>
 
           <p className="text-xs text-gray-500 mt-3">
-            Limited seats • Early registration recommended
+            Limited seats • Early registration recommended. <b> Last Date for Registration: <span className="font-bold" style={{ color: 'red' }}>8 October 2026</span></b>
           </p>
         </div>
 
