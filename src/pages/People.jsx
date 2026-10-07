@@ -6,75 +6,79 @@ import usePeopleInfo from "../hooks/usePeopleInfo";
 
 // Lazy load People section components
 const NavCard = lazy(() => import("../components/Academics/NavCard"));
-// const DepartmentLeadership = lazy(() =>
-//   import("../components/People/DepartmentLeadership")
-// );
+
 const FacultySection = lazy(() =>
   import("../components/People/FacultySection")
 );
-const StaffSection = lazy(() => import("../components/People/StaffSection"));
+
+const StaffSection = lazy(() =>
+  import("../components/People/StaffSection")
+);
+
 const FormerMemberSection = lazy(() =>
   import("../components/People/FormerMemberSection")
 );
-const FormerFacultySection = lazy(() =>
-  import("../components/People/FormerFacultySection")
-);
+
 const PhDScholarSection = lazy(() =>
   import("../components/People/PhDScholarSection")
 );
+
 const GraduatedScholarSection = lazy(() =>
   import("../components/People/GraduatedScholarSection")
 );
+
 const StudentsSection = lazy(() =>
   import("../components/People/StudentsSection")
 );
-const BackToTopButton = lazy(() => import("../components/BackToTopButton"));
+
+const BackToTopButton = lazy(() =>
+  import("../components/BackToTopButton")
+);
 
 function QuickNavigation() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
-      {/* <NavCard
-        title="Department Leadership"
-        icon={<i className="fas fa-user-tie"></i>}
-        targetId="leadership"
-        viewText={"View Members"}
-      /> */}
+      {/* Faculty */}
       <NavCard
         title="Faculty"
         icon={<i className="fas fa-chalkboard-teacher"></i>}
         targetId="faculty"
         viewText={"View Members"}
       />
+
+      {/* Staff */}
       <NavCard
-        title="Former Faculty"
-        icon={<i className="fas fa-chalkboard"></i>}
-        targetId="former-faculty"
-        viewText={"View Members"}
+      title="Staff"
+      icon={<i className="fas fa-users"></i>}
+      targetId="staff"
+      viewText={"View Members"}
       />
+
+      {/* Former Members */}
       <NavCard
-        title="Staff"
-        icon={<i className="fas fa-users"></i>}
-        targetId="staff"
-        viewText={"View Members"}
-      />
-      <NavCard
-        title="Former Staff"
-        icon={<i className="fas fa-user-graduate"></i>}
+        title="Former Members"
+        icon={<i className="fas fa-user-friends"></i>}
         targetId="former-members"
         viewText={"View Members"}
       />
+
+      {/* PhD Scholars */}
       <NavCard
         title="PhD Scholars"
         icon={<i className="fas fa-user-graduate"></i>}
         targetId="phd-scholars"
         viewText={"View Members"}
       />
+
+      {/* Graduated Scholars */}
       <NavCard
         title="Graduated Scholars"
         icon={<i className="fas fa-history"></i>}
         targetId="graduated-scholars"
         viewText={"View Members"}
       />
+
+      {/* Students */}
       <NavCard
         title="Students"
         icon={<i className="fas fa-user-graduate"></i>}
@@ -103,21 +107,25 @@ const getPeopleData = (data) => {
       case "Department Leadership":
       case "PhD Scholars":
       case "Graduated Scholars":
-        return { ...base, expertise: person.Domain };
+        return {
+          ...base,
+          expertise: person.Domain,
+        };
+
       case "Staff Members":
-        return { ...base, office: person.Domain };
+        return {
+          ...base,
+          office: person.Domain,
+        };
+
       case "Former Members":
+      case "Former Faculty":
         return {
           ...base,
           period: person.Period,
           currentAffiliation: person.CurrentAffiliation,
         };
-        case "Former Faculty":
-        return {
-          ...base,
-          period: person.Period,
-          currentAffiliation: person.CurrentAffiliation,
-        };
+
       default:
         return base;
     }
@@ -125,7 +133,9 @@ const getPeopleData = (data) => {
 };
 
 const fallback = (
-  <div className="text-center py-8 text-gray-400">Loading...</div>
+  <div className="text-center py-8 text-gray-400">
+    Loading...
+  </div>
 );
 
 // People Page Component
@@ -144,56 +154,74 @@ const People = () => {
     people.filter((person) => person.role === role);
 
   const leadership = filterByRole("Department Leadership");
-  const facultyMembers = [...leadership, ...filterByRole("Faculty Members")];
+
+  const facultyMembers = [
+    ...leadership,
+    ...filterByRole("Faculty Members"),
+  ];
+
   const staffMembers = filterByRole("Staff Members");
-  const formerMembers = filterByRole("Former Members");
+
+  const formerFaculty = filterByRole("Former Faculty");
+
+  const formerStaff = filterByRole("Former Members");
+
   const phdScholars = filterByRole("PHD");
+
   const GraduatedScholars = filterByRole("Graduated Scholars");
-const formerFaculty = filterByRole("Former Faculty");
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Page Title */}
       <div id="people-top" className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">People</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+          People
+        </h1>
+
         <p className="text-gray-600">
-          Meet the faculty, staff, and former members of the Department of
-          Computer Science and Engineering.
+          Meet the faculty, staff, and former members of the Department
+          of Computer Science and Engineering.
         </p>
       </div>
+
       {/* Navigation Cards */}
       <QuickNavigation />
-      {/* Leadership Section */}
-      {/* <Suspense fallback={fallback}>
-        <DepartmentLeadership leadership={leadership} />
-      </Suspense> */}
+
       {/* Faculty Section */}
       <Suspense fallback={fallback}>
         <FacultySection facultyMembers={facultyMembers} />
       </Suspense>
-      {/* Former Faculty Section */}
+
+      {/* Former Members Section */}
       <Suspense fallback={fallback}>
-        <FormerFacultySection formerFaculty={formerFaculty} />
+        <FormerMemberSection
+          formerFaculty={formerFaculty}
+          formerStaff={formerStaff}
+        />
       </Suspense>
+
       {/* Staff Section */}
       <Suspense fallback={fallback}>
         <StaffSection staffMembers={staffMembers} />
       </Suspense>
-      {/* Former Members Section */}
-      <Suspense fallback={fallback}>
-        <FormerMemberSection formerMembers={formerMembers} />
-      </Suspense>
-      {/* PHD Scholars Section */}
+
+      {/* PhD Scholars Section */}
       <Suspense fallback={fallback}>
         <PhDScholarSection phdScholars={phdScholars} />
       </Suspense>
-      {/* Graduated Scholars */}
+
+      {/* Graduated Scholars Section */}
       <Suspense fallback={fallback}>
-        <GraduatedScholarSection GraduatedScholars={GraduatedScholars} />
+        <GraduatedScholarSection
+          GraduatedScholars={GraduatedScholars}
+        />
       </Suspense>
+
       {/* Students Section */}
       <Suspense fallback={fallback}>
         <StudentsSection />
       </Suspense>
+
       {/* Back to Top Button */}
       <Suspense fallback={null}>
         <BackToTopButton to={"people-top"} />

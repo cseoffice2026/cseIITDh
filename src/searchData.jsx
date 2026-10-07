@@ -245,7 +245,7 @@ const searchData = [
     page: 'people',
     title: 'Former Members',
     content: 'Former Members',
-    link: '/people#former'
+    link: '/people#former-members'
   },
   {
     page: 'Contact',

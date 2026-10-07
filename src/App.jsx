@@ -39,7 +39,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <ScrollToTop />
-      <div className="min-h-screen bg-gray-50 overflow-hidden flex flex-col">
+      <div className="min-h-screen bg-gray-50 overflow-x-hidden flex flex-col">
         {/* Fixed top bar */}
         <Topbar
           toggleMobileMenu={toggleMobileMenu}

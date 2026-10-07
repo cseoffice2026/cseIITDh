@@ -59,6 +59,21 @@ const Research = () => {
         <ResearchProjects />
       </Suspense>
 
+      {/* Research Project Information Link */}
+      <div className="text-center mt-8 mb-4">
+        <p className="text-gray-600">
+          For more information regarding the research projects,{" "}
+          <a
+            href="https://rnd.iitdh.ac.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-indigo-600 hover:underline font-medium"
+          >
+            click here
+          </a>.
+        </p>
+      </div>
+
       {/* Back to Top Button */}
       <Suspense fallback={null}>
         <BackToTopButton to={"research-top"} />
