@@ -176,7 +176,7 @@ console.log("Schedule:", schedule);
                   rel="noopener noreferrer"
                   className="font-medium text-blue-600 hover:underline"
                 >
-                  Dr. Kumar Madhukar
+                  Prof. Kumar Madhukar
                 </a>{" "}
                 – IIT Delhi
               </li>
