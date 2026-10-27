@@ -14,6 +14,7 @@ import Home from "./pages/Home"; // Import Home eagerly
 
 // Lazy load all other page components
 const Academics = lazy(() => import("./pages/Academics"));
+const Programmes = lazy(() => import("./pages/Programmes")); // NEW
 const Admissions = lazy(() => import("./pages/Admissions"));
 const JoinAsFaculty = lazy(() => import("./pages/JoinAsFaculty"));
 const Contact = lazy(() => import("./pages/Contact"));
@@ -79,6 +80,13 @@ function App() {
                   path="/academics"
                   element={<LazyRoute element={Academics} />}
                 />
+
+                {/* NEW: matches /programmes, /programmes/btech, /programmes/mtech, ... */}
+                <Route
+                  path="/programmes/*"
+                  element={<LazyRoute element={Programmes} />}
+                />
+
                 <Route
                   path="/admissions"
                   element={<LazyRoute element={Admissions} />}

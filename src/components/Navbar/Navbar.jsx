@@ -11,6 +11,18 @@ const sectionLinks = {
     { id: "faq", label: "FAQs" },
   ],
 
+  // Each item has its own page path (`to`)
+  programmes: [
+    { id: "btech", label: "B.Tech", to: "/programmes/btech" },
+    { id: "mtech", label: "M.Tech", to: "/programmes/mtech" },
+    {
+      id: "mtech-research",
+      label: "M.Tech with Research",
+      to: "/programmes/mtech-research",
+    },
+    { id: "phd", label: "PhD", to: "/programmes/phd" },
+  ],
+
   people: [
     { id: "faculty", label: "Faculty" },
     { id: "staff", label: "Staff" },
@@ -39,6 +51,11 @@ const navLinks = [
     to: "/academics",
     label: "Academics",
     sections: sectionLinks.academics,
+  },
+  {
+    to: "/programmes/btech",
+    label: "Programmes",
+    sections: sectionLinks.programmes,
   },
   {
     to: "/people",
@@ -166,7 +183,9 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                   {item.sections.map((section) => (
                     <NavLink
                       key={section.id}
-                      to={`${item.to}#${section.id}`}
+                      // Programmes items have their own page path (section.to);
+                      // the others still scroll to a #section on the same page.
+                      to={section.to ?? `${item.to}#${section.id}`}
                       onClick={() => {
                         setOpenDropdown(null);
                         closeMenu?.();
