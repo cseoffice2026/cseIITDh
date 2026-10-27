@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import useAcademicPrograms from "../../hooks/useAcademicPrograms";
 
 const sectionLinks = {
   academics: [
@@ -11,7 +10,6 @@ const sectionLinks = {
     { id: "faq", label: "FAQs" },
   ],
 
-  // Each item has its own page path (`to`)
   programmes: [
     { id: "btech", label: "B.Tech", to: "/programmes/btech" },
     { id: "mtech", label: "M.Tech", to: "/programmes/mtech" },
@@ -37,89 +35,6 @@ const sectionLinks = {
   ],
 };
 
-const defaultProgrammeLinks = [
-  {
-    id: "btech",
-    label: "BTech",
-    icon: "fa-graduation-cap",
-    to: "/admissions#btech",
-  },
-  {
-    id: "mtech",
-    label: "MTech",
-    icon: "fa-university",
-    to: "/admissions#mtech",
-  },
-  {
-    id: "mtech-research",
-    label: "MTech by Research",
-    icon: "fa-microscope",
-    to: "/admissions#ms",
-  },
-  {
-    id: "phd",
-    label: "PhD",
-    icon: "fa-flask",
-    to: "/admissions#phd",
-  },
-];
-
-const getProgrammeCategory = (name = "") => {
-  const normalized = String(name)
-    .toLowerCase()
-    .replace(/\s+/g, " ")
-    .trim();
-
-  if (
-    /m\.?\s?tech.*research|research.*m\.?\s?tech|mfr|ms\.?\s?by research|mtech with research/.test(
-      normalized,
-    )
-  ) {
-    return "mtech-research";
-  }
-
-  if (/ph\.?\s?d|doctor/.test(normalized)) return "phd";
-  if (/m\.?\s?tech|master/.test(normalized)) return "mtech";
-  if (/b\.?\s?tech|bachelor|undergraduate/.test(normalized)) {
-    return "btech";
-  }
-
-  return null;
-};
-
-// Accept safe website URLs or same-site absolute paths from the sheet.
-const getSafeProgrammeTarget = (value) => {
-  if (!value || typeof value !== "string") return null;
-
-  const markdownUrl = value.match(
-    /\[[^\]]*\]\((https?:\/\/[^)]+)\)/i,
-  );
-  const foundUrl = value.match(/https?:\/\/[^\s)]+/i);
-  const candidate = (
-    markdownUrl?.[1] ||
-    foundUrl?.[0] ||
-    value
-  ).trim();
-
-  if (/^https?:\/\//i.test(candidate)) {
-    try {
-      const url = new URL(candidate);
-
-      if (url.protocol === "http:" || url.protocol === "https:") {
-        return { href: url.href, external: true };
-      }
-    } catch {
-      return null;
-    }
-  }
-
-  if (candidate.startsWith("/") && !candidate.startsWith("//")) {
-    return { href: candidate, external: false };
-  }
-
-  return null;
-};
-
 const navLinks = [
   { to: "/", label: "Home" },
   { to: "/about", label: "About" },
@@ -128,14 +43,6 @@ const navLinks = [
     label: "Academics",
     sections: sectionLinks.academics,
   },
-
-  // New Programmes dropdown
-  {
-    to: "/admissions",
-    label: "Programmes",
-    programmeMenu: true,
-  },
-
   {
     to: "/programmes/btech",
     label: "Programmes",
@@ -168,37 +75,6 @@ const navLinks = [
 function Navbar({ closeMenu, isMobileMenuOpen }) {
   const [openDropdown, setOpenDropdown] = useState(null);
 
-  const { data: programmes = [] } = useAcademicPrograms();
-
-  // Use programme links from the sheet when available.
-  // Otherwise, fall back to the existing Admissions sections.
-  const programmeSections = useMemo(
-    () =>
-      defaultProgrammeLinks.map((defaultItem) => {
-        const matchingProgramme = programmes.find(
-          (programme) =>
-            getProgrammeCategory(programme?.name) === defaultItem.id,
-        );
-
-        const sheetTarget = getSafeProgrammeTarget(
-          matchingProgramme?.link,
-        );
-
-        return {
-          ...defaultItem,
-          ...(sheetTarget?.external
-            ? {
-                href: sheetTarget.href,
-                external: true,
-              }
-            : sheetTarget?.href
-              ? { to: sheetTarget.href }
-              : {}),
-        };
-      }),
-    [programmes],
-  );
-
   const linkClass = (active) =>
     `flex items-center justify-center px-4 py-3 text-sm font-semibold transition-colors ${
       active
@@ -217,10 +93,7 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
     >
       <ul className="mx-auto flex max-w-7xl flex-col sm:flex-row sm:items-stretch sm:justify-center">
         {navLinks.map((item) => {
-          const dropdownItems = item.programmeMenu
-            ? programmeSections
-            : item.sections;
-
+          const dropdownItems = item.sections;
           const hasDropdown = Array.isArray(dropdownItems);
 
           return (
@@ -266,7 +139,7 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                       event.preventDefault();
 
                       setOpenDropdown((current) =>
-                        current === item.label ? null : item.label,
+                        current === item.label ? null : item.label
                       );
                     }}
                     className="flex h-full items-center px-2 py-3 text-white hover:bg-purple-900"
@@ -310,15 +183,6 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                             }}
                             className="flex items-center whitespace-nowrap px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-purple-900"
                           >
-                            {item.programmeMenu && (
-                              <span className="mr-3 inline-flex w-5 shrink-0 items-center justify-center text-purple-100">
-                                <i
-                                  aria-hidden="true"
-                                  className={`fas ${section.icon || "fa-book-open"}`}
-                                />
-                              </span>
-                            )}
-
                             {section.label}
                           </a>
                         ) : (
@@ -330,15 +194,6 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                             }}
                             className="flex items-center whitespace-nowrap px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-purple-900"
                           >
-                            {item.programmeMenu && (
-                              <span className="mr-3 inline-flex w-5 shrink-0 items-center justify-center text-purple-100">
-                                <i
-                                  aria-hidden="true"
-                                  className={`fas ${section.icon || "fa-book-open"}`}
-                                />
-                              </span>
-                            )}
-
                             {section.label}
                           </NavLink>
                         )}
