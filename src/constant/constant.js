@@ -8,4 +8,6 @@ export const constant = {
 	studentsSheetCSV: "https://docs.google.com/spreadsheets/d/13cPfqJ8JB0ikn7yIhtxavzCHRXssTm39a1OK230lpRg/export?format=csv",
 	// Google Sheets CSV export URL for the CSE Conclave schedule
 	cseConclaveScheduleSheetCSV: "https://docs.google.com/spreadsheets/d/1M6PULB_xoAFoXKsRQ5_JC0Vc6web676iAbuKiC9U1Yg/export?format=csv&gid=2037967715",
+	// Google Sheets CSV export URL for Academic Programmes
+	academicProgramsSheetCSV: "https://docs.google.com/spreadsheets/d/1_XBp8tXrNcaGUg_cYkdIIXY81JdeallspUDiYooUb3I/export?format=csv&gid=0",
 };
