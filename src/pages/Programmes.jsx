@@ -15,9 +15,8 @@ const BackToTopButton = lazy(() =>
   import("../components/BackToTopButton")
 );
 
-const serif = {
-  fontFamily: "Georgia, 'Times New Roman', serif",
-};
+// Shown under the title on every programme page
+const DEPARTMENT_NAME = "Department of Computer Science and Engineering";
 
 // Route labels are fallbacks only. Programme details come
 // from the original Google Sheet.
@@ -26,16 +25,22 @@ const routeLabels = {
     title: "BTech",
     level: "UG",
     eyebrow: "Undergraduate Programme",
+    description:
+      "The B.Tech programme in Computer Science and Engineering builds a strong foundation in programming, algorithms, computer systems and the theory of computing. Students can then specialise through electives, laboratories and projects.",
   },
   mtech: {
     title: "MTech",
     level: "PG",
     eyebrow: "Postgraduate Programme",
+    description:
+      "The M.Tech programme offers advanced coursework in areas such as algorithms, machine learning, computer networks and software systems, along with a technical project.",
   },
   "mtech-research": {
     title: "MTech with Research",
     level: "PG",
     eyebrow: "Postgraduate Research Programme",
+    description:
+      "The M.Tech with Research programme combines advanced coursework with research work carried out under the guidance of the department's faculty members.",
   },
 };
 
@@ -100,6 +105,7 @@ function EmptyState({
   );
 }
 
+/* ---------- Banner at the top of every programme page ---------- */
 function ProgrammeHero({
   programme,
   stats = [],
@@ -108,71 +114,48 @@ function ProgrammeHero({
   return (
     <section
       id="programmes-top"
-      className="relative mb-8 w-full overflow-hidden rounded-2xl border border-purple-100 bg-gradient-to-br from-purple-50 via-white to-purple-100 px-6 py-8 shadow-sm md:px-10 md:py-10"
+      className="mb-8 w-full rounded-lg border border-gray-200 border-l-4 border-l-purple-800 bg-white px-6 py-7 md:px-8"
     >
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-purple-200/60 blur-3xl"
-      />
+      <p className="text-sm font-medium text-purple-800">
+        {programme.eyebrow || "Academic Programme"}
+      </p>
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -bottom-24 right-1/3 h-56 w-56 rounded-full bg-purple-100 blur-3xl"
-      />
+      <h1 className="mt-1 text-3xl font-bold leading-tight text-gray-900 md:text-4xl">
+        {programme.title}
 
-      <div className="relative w-full">
-        <div className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-purple-700">
-          <span className="h-px w-8 bg-purple-700" />
-          {programme.eyebrow || "Academic Programme"}
-        </div>
+        {programme.subtitle ? (
+          <span className="mt-1 block text-lg font-medium text-purple-800 md:text-xl">
+            {programme.subtitle}
+          </span>
+        ) : null}
+      </h1>
 
-        <h1
-          style={serif}
-          className="mt-4 text-3xl font-bold leading-tight text-purple-950 md:text-5xl"
-        >
-          {programme.title}
+      <p className="mt-4 w-full max-w-4xl whitespace-pre-line text-base leading-7 text-gray-700">
+        {programme.description ||
+          (isLoading
+            ? "Loading programme information from the Google Sheet…"
+            : "Programme description is not available in the Google Sheet yet.")}
+      </p>
 
-          {programme.subtitle ? (
-            <span className="ml-2 italic text-purple-600">
-              {programme.subtitle}
-            </span>
-          ) : null}
-        </h1>
+      {stats.length > 0 ? (
+        <dl className="mt-6 flex flex-wrap gap-x-12 gap-y-4 border-t border-gray-200 pt-5">
+          {stats.map((stat, index) => (
+            <div key={`${stat.label}-${index}`}>
+              <dd className="text-xl font-semibold text-gray-900">
+                {stat.value || "—"}
+              </dd>
 
-        <p className="mt-4 w-full max-w-4xl whitespace-pre-line text-sm leading-7 text-gray-600 md:text-base">
-          {programme.description ||
-            (isLoading
-              ? "Loading programme information from the Google Sheet…"
-              : "Programme description is not available in the Google Sheet yet.")}
+              <dt className="mt-0.5 text-sm text-gray-500">
+                {stat.label}
+              </dt>
+            </div>
+          ))}
+        </dl>
+      ) : isLoading ? null : (
+        <p className="mt-5 border-t border-gray-200 pt-4 text-sm text-gray-500">
+          Programme statistics are not available yet.
         </p>
-
-        {stats.length > 0 ? (
-          <>
-            <div className="mt-7 h-px w-full max-w-2xl bg-purple-200" />
-
-            <dl className="mt-5 flex flex-wrap gap-x-10 gap-y-4">
-              {stats.map((stat, index) => (
-                <div key={`${stat.label}-${index}`}>
-                  <dd
-                    style={serif}
-                    className="text-3xl font-bold text-purple-700 md:text-4xl"
-                  >
-                    {stat.value || "—"}
-                  </dd>
-
-                  <dt className="mt-1 text-xs font-medium uppercase tracking-[0.15em] text-gray-500">
-                    {stat.label}
-                  </dt>
-                </div>
-              ))}
-            </dl>
-          </>
-        ) : isLoading ? null : (
-          <p className="mt-5 text-sm text-gray-500">
-            Programme statistics are not available yet.
-          </p>
-        )}
-      </div>
+      )}
     </section>
   );
 }
@@ -297,9 +280,7 @@ function PhDOnHoldPage() {
       <ProgrammeHero
         programme={{
           title: data?.title || "PhD",
-          subtitle:
-            data?.subtitle ||
-            "Computer Science and Engineering",
+          subtitle: DEPARTMENT_NAME,
           eyebrow:
             data?.eyebrow || "Doctoral Programme",
           description:
@@ -348,47 +329,17 @@ function PhDOnHoldPage() {
         </div>
       ) : null}
 
-      {/* Research areas */}
-      <section className="mb-10">
-        <div className="mb-5 border-b border-gray-200 pb-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
-            Areas of Research
-          </p>
-
-          <h2 className="mt-2 text-xl font-bold text-gray-900 md:text-2xl">
-            Research Focus Areas
-          </h2>
-
-          <p className="mt-2 text-sm leading-6 text-gray-600">
-            Research topics and descriptions are loaded from
-            the dedicated PhD Google Sheet.
-          </p>
-        </div>
-
-        {renderCards(
-          data?.researchAreas,
-          "No research areas have been added to the PhD Google Sheet yet."
-        )}
-      </section>
+            {/* Research areas (cards only, shown when the sheet has entries) */}
+      {data?.researchAreas?.length ? (
+        <section className="mb-10">
+          {renderCards(data.researchAreas, "")}
+        </section>
+      ) : null}
 
       {/* Coursework and credits */}
-      <section className="mb-10">
-        <div className="mb-5 border-b border-gray-200 pb-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
-            Academic Requirements
-          </p>
-
-          <h2 className="mt-2 text-xl font-bold text-gray-900 md:text-2xl">
-            Coursework and Credits
-          </h2>
-
-          <p className="mt-2 text-sm leading-6 text-gray-600">
-            Coursework requirements are shown only when they
-            are present in the PhD sheet.
-          </p>
-        </div>
-
-        {data?.courseworkCredits?.length ? (
+            {/* Coursework and credits (table only, shown when the sheet has entries) */}
+      {data?.courseworkCredits?.length ? (
+        <section className="mb-10">
           <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
             <table className="w-full min-w-[500px] border-collapse text-left text-sm">
               <thead className="bg-purple-800 text-white">
@@ -433,13 +384,8 @@ function PhDOnHoldPage() {
               </tbody>
             </table>
           </div>
-        ) : (
-          emptyState(
-            "Coursework information not available yet",
-            "No coursework or credit requirements have been added to the connected sheet."
-          )
-        )}
-      </section>
+        </section>
+      ) : null}
 
       {/* Research progress */}
       <section className="mb-10">
@@ -665,12 +611,12 @@ export default function Programmes() {
 
     return {
       title: row?.name || routeFallback.title,
-      subtitle: row?.subtitle || "",
+      subtitle: DEPARTMENT_NAME,
       eyebrow:
         row?.eyebrow ||
         routeFallback.eyebrow ||
         inferredEyebrow,
-      description: row?.description || "",
+         description: row?.description || routeFallback.description || "",
       duration: row?.duration || "",
       semesters,
       level: inferredLevel,
@@ -814,25 +760,23 @@ export default function Programmes() {
         </section>
       ) : null}
 
-      <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
-        <h2 className="text-lg font-semibold text-gray-900">
-          Eligibility
-        </h2>
+      {/* Shown only when the sheet has eligibility text */}
+      {programme?.eligibility ? (
+        <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Eligibility
+          </h2>
 
-        {programme?.eligibility ? (
           <p className="mt-2 whitespace-pre-line text-sm leading-6 text-gray-700">
             {programme.eligibility}
           </p>
-        ) : (
-          <p className="mt-2 text-sm leading-6 text-gray-500">
-            Eligibility information is not available yet.
-          </p>
-        )}
-      </section>
+        </section>
+      ) : null}
 
-      <section className="mb-8">
-        {programme?.officialLink ? (
-          programme.officialLink.external ? (
+      {/* Shown only when the sheet has a valid link */}
+      {programme?.officialLink ? (
+        <section className="mb-8">
+          {programme.officialLink.external ? (
             <a
               href={programme.officialLink.href}
               target="_blank"
@@ -850,32 +794,11 @@ export default function Programmes() {
               Programme information
               <span aria-hidden="true">→</span>
             </Link>
-          )
-        ) : (
-          <p className="text-sm text-gray-500">
-            An official programme information link is not available yet.
-          </p>
-        )}
-      </section>
+          )}
+        </section>
+      ) : null}
 
-      <section>
-        <div className="mb-5 flex flex-col gap-2 border-b border-gray-200 pb-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="text-xl font-bold text-gray-800 md:text-2xl">
-              {courseHeading} Course Catalogue
-            </h2>
-
-            <p className="mt-1 text-sm text-gray-600">
-              Course names, codes, credits and proposed UG/PG levels
-              are fetched from the Google Sheet.
-            </p>
-          </div>
-
-          <span className="text-xs text-gray-500">
-            Data source: Google Sheet
-          </span>
-        </div>
-
+            <section>
         {coursesLoading ? (
           <Loading />
         ) : coursesError ? (
