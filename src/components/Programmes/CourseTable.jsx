@@ -1,17 +1,21 @@
 import { useMemo, useState } from "react";
 
 /**
- * Responsive course table (Course Code | Course Name | L-T-P-C | Previous Code).
- * `courses` is an array produced by src/hooks/useCourses.js
+ * Responsive course table.
+ * Columns: Sl. No | Course Code | Course Name | L-T-P-C
  */
-export default function CourseTable({ courses }) {
+export default function CourseTable({ courses = [] }) {
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+
     if (!q) return courses;
-    return courses.filter((c) =>
-      `${c.newCode} ${c.oldCode} ${c.name}`.toLowerCase().includes(q)
+
+    return courses.filter((course) =>
+      `${course.newCode || ""} ${course.name || ""}`
+        .toLowerCase()
+        .includes(q)
     );
   }, [courses, query]);
 
@@ -26,6 +30,7 @@ export default function CourseTable({ courses }) {
           aria-label="Search courses"
           className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-purple-700 focus:outline-none focus:ring-1 focus:ring-purple-700 sm:max-w-xs"
         />
+
         <span className="text-sm text-gray-500">
           {filtered.length} of {courses.length} courses
         </span>
@@ -35,41 +40,62 @@ export default function CourseTable({ courses }) {
         <table className="min-w-full border-collapse text-left text-sm">
           <thead className="bg-purple-800 text-white">
             <tr>
-              <th className="w-14 px-4 py-3 font-semibold">Sl. No</th>
-              <th className="px-4 py-3 font-semibold whitespace-nowrap">Course Code</th>
-              <th className="px-4 py-3 font-semibold">Course Name</th>
-              <th className="px-4 py-3 font-semibold whitespace-nowrap">L-T-P-C</th>
-              <th className="px-4 py-3 font-semibold whitespace-nowrap">Previous Code</th>
+              <th className="w-14 px-4 py-3 font-semibold">
+                Sl. No
+              </th>
+
+              <th className="whitespace-nowrap px-4 py-3 font-semibold">
+                Course Code
+              </th>
+
+              <th className="px-4 py-3 font-semibold">
+                Course Name
+              </th>
+
+              <th className="whitespace-nowrap px-4 py-3 font-semibold">
+                L-T-P-C
+              </th>
             </tr>
           </thead>
+
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
-                  No courses match your search.
+                <td
+                  colSpan={4}
+                  className="px-4 py-6 text-center text-gray-500"
+                >
+                  {query.trim()
+                    ? "No courses match your search."
+                    : "No course data is available for this programme yet."}
                 </td>
               </tr>
             ) : (
-              filtered.map((c, i) => (
+              filtered.map((course, index) => (
                 <tr
-                  key={`${c.newCode}-${c.oldCode}-${c.name}-${i}`}
+                  key={`${course.newCode || ""}-${course.name || ""}-${index}`}
                   className="border-t border-gray-200 odd:bg-white even:bg-purple-50/60 hover:bg-purple-100/60"
                 >
-                  <td className="px-4 py-2.5 text-gray-500">{i + 1}</td>
-                  <td className="px-4 py-2.5 font-medium whitespace-nowrap text-gray-900">
-                    {c.newCode || "—"}
+                  <td className="px-4 py-2.5 text-gray-500">
+                    {index + 1}
                   </td>
+
+                  <td className="whitespace-nowrap px-4 py-2.5 font-medium text-gray-900">
+                    {course.newCode || "—"}
+                  </td>
+
                   <td className="px-4 py-2.5 text-gray-800">
-                    {c.name}
-                    {c.remarks && (
-                      <div className="mt-0.5 text-xs text-gray-500">{c.remarks}</div>
+                    {course.name || "—"}
+
+                    {course.remarks && (
+                      <div className="mt-0.5 text-xs text-gray-500">
+                        {course.remarks}
+                      </div>
                     )}
                   </td>
-                  <td className="px-4 py-2.5 whitespace-nowrap text-gray-800">
-                    {c.ltpc || "—"}
-                  </td>
-                  <td className="px-4 py-2.5 whitespace-nowrap text-gray-600">
-                    {c.oldCode || "—"}
+
+                  <td className="whitespace-nowrap px-4 py-2.5 text-gray-800">
+                    {course.ltpc || "—"}
                   </td>
                 </tr>
               ))

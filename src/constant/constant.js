@@ -10,4 +10,6 @@ export const constant = {
 	cseConclaveScheduleSheetCSV: "https://docs.google.com/spreadsheets/d/1M6PULB_xoAFoXKsRQ5_JC0Vc6web676iAbuKiC9U1Yg/export?format=csv&gid=2037967715",
 	// Google Sheets CSV export URL for Academic Programmes
 	academicProgramsSheetCSV: "https://docs.google.com/spreadsheets/d/1_XBp8tXrNcaGUg_cYkdIIXY81JdeallspUDiYooUb3I/export?format=csv&gid=0",
+	// Google Sheets CSV export URL for the CSE PhD programme
+	phdProgrammeSheetCSV:"https://docs.google.com/spreadsheets/d/11kI8unqIAiRqe5IxFKBOC9nMPsgnd6WKBm1BhklQMoM/export?format=csv&gid=0",
 };
