@@ -14,7 +14,7 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         <div className="flex items-center">
           <button
             type="button"
-            className="sm:hidden flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none mr-2"
+            className="lg:hidden flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none mr-2"
             onClick={toggleMobileMenu}
             aria-label="Toggle menu"
           >

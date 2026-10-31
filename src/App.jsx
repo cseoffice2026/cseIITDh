@@ -49,7 +49,7 @@ function App() {
 
         {/* Mobile menu overlay */}
         <div
-          className={`sm:hidden fixed inset-0 bg-black/50 z-40 transition-opacity duration-300 ${
+          className={`lg:hidden fixed inset-0 bg-black/20 z-40 transition-opacity duration-300 ${
             isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
           tabIndex={0}
@@ -63,7 +63,7 @@ function App() {
           }}
         />
 
-        <div className="flex flex-grow relative" style={{ paddingTop: "124px" }}>
+        <div className="flex flex-grow relative pt-[70px] lg:pt-[124px]">
           <Navbar
             closeMenu={() => setIsMobileMenuOpen(false)}
             isMobileMenuOpen={isMobileMenuOpen}
