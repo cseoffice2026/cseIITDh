@@ -123,12 +123,12 @@ const TalkCard = ({
 }) => (
   <div className="flex h-full flex-col rounded-lg bg-white p-4 shadow-sm transition-shadow duration-300 hover:shadow-md">
     <h3 className="mb-2 text-lg font-semibold text-gray-800">
-      <span className="italic">{title}</span>
+      <span className="italic">Title:</span>{title}
     </h3>
 
     {speaker && (
       <div className="mb-2">
-        <span className="font-semibold">Speaker:</span> {speaker}
+        <span className="font-semibold">Speaker:</span>{speaker}
         <br />
         {designation && (
           <span className="text-sm text-gray-600">
@@ -179,7 +179,7 @@ const TalkCard = ({
     )}
 
     {description && (
-      <div className="mt-2 font-semibold">{description}</div>
+      <div className="mt-2 font-semibold">Abstract: {description}</div>
     )}
   </div>
 );

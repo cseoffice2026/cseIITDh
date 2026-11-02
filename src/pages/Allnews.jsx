@@ -40,7 +40,7 @@ export default function NewsPage() {
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-8 md:px-16">
       <div className="max-w-4xl mx-auto">
         {/* The title styling is now more subtle and left-aligned */}
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">All News</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-8">All News and Announcements</h1>
 
         {newsLoading ? (
           <NewsLoading />
@@ -50,7 +50,7 @@ export default function NewsPage() {
               Oops, something went wrong!
             </p>
             <p className="text-sm mt-2">
-              There was an error loading the news. Please try refreshing the page.
+              There was an error loading the News and Announcements. Please try refreshing the page.
             </p>
           </div>
         ) : news && news.length > 0 ? (
@@ -62,7 +62,7 @@ export default function NewsPage() {
           </div>
         ) : (
           <div className="text-gray-500 text-center mt-20">
-            <p className="text-lg">No news found.</p>
+            <p className="text-lg">No News and Announcements found.</p>
           </div>
         )}
       </div>

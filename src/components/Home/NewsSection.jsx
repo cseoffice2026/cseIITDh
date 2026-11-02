@@ -48,12 +48,12 @@ export default function NewsSection() {
     <div>
       {/* Header with button */}
       <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">News</h2>
+        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">News and Announcements</h2>
         <Link
           to="/allnews"
           className="text-sm bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 transition font-medium"
         >
-          View All News
+          View All News and Announcements
         </Link>
       </div>
 
@@ -63,7 +63,7 @@ export default function NewsSection() {
           <NewsLoading />
         ) : newsError ? (
           <div className="text-red-500 p-4 bg-red-50 rounded-lg">
-            <p>Error loading news: {newsError?.message}</p>
+            <p>Error loading News and Announcements: {newsError?.message}</p>
             <p className="text-sm mt-2">Please try refreshing the page.</p>
           </div>
         ) : hasRecentNews ? (
@@ -72,12 +72,12 @@ export default function NewsSection() {
           ))
         ) : (
           <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-600 mb-4">No recent news in the past month.</p>
+            <p className="text-gray-600 mb-4">No recent News and Announcements in the past month.</p>
             <Link
               to="/allnews"
               className="inline-block text-indigo-600 hover:text-indigo-700 font-medium"
             >
-              View past news and more →
+              View past news and Announcements, more →
             </Link>
           </div>
         )}

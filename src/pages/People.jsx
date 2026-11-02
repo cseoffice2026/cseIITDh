@@ -192,6 +192,11 @@ const People = () => {
         <FacultySection facultyMembers={facultyMembers} />
       </Suspense>
 
+      {/* Staff Section */}
+      <Suspense fallback={fallback}>
+        <StaffSection staffMembers={staffMembers} />
+      </Suspense>
+
       {/* Former Members Section */}
       <Suspense fallback={fallback}>
         <FormerMemberSection
@@ -200,10 +205,7 @@ const People = () => {
         />
       </Suspense>
 
-      {/* Staff Section */}
-      <Suspense fallback={fallback}>
-        <StaffSection staffMembers={staffMembers} />
-      </Suspense>
+
 
       {/* PhD Scholars Section */}
       <Suspense fallback={fallback}>
