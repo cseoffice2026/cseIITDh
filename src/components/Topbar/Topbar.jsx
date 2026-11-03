@@ -1,118 +1,171 @@
-// src/components/Topbar.jsx
 import SearchInput from "./SearchInput";
 import { useNavigate } from "react-router-dom";
-
-// import logo from "../../assets/institute-logo.png";
 
 function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
   const navigate = useNavigate();
 
+  const openInstituteWebsite = () => {
+    window.open("https://www.iitdh.ac.in/", "_blank", "noopener,noreferrer");
+  };
+
   return (
-    <>
-      <header className="fixed top-0 left-0 right-0 bg-white py-2 px-4 sm:px-6 flex items-center justify-between border-t-[5px] border-[#263c38] shadow-sm z-50 h-[70px]">
-        {/* Mobile menu button and Logo */}
-        <div className="flex items-center">
+    <header
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-t-[5px] border-[#263c38] bg-white px-4 shadow-sm sm:px-6"
+      style={{
+        height: "70px",
+        minHeight: "70px",
+        maxHeight: "70px",
+        boxSizing: "border-box",
+        overflow: "hidden",
+      }}
+    >
+      {/* Institute logo */}
+      <div
+        className="flex shrink-0 items-center"
+        style={{
+          height: "100%",
+          maxWidth: "min(42vw, 360px)",
+        }}
+      >
+        {/* Desktop and tablet logo */}
+        <button
+          type="button"
+          onClick={openInstituteWebsite}
+          aria-label="Visit IIT Dharwad website"
+          className="hidden items-center bg-transparent p-0 sm:flex"
+          style={{
+            height: "100%",
+            maxHeight: "55px",
+            lineHeight: 0,
+            border: 0,
+          }}
+        >
+          <img
+            src="/images/logo.png"
+            alt="Indian Institute of Technology Dharwad"
+            loading="eager"
+            decoding="async"
+            style={{
+              display: "block",
+              height: "55px",
+              minHeight: "0",
+              maxHeight: "55px",
+              width: "auto",
+              maxWidth: "min(42vw, 360px)",
+              objectFit: "contain",
+            }}
+          />
+        </button>
+
+        {/* Mobile menu and logo */}
+        <div className="flex items-center gap-2 sm:hidden">
           <button
             type="button"
-            className="lg:hidden flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 focus:outline-none mr-2"
             onClick={toggleMobileMenu}
-            aria-label="Toggle menu"
+            aria-label={
+              isMobileMenuOpen ? "Close menu" : "Open menu"
+            }
+            className="flex h-9 w-9 items-center justify-center rounded-md text-gray-700 hover:bg-gray-100"
           >
             {isMobileMenuOpen ? (
               <svg
                 className="h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
                 viewBox="0 0 24 24"
+                fill="none"
                 stroke="currentColor"
+                aria-hidden="true"
               >
-                <title>Menu</title>
                 <path
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M6 18L18 6M6 6l12 12"
                 />
               </svg>
             ) : (
               <svg
                 className="h-6 w-6"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
                 viewBox="0 0 24 24"
+                fill="none"
                 stroke="currentColor"
+                aria-hidden="true"
               >
-                <title>Open menu</title>
                 <path
+                  strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
             )}
           </button>
-          {/* Default Logo (hidden on small screens) */}
+
           <button
             type="button"
-            onClick={() => window.open("https://www.iitdh.ac.in/", "_blank")}
+            onClick={openInstituteWebsite}
+            aria-label="IIT Dharwad Home"
+            className="flex items-center bg-transparent p-0"
+            style={{
+              lineHeight: 0,
+              border: 0,
+            }}
           >
             <img
-              loading="lazy"
-              src={"/images/logo.png"}
-              alt="IIT DH"
-              className="hidden sm:block cursor-pointer h-[40px] sm:h-[45px] md:h-[55px] w-auto transition-transform duration-200 hover:scale-[1.02]"
-            />
-          </button>
-          {/* Mobile Logo (visible only on small screens) */}
-          <button
-            type="button"
-            onClick={() => window.open("https://www.iitdh.ac.in/", "_blank")}
-            className="block sm:hidden p-0 bg-transparent border-none"
-            style={{ lineHeight: 0 }}
-            aria-label="IIT DH Home"
-          >
-            <img
-              loading="lazy"
               src="/institute_favicon.png"
-              alt="IIT DH"
-              className="cursor-pointer h-[50px] w-auto transition-transform duration-200 hover:scale-[1.02]"
+              alt="IIT Dharwad"
+              loading="eager"
+              style={{
+                display: "block",
+                width: "42px",
+                height: "42px",
+                maxWidth: "42px",
+                maxHeight: "42px",
+                objectFit: "contain",
+              }}
             />
           </button>
         </div>
+      </div>
 
-        {/* Department name - centered on laptop+ screens */}
-        <div className="flex-1 hidden sm:flex justify-center items-center">
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            className="cursor-pointer text-[0.8rem] md:text-[0.95rem] lg:text-[1rem] font-semibold text-purple-900 tracking-wide text-center bg-transparent border-none p-0"
-            style={{ outline: "none" }}
-          >
-            <h1 className="pointer-events-none m-0">
-              DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
-            </h1>
-          </button>
-        </div>
+      {/* Department name */}
+      <div className="hidden min-w-0 flex-1 items-center justify-center px-3 sm:flex">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="bg-transparent p-0 text-center font-semibold tracking-wide text-purple-900"
+          style={{
+            border: 0,
+            outline: "none",
+            fontSize: "clamp(11px, 1vw, 15px)",
+            lineHeight: 1.4,
+          }}
+        >
+          DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
+        </button>
+      </div>
 
-        {/* Department name - mobile only - abbreviated */}
-        <div className="flex sm:hidden max-w-[300px]">
-          <button
-            type="button"
-            onClick={() => navigate("/")}
-            className="cursor-pointer text-[0.65rem] font-semibold text-purple-900 tracking-wide text-center bg-transparent border-none p-0"
-            style={{ outline: "none" }}
-          >
-            <h1 className="pointer-events-none m-0">
-              Department of Computer Science & Engineering
-            </h1>
-          </button>
-        </div>
+      {/* Mobile department name */}
+      <div className="flex min-w-0 flex-1 items-center justify-center sm:hidden">
+        <button
+          type="button"
+          onClick={() => navigate("/")}
+          className="bg-transparent p-0 text-center font-semibold text-purple-900"
+          style={{
+            border: 0,
+            outline: "none",
+            fontSize: "10px",
+            lineHeight: 1.3,
+          }}
+        >
+          Department of Computer Science & Engineering
+        </button>
+      </div>
 
-        {/* Search bar and results container */}
+      {/* Search component remains compatible with existing imports */}
+      <div className="shrink-0">
         <SearchInput />
-      </header>
-    </>
+      </div>
+    </header>
   );
 }
 
