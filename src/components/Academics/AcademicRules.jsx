@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import useAcademicRules from "../../hooks/useAcademicRules";
 import Section from "../Section";
 
@@ -140,8 +139,8 @@ export default function AcademicRules() {
                       </tr>
                     </thead>
                     <tbody>
-                      {academicRules.grading_policy.grades.map((gradeItem) => (
-                        <tr key={v4()}>
+                      {academicRules.grading_policy.grades.map((gradeItem, index) => (
+                        <tr key={index}>
                           <td className="border border-gray-200 px-4 py-2 text-center">
                             {gradeItem.grade}
                           </td>
@@ -170,8 +169,8 @@ export default function AcademicRules() {
                 </p>
                 <ul className="list-disc list-inside text-gray-700 mt-2 space-y-1">
                   {academicRules.academic_integrity.consequences.map(
-                    (consequence) => (
-                      <li key={v4()}>{consequence}</li>
+                    (consequence, index) => (
+                      <li key={index}>{consequence}</li>
                     )
                   )}
                 </ul>

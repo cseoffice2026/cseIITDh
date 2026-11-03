@@ -48,19 +48,15 @@ function App() {
         />
 
         {/* Mobile menu overlay */}
-        <div
+        <button
+          type="button"
           className={`lg:hidden fixed inset-0 bg-black/20 z-40 transition-opacity duration-300 ${
             isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
           }`}
-          tabIndex={0}
-          role="button"
-          aria-label="Close mobile menu"
+          aria-label="Close navigation menu"
+          aria-hidden={!isMobileMenuOpen}
+          tabIndex={isMobileMenuOpen ? 0 : -1}
           onClick={() => setIsMobileMenuOpen(false)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              setIsMobileMenuOpen(false);
-            }
-          }}
         />
 
         <div className="flex flex-grow relative pt-[70px] lg:pt-[124px]">
@@ -134,7 +130,7 @@ function App() {
           </div>
         </div>
       </div>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {import.meta.env.DEV && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   );
 }

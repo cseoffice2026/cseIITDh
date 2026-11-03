@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import { useNews } from "../hooks/useNews";
 
 const NewsCard = ({ title, dateDisplay, description, link }) => (
@@ -56,8 +55,11 @@ export default function NewsPage() {
         ) : news && news.length > 0 ? (
           <div className="space-y-8">
             {/* Map directly over the 'news' data which is already sorted by the hook */}
-            {news.map((item) => (
-              <NewsCard key={`news-${item?.id || v4()}`} {...item} />
+            {news.map((item, index) => (
+              <NewsCard
+                key={`news-${item?.id ?? item?.link ?? `${item?.title ?? item?.Title ?? "entry"}-${index}`}`}
+                {...item}
+              />
             ))}
           </div>
         ) : (

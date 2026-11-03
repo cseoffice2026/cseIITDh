@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import Section from "../Section";
 
 export default function BTechSection({ btech_admission }) {
@@ -24,7 +23,7 @@ export default function BTechSection({ btech_admission }) {
               </h3>
               <ol className="list-decimal list-inside space-y-2 text-gray-700">
                 {btech_admission.admission_process.steps.map((step, index) => (
-                  <li key={v4()}>{step}</li>
+                  <li key={index}>{step}</li>
                 ))}
               </ol>
             </div>
@@ -38,7 +37,7 @@ export default function BTechSection({ btech_admission }) {
               <ul className="list-disc list-inside space-y-2 text-gray-700">
                 {btech_admission.eligibility.criteria.map(
                   (criterion, index) => (
-                    <li key={v4()}>{criterion}</li>
+                    <li key={index}>{criterion}</li>
                   )
                 )}
               </ul>

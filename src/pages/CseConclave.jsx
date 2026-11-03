@@ -1,9 +1,5 @@
 import React from 'react';
-import { lazy, Suspense } from "react";
 import poster from "../content/cse-conclave.jpeg";
-const fallback = (
-  <div className="text-center py-8 text-gray-400">Loading...</div>
-);
 
 const CseConclave = () => {
   return (

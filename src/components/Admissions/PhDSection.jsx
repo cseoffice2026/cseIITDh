@@ -1,5 +1,4 @@
-import React from "react";
-import { v4 } from "uuid";
+import { Fragment } from "react";
 import Section from "../Section";
 import MarkDownLink from "./MarkdownLink";
 
@@ -26,7 +25,7 @@ export default function PhDSection({ phd_admission }) {
               </h3>
               <ul className="list-none space-y-1 text-gray-700">
                 {phd_admission.important_dates.dates.map((dateItem, index) => (
-                  <li key={v4()}>
+                  <li key={index}>
                     <span className="font-medium">{dateItem.event}</span>{" "}
                     {dateItem.date}
                   </li>
@@ -58,7 +57,7 @@ export default function PhDSection({ phd_admission }) {
               <ul className="list-disc list-inside space-y-1 text-gray-700 mb-3">
                 {phd_admission.qualifying_degree.minimum_score.general.criteria.map(
                   (criterion, index) => (
-                    <li key={v4()}>{criterion}</li>
+                    <li key={index}>{criterion}</li>
                   )
                 )}
               </ul>
@@ -100,7 +99,7 @@ export default function PhDSection({ phd_admission }) {
               </p>
               <ol className="list-decimal list-inside space-y-2 text-gray-700">
                 {phd_admission.selection_process.rounds.map((round, index) => (
-                  <li key={v4()}>
+                  <li key={index}>
                     <span className="font-medium">{round.round}</span>{" "}
                     {round.details}
                   </li>
@@ -143,7 +142,7 @@ export default function PhDSection({ phd_admission }) {
               <div className="space-y-3">
                 {phd_admission.financial_assistance.assistance.map(
                   (item, index) => (
-                    <div key={v4()}>
+                    <div key={index}>
                       <h4 className="font-medium mb-2">{item.type}</h4>
                       <p className="text-gray-700">{item.description}</p>
                     </div>
@@ -161,7 +160,7 @@ export default function PhDSection({ phd_admission }) {
               <div className="space-y-3">
                 {phd_admission.syllabus_selection_process.topics.map(
                   (topic, index) => (
-                    <div key={v4()}>
+                    <div key={index}>
                       <h4 className="font-medium mb-1">{topic.topic}</h4>
                       <p className="text-sm text-gray-600">{topic.details}</p>
                     </div>
@@ -228,14 +227,14 @@ export default function PhDSection({ phd_admission }) {
                     Website -{" "}
                     {phd_admission.dia_fellowship_scheme.websites.map(
                       (website, index) => (
-                        <React.Fragment key={v4()}>
+                        <Fragment key={index}>
                           <MarkDownLink text={website} />
                           {index <
                           phd_admission.dia_fellowship_scheme.websites.length -
                             1
                             ? " and "
                             : ""}
-                        </React.Fragment>
+                        </Fragment>
                       )
                     )}
                     <br />

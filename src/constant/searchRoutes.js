@@ -1,0 +1,26 @@
+const slugMap = {
+  about: "about",
+  academics: "academics",
+  "about-pages": "about",
+  admissions: "admissions",
+  "academic-pages": "academics",
+  "contact-pages": "contact",
+  contact: "contact",
+  events: "allTalksEvents",
+  faculty: "people",
+  home: "",
+  join_as_faculty: "join-as-faculty",
+  joinasfaculty: "join-as-faculty",
+  news: "allnews",
+  people: "people",
+  peoples: "people",
+  programmes: "programmes/btech",
+  research: "research",
+  "research-labs": "research",
+  "research-projects": "research",
+  staff: "people",
+  talks: "allTalksEvents",
+  talks_and_events: "allTalksEvents",
+};
+
+export default slugMap;

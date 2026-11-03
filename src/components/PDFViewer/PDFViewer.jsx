@@ -1,26 +1,19 @@
 import {
-  lazy,
-  Suspense,
   useCallback,
   useLayoutEffect,
   useRef,
   useState,
 } from "react";
 // import "./PDFViewer.css";
-import { pdfjs } from "react-pdf";
-
-// Lazy load react-pdf for performance and bundle size
-const Document = lazy(() =>
-  import("react-pdf").then((mod) => ({ default: mod.Document }))
-);
-const Page = lazy(() =>
-  import("react-pdf").then((mod) => ({ default: mod.Page }))
-);
+import { Document, Page, pdfjs } from "react-pdf";
 
 import PDFErrorFallback from "./PDFErrorFallback";
 
 // Set up the worker source for PDF.js (only once)
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.mjs",
+  import.meta.url
+).toString();
 
 const PDFViewer = ({ pdfFile }) => {
   const [numPages, setNumPages] = useState(null);
@@ -59,9 +52,7 @@ const PDFViewer = ({ pdfFile }) => {
     setLoading(false);
     setError(true);
     setUseFallback(true);
-    // Optionally log error in production
-    if (process.env.NODE_ENV !== "production") {
-      // eslint-disable-next-line no-console
+    if (import.meta.env.DEV) {
       console.error("Error loading PDF:", err);
     }
   }, []);
@@ -157,26 +148,20 @@ const PDFViewer = ({ pdfFile }) => {
         </div>
       )}
       <div className="pdf-container">
-        <Suspense
-          fallback={
+        <Document
+          file={absolutePdfUrl}
+          onLoadSuccess={onDocumentLoadSuccess}
+          onLoadError={onDocumentLoadError}
+          className="flex flex-col items-center"
+          error={<PDFErrorFallback pdfFile={absolutePdfUrl} />}
+          noData={<PDFErrorFallback pdfFile={absolutePdfUrl} />}
+          loading={
             <div className="flex justify-center items-center h-64">
               <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
             </div>
           }
         >
-          <Document
-            file={absolutePdfUrl}
-            onLoadSuccess={onDocumentLoadSuccess}
-            onLoadError={onDocumentLoadError}
-            className="flex flex-col items-center"
-            error={<PDFErrorFallback pdfFile={absolutePdfUrl} />}
-            noData={<PDFErrorFallback pdfFile={absolutePdfUrl} />}
-            loading={
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-              </div>
-            }
-          >
+          {numPages !== null && (
             <Page
               pageNumber={pageNumber}
               width={width ? Math.min(width, 800) : 600}
@@ -185,8 +170,8 @@ const PDFViewer = ({ pdfFile }) => {
               renderAnnotationLayer={false}
               error={<PDFErrorFallback pdfFile={absolutePdfUrl} />}
             />
-          </Document>
-        </Suspense>
+          )}
+        </Document>
       </div>
       {!loading && !error && (
         <div className="flex flex-col items-center mt-4">

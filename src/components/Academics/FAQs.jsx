@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import useAcademicFaq from "../../hooks/useAcademicFaqs";
 import Section from "../Section";
 
@@ -89,8 +88,11 @@ export default function FAQs() {
           {isError && <FAQsError error={error} />}
 
           <div className="space-y-6">
-            {faqs?.map((faq) => (
-              <div key={v4()} className="border-b border-gray-200 pb-4">
+            {faqs?.map((faq, index) => (
+              <div
+                key={faq.id ?? faq.documentId ?? `${faq.question}-${index}`}
+                className="border-b border-gray-200 pb-4"
+              >
                 <h3 className="text-lg font-medium text-gray-800">
                   {faq.question}
                 </h3>

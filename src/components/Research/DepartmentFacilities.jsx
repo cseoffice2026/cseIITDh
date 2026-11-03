@@ -13,10 +13,6 @@ function DepartmentFacilitiesData() {
       (item) => item?.Type?.toLowerCase() === type?.toLowerCase()
     );
 
-  const instructionalLabs = filterType("Instructional", data).map((lab) => ({
-    id: lab.documentId,
-    lab: lab.Name,
-  }));
   const rndLabs = filterType("RnD", data).map((lab) => ({
     id: lab.documentId,
     name: lab.Name,
@@ -44,7 +40,7 @@ function DepartmentFacilitiesData() {
           Research & Development Labs
         </h3>
         <ul className="list-disc list-inside ml-6 text-gray-700">
-          {rndLabs.map((lab, idx) => (
+          {rndLabs.map((lab) => (
             <li key={lab.id} className="mb-2">
               {lab.link ? (
                 <a

@@ -14,7 +14,7 @@ const CustomCarousel = () => {
     if (!images || images.length === 0) return;
 
     const timer = setInterval(() => {
-      goToNext();
+      setCurrentIndex((prev) => (prev + 1) % images.length);
     }, 5000);
 
     return () => clearInterval(timer);

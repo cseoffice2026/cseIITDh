@@ -1,7 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { v4 } from "uuid";
 import Loading from "../components/Loading";
-import { slugMap } from "../components/Topbar/SearchInput";
+import slugMap from "../constant/searchRoutes";
 import useSearchResult from "../hooks/useSearchResult";
 
 function SearchResults() {
@@ -14,13 +13,22 @@ function SearchResults() {
   const navigate = useNavigate();
 
   const handleResultClick = (category) => {
-    const targetSlug = slugMap[category];
-    if (targetSlug) {
+    const categoryKey = category.trim().toLowerCase().replace(/\s+/g, "_");
+    const targetSlug = slugMap[categoryKey];
+    if (typeof targetSlug === "string") {
       navigate(`/${targetSlug}`);
     } else {
       console.warn(`No slug mapping found for category: ${category}`);
     }
   };
+
+  if (!query?.trim()) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center px-4 text-center">
+        <p className="text-gray-600">Enter a search term to find department content.</p>
+      </div>
+    );
+  }
 
   if (isLoading) return <Loading />;
   if (isError) {
@@ -82,9 +90,13 @@ function SearchResults() {
                 {category.replace(/_/g, " ")}
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {items.map((item) => (
+                {items.map((item, index) => (
                   <div
-                    key={v4()}
+                    key={
+                      item.id ??
+                      item.documentId ??
+                      `${category}-${item.Title ?? item.Name ?? index}`
+                    }
                     className="bg-white p-4 rounded-lg shadow-md border border-gray-100"
                   >
                     <h3 className="font-semibold text-lg mb-1">

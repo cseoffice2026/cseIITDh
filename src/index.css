@@ -6,6 +6,18 @@
   font-family: Roboto, sans-serif;
 }
 
+@media (max-width: 1023px) {
+  .mobile-nav-open {
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .mobile-nav-closed {
+    visibility: hidden;
+    transform: translateX(-100%);
+  }
+}
+
 .hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;

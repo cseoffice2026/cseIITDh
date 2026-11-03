@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 const sectionLinks = {
@@ -97,6 +97,22 @@ const isDesktopWidth = () =>
 function Navbar({ closeMenu, isMobileMenuOpen }) {
   const [openDropdown, setOpenDropdown] = useState(null);
   const location = useLocation();
+  const dropdownId = useId();
+
+  useEffect(() => {
+    setOpenDropdown(null);
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (!openDropdown) return undefined;
+
+    const closeOnEscape = (event) => {
+      if (event.key === "Escape") setOpenDropdown(null);
+    };
+
+    document.addEventListener("keydown", closeOnEscape);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [openDropdown]);
 
   const linkClass = (active) =>
     `flex items-center justify-start px-5 py-3.5 text-sm font-semibold transition-colors lg:justify-center lg:px-3 lg:py-3 xl:px-4 ${active
@@ -133,12 +149,13 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
     );
 
   return (
-        <nav
+    <nav
+      id="main-navigation"
       aria-label="Main navigation"
       className={`fixed left-0 right-0 top-[70px] z-[100] bg-purple-800 shadow-sm max-lg:right-auto max-lg:bottom-0 max-lg:w-72 max-lg:max-w-[85vw] max-lg:overflow-y-auto max-lg:overflow-x-hidden max-lg:shadow-xl max-lg:transition-all max-lg:duration-300 max-lg:ease-out ${
         isMobileMenuOpen
-          ? "max-lg:visible max-lg:translate-x-0"
-          : "max-lg:invisible max-lg:-translate-x-full"
+          ? "mobile-nav-open"
+          : "mobile-nav-closed"
       }`}
     >
       <ul className="mx-auto flex max-w-7xl flex-col lg:flex-row lg:items-stretch lg:justify-center">
@@ -170,12 +187,13 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                     type="button"
                     aria-label={`Toggle ${item.label} dropdown`}
                     aria-expanded={openDropdown === item.label}
+                    aria-controls={`${dropdownId}-${item.label.toLowerCase()}`}
                     onClick={() =>
                       setOpenDropdown((current) =>
                         current === item.label ? null : item.label
                       )
                     }
-                    className="flex items-center border-l border-purple-700/70 px-5 text-white hover:bg-purple-900 lg:border-l-0 lg:px-2"
+                    className="flex items-center border-l border-purple-700/70 px-5 text-white hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:border-l-0 lg:px-2"
                   >
                     <svg
                       className={`h-4 w-4 transition-transform duration-200 ${openDropdown === item.label ? "rotate-180" : ""
@@ -197,10 +215,10 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
 
                 {/* Dropdown: inline list below lg, floating panel on lg+ */}
                 <div
+                  id={`${dropdownId}-${item.label.toLowerCase()}`}
                   className="bg-purple-900 lg:absolute lg:left-0 lg:top-full lg:min-w-[220px] lg:rounded-b-md lg:bg-purple-800 lg:shadow-lg"
                   style={{
                     display: openDropdown === item.label ? "block" : "none",
-                    zIndex: 9999,
                   }}
                 >
                   {item.sections.map((section) => (

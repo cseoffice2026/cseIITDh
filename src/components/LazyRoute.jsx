@@ -1,10 +1,10 @@
-import React, { Suspense } from "react";
+import { createElement, Suspense } from "react";
 import PageSkeleton from "./LoadingSkeleton/PageSkeleton";
 
-export default function LazyRoute({ element: Element }) {
+export default function LazyRoute({ element: Component }) {
   return (
     <Suspense fallback={<PageSkeleton />}>
-      <Element />
+      {createElement(Component)}
     </Suspense>
   );
 }

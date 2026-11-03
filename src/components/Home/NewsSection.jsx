@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import { useNews } from "../../hooks/useNews";
 import { Link } from "react-router-dom"; // ← make sure this is imported
 
@@ -67,8 +66,11 @@ export default function NewsSection() {
             <p className="text-sm mt-2">Please try refreshing the page.</p>
           </div>
         ) : hasRecentNews ? (
-          recentNews.map((item) => (
-            <NewsCard key={`news-${item?.id || v4()}`} {...item} />
+          recentNews.map((item, index) => (
+            <NewsCard
+              key={`news-${item?.id ?? item?.link ?? `${item?.title ?? item?.Title ?? "entry"}-${index}`}`}
+              {...item}
+            />
           ))
         ) : (
           <div className="text-center py-8 bg-gray-50 rounded-lg">

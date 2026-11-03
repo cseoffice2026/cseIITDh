@@ -112,7 +112,7 @@ export const getNews = async () => {
 			error,
 		);
 
-		return [];
+		throw error;
 	}
 };
 
@@ -273,7 +273,7 @@ export const getTalksAndEvents = async () => {
 			error,
 		);
 
-		return [];
+		throw error;
 	}
 };
 
@@ -1223,7 +1223,13 @@ export const getAcademicFaq = async () => {
  */
 export const getAdmissionsInfo = async () => {
 	const { data } = await axiosInstance.get("/admissions-pages");
-	return data?.data?.[0].allData;
+	const admissionsInfo = data?.data?.[0]?.allData;
+
+	if (!admissionsInfo || typeof admissionsInfo !== "object") {
+		throw new Error("Fetched Admissions data is not in the expected format.");
+	}
+
+	return admissionsInfo;
 };
 
 /**
@@ -1235,12 +1241,7 @@ export const getPeopleInfo = async () => {
 	);
 
 	if (!data || !Array.isArray(data.data)) {
-		console.error(
-			"Fetched data is not in the expected format:",
-			data,
-		);
-
-		return [];
+		throw new Error("Fetched People data is not in the expected format.");
 	}
 
 	const getLastName = (fullName) => {

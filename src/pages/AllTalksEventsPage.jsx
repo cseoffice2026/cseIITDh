@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import { useTalksAndEvents } from "../hooks/useTalksAndEvents";
 
 const TalkCard = ({
@@ -7,7 +6,6 @@ const TalkCard = ({
   designation,
   venue,
   time,
-  date,
   dateDisplay,
   description,
   links,
@@ -82,8 +80,11 @@ export default function AllTalksEventsPage() {
           </div>
         ) : sortedTalks.length > 0 ? (
           <div className="space-y-8">
-            {sortedTalks.map((item) => (
-              <TalkCard key={`talk-${item.id || v4()}`} {...item} />
+            {sortedTalks.map((item, index) => (
+              <TalkCard
+                key={`talk-${item.id ?? item.Title ?? item.title ?? index}`}
+                {...item}
+              />
             ))}
           </div>
         ) : (

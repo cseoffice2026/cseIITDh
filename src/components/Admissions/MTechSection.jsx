@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import Section from "../Section";
 
 export default function MTechSection({ mtech_admission }) {
@@ -33,7 +32,7 @@ export default function MTechSection({ mtech_admission }) {
               <ul className="list-disc list-inside space-y-2 text-gray-700 pl-3">
                 {mtech_admission.eligibility_admission.qualifying_degree.degrees.map(
                   (degree, index) => (
-                    <li key={v4()}>{degree}</li>
+                    <li key={index}>{degree}</li>
                   )
                 )}
               </ul>
@@ -64,7 +63,7 @@ export default function MTechSection({ mtech_admission }) {
               <ul className="list-disc list-inside space-y-1 text-gray-700 pl-3">
                 {mtech_admission.eligibility_admission.minimum_eligibility_criteria.general.criteria.map(
                   (criterion, index) => (
-                    <li key={v4()}>{criterion}</li>
+                    <li key={index}>{criterion}</li>
                   )
                 )}
               </ul>
@@ -94,7 +93,7 @@ export default function MTechSection({ mtech_admission }) {
               <ul className="list-disc list-inside space-y-1 text-gray-700 pl-3">
                 {mtech_admission.selection_process.gate_scores.map(
                   (score, index) => (
-                    <li key={v4()}>{score}</li>
+                    <li key={index}>{score}</li>
                   )
                 )}
               </ul>
@@ -129,7 +128,7 @@ export default function MTechSection({ mtech_admission }) {
                     <ul className="list-disc list-inside text-sm pl-3">
                       {mtech_admission.program_structure.coursework.details.map(
                         (detail, index) => (
-                          <li key={v4()}>{detail}</li>
+                          <li key={index}>{detail}</li>
                         )
                       )}
                     </ul>
@@ -143,7 +142,7 @@ export default function MTechSection({ mtech_admission }) {
                     <ul className="list-disc list-inside text-sm pl-3">
                       {mtech_admission.program_structure.mtech_project.details.map(
                         (detail, index) => (
-                          <li key={v4()}>{detail}</li>
+                          <li key={index}>{detail}</li>
                         )
                       )}
                     </ul>
@@ -157,7 +156,7 @@ export default function MTechSection({ mtech_admission }) {
                     <ul className="list-disc list-inside text-sm pl-3">
                       {mtech_admission.program_structure.additional.details.map(
                         (detail, index) => (
-                          <li key={v4()}>{detail}</li>
+                          <li key={index}>{detail}</li>
                         )
                       )}
                     </ul>
@@ -174,7 +173,7 @@ export default function MTechSection({ mtech_admission }) {
               </h3>
               <ul className="list-disc list-inside space-y-1 text-gray-700 pl-3">
                 {mtech_admission.core_courses.courses.map((course, index) => (
-                  <li key={v4()}>{course}</li>
+                  <li key={index}>{course}</li>
                 ))}
               </ul>
             </div>

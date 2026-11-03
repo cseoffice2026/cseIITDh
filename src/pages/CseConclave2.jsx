@@ -1,11 +1,7 @@
 import React from 'react';
-import { lazy, Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getCseConclaveSchedule } from "../api/api";
 import poster from "../content/conclave2_0.png";
-const fallback = (
-  <div className="text-center py-8 text-gray-400">Loading...</div>
-);
 
 const CseConclave = () => {
   const {

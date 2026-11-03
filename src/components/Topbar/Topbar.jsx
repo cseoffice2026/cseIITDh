@@ -16,17 +16,57 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         minHeight: "70px",
         maxHeight: "70px",
         boxSizing: "border-box",
-        overflow: "hidden",
       }}
     >
       {/* Institute logo */}
       <div
-        className="flex shrink-0 items-center"
+        className="flex shrink-0 items-center gap-2"
         style={{
           height: "100%",
-          maxWidth: "min(42vw, 360px)",
+          maxWidth: "min(45vw, 390px)",
         }}
       >
+        <button
+          type="button"
+          onClick={toggleMobileMenu}
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls="main-navigation"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-gray-700 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700 lg:hidden"
+        >
+          {isMobileMenuOpen ? (
+            <svg
+              className="h-6 w-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              className="h-6 w-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
+        </button>
+
         {/* Desktop and tablet logo */}
         <button
           type="button"
@@ -61,47 +101,6 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         <div className="flex items-center gap-2 sm:hidden">
           <button
             type="button"
-            onClick={toggleMobileMenu}
-            aria-label={
-              isMobileMenuOpen ? "Close menu" : "Open menu"
-            }
-            className="flex h-9 w-9 items-center justify-center rounded-md text-gray-700 hover:bg-gray-100"
-          >
-            {isMobileMenuOpen ? (
-              <svg
-                className="h-6 w-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="h-6 w-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
-          </button>
-
-          <button
-            type="button"
             onClick={openInstituteWebsite}
             aria-label="IIT Dharwad Home"
             className="flex items-center bg-transparent p-0"
@@ -132,10 +131,9 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-transparent p-0 text-center font-semibold tracking-wide text-purple-900"
+          className="bg-transparent p-0 text-center font-semibold tracking-wide text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700"
           style={{
             border: 0,
-            outline: "none",
             fontSize: "clamp(11px, 1vw, 15px)",
             lineHeight: 1.4,
           }}
@@ -149,10 +147,9 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-transparent p-0 text-center font-semibold text-purple-900"
+          className="bg-transparent p-0 text-center font-semibold text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700"
           style={{
             border: 0,
-            outline: "none",
             fontSize: "10px",
             lineHeight: 1.3,
           }}
