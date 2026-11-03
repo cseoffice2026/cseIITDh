@@ -5,166 +5,140 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
   const navigate = useNavigate();
 
   const openInstituteWebsite = () => {
-    window.open("https://www.iitdh.ac.in/", "_blank", "noopener,noreferrer");
+    window.open(
+      "https://www.iitdh.ac.in/",
+      "_blank",
+      "noopener,noreferrer"
+    );
   };
 
   return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-t-[5px] border-[#263c38] bg-white px-4 shadow-sm sm:px-6"
-      style={{
-        height: "70px",
-        minHeight: "70px",
-        maxHeight: "70px",
-        boxSizing: "border-box",
-        overflow: "hidden",
-      }}
-    >
-      {/* Institute logo */}
-      <div
-        className="flex shrink-0 items-center"
-        style={{
-          height: "100%",
-          maxWidth: "min(42vw, 360px)",
-        }}
-      >
+    <header className="fixed top-0 left-0 right-0 z-50 flex h-[70px] items-center justify-between border-t-[5px] border-[#263c38] bg-white px-4 py-2 shadow-sm sm:px-6">
+
+      {/* Mobile menu button: visible below 1024px */}
+      <div className="flex shrink-0 items-center">
+        <button
+          type="button"
+          className="mr-2 flex items-center justify-center rounded-md p-2 text-gray-700 hover:text-gray-900 focus:outline-none lg:hidden"
+          onClick={toggleMobileMenu}
+          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isMobileMenuOpen}
+        >
+          {isMobileMenuOpen ? (
+            <svg
+              className="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          ) : (
+            <svg
+              className="h-6 w-6"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            </svg>
+          )}
+        </button>
+
         {/* Desktop and tablet logo */}
         <button
           type="button"
           onClick={openInstituteWebsite}
           aria-label="Visit IIT Dharwad website"
-          className="hidden items-center bg-transparent p-0 sm:flex"
-          style={{
-            height: "100%",
-            maxHeight: "55px",
-            lineHeight: 0,
-            border: 0,
-          }}
+          className="hidden bg-transparent p-0 sm:block"
+          style={{ lineHeight: 0, border: 0 }}
         >
           <img
-            src="/images/logo.png"
-            alt="Indian Institute of Technology Dharwad"
             loading="eager"
             decoding="async"
+            src="/images/logo.png"
+            alt="Indian Institute of Technology Dharwad"
             style={{
               display: "block",
-              height: "55px",
-              minHeight: "0",
+              height: "clamp(40px, 5vw, 55px)",
               maxHeight: "55px",
               width: "auto",
-              maxWidth: "min(42vw, 360px)",
+              maxWidth: "min(42vw, 320px)",
               objectFit: "contain",
             }}
           />
         </button>
 
-        {/* Mobile menu and logo */}
-        <div className="flex items-center gap-2 sm:hidden">
-          <button
-            type="button"
-            onClick={toggleMobileMenu}
-            aria-label={
-              isMobileMenuOpen ? "Close menu" : "Open menu"
-            }
-            className="flex h-9 w-9 items-center justify-center rounded-md text-gray-700 hover:bg-gray-100"
-          >
-            {isMobileMenuOpen ? (
-              <svg
-                className="h-6 w-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              <svg
-                className="h-6 w-6"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
-          </button>
-
-          <button
-            type="button"
-            onClick={openInstituteWebsite}
-            aria-label="IIT Dharwad Home"
-            className="flex items-center bg-transparent p-0"
+        {/* Mobile logo */}
+        <button
+          type="button"
+          onClick={openInstituteWebsite}
+          className="block border-0 bg-transparent p-0 sm:hidden"
+          style={{ lineHeight: 0 }}
+          aria-label="IIT Dharwad Home"
+        >
+          <img
+            loading="eager"
+            decoding="async"
+            src="/institute_favicon.png"
+            alt="IIT Dharwad"
             style={{
-              lineHeight: 0,
-              border: 0,
+              display: "block",
+              width: "46px",
+              height: "46px",
+              maxWidth: "46px",
+              maxHeight: "46px",
+              objectFit: "contain",
             }}
-          >
-            <img
-              src="/institute_favicon.png"
-              alt="IIT Dharwad"
-              loading="eager"
-              style={{
-                display: "block",
-                width: "42px",
-                height: "42px",
-                maxWidth: "42px",
-                maxHeight: "42px",
-                objectFit: "contain",
-              }}
-            />
-          </button>
-        </div>
+          />
+        </button>
       </div>
 
-      {/* Department name */}
+      {/* Department name: tablet and desktop */}
       <div className="hidden min-w-0 flex-1 items-center justify-center px-3 sm:flex">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-transparent p-0 text-center font-semibold tracking-wide text-purple-900"
-          style={{
-            border: 0,
-            outline: "none",
-            fontSize: "clamp(11px, 1vw, 15px)",
-            lineHeight: 1.4,
-          }}
+          className="cursor-pointer border-0 bg-transparent p-0 text-center text-[0.8rem] font-semibold tracking-wide text-purple-900 outline-none md:text-[0.95rem] lg:text-[1rem]"
+          style={{ outline: "none" }}
         >
-          DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
+          <h1 className="pointer-events-none m-0">
+            DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING
+          </h1>
         </button>
       </div>
 
-      {/* Mobile department name */}
-      <div className="flex min-w-0 flex-1 items-center justify-center sm:hidden">
+      {/* Department name: mobile */}
+      <div className="flex max-w-[300px] min-w-0 flex-1 justify-center sm:hidden">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-transparent p-0 text-center font-semibold text-purple-900"
-          style={{
-            border: 0,
-            outline: "none",
-            fontSize: "10px",
-            lineHeight: 1.3,
-          }}
+          className="cursor-pointer border-0 bg-transparent p-0 text-center text-[0.65rem] font-semibold tracking-wide text-purple-900 outline-none"
+          style={{ outline: "none" }}
         >
-          Department of Computer Science & Engineering
+          <h1 className="pointer-events-none m-0">
+            Department of Computer Science &amp; Engineering
+          </h1>
         </button>
       </div>
 
-      {/* Search component remains compatible with existing imports */}
-      <div className="shrink-0">
-        <SearchInput />
-      </div>
+      {/* Keep existing SearchInput import compatibility */}
+      <SearchInput />
+
     </header>
   );
 }
