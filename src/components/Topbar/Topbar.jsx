@@ -5,7 +5,11 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
   const navigate = useNavigate();
 
   const openInstituteWebsite = () => {
-    window.open("https://www.iitdh.ac.in/", "_blank", "noopener,noreferrer");
+    window.open(
+      "https://www.iitdh.ac.in/",
+      "_blank",
+      "noopener,noreferrer"
+    );
   };
 
   return (
@@ -16,82 +20,36 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         minHeight: "70px",
         maxHeight: "70px",
         boxSizing: "border-box",
+        overflow: "hidden",
       }}
     >
       {/* Institute logo */}
       <div
-        className="flex shrink-0 items-center gap-2"
+        className="flex shrink-0 items-center"
         style={{
           height: "100%",
-          maxWidth: "min(45vw, 390px)",
+          maxWidth: "min(42vw, 360px)",
         }}
       >
-        <button
-          type="button"
-          onClick={toggleMobileMenu}
-          aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isMobileMenuOpen}
-          aria-controls="main-navigation"
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-gray-700 hover:bg-gray-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700 lg:hidden"
-        >
-          {isMobileMenuOpen ? (
-            <svg
-              className="h-6 w-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          ) : (
-            <svg
-              className="h-6 w-6"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          )}
-        </button>
-
         {/* Desktop and tablet logo */}
         <button
           type="button"
           onClick={openInstituteWebsite}
           aria-label="Visit IIT Dharwad website"
-          className="hidden items-center bg-transparent p-0 sm:flex"
-          style={{
-            height: "100%",
-            maxHeight: "55px",
-            lineHeight: 0,
-            border: 0,
-          }}
+          className="hidden bg-transparent p-0 sm:block"
+          style={{ lineHeight: 0, border: 0 }}
         >
           <img
-            src="/images/logo.png"
-            alt="Indian Institute of Technology Dharwad"
             loading="eager"
             decoding="async"
+            src="/images/logo.png"
+            alt="Indian Institute of Technology Dharwad"
             style={{
               display: "block",
-              height: "55px",
-              minHeight: "0",
+              height: "clamp(40px, 5vw, 55px)",
               maxHeight: "55px",
               width: "auto",
-              maxWidth: "min(42vw, 360px)",
+              maxWidth: "min(42vw, 320px)",
               objectFit: "contain",
             }}
           />
@@ -99,6 +57,47 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
 
         {/* Mobile menu and logo */}
         <div className="flex items-center gap-2 sm:hidden">
+          <button
+            type="button"
+            onClick={toggleMobileMenu}
+            aria-label={
+              isMobileMenuOpen ? "Close menu" : "Open menu"
+            }
+            className="flex h-9 w-9 items-center justify-center rounded-md text-gray-700 hover:bg-gray-100"
+          >
+            {isMobileMenuOpen ? (
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            ) : (
+              <svg
+                className="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
+              </svg>
+            )}
+          </button>
+
           <button
             type="button"
             onClick={openInstituteWebsite}
@@ -126,14 +125,15 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         </div>
       </div>
 
-      {/* Department name */}
+      {/* Department name: tablet and desktop */}
       <div className="hidden min-w-0 flex-1 items-center justify-center px-3 sm:flex">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-transparent p-0 text-center font-semibold tracking-wide text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700"
+          className="bg-transparent p-0 text-center font-semibold tracking-wide text-purple-900"
           style={{
             border: 0,
+            outline: "none",
             fontSize: "clamp(11px, 1vw, 15px)",
             lineHeight: 1.4,
           }}
@@ -142,14 +142,15 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         </button>
       </div>
 
-      {/* Mobile department name */}
-      <div className="flex min-w-0 flex-1 items-center justify-center sm:hidden">
+      {/* Department name: mobile */}
+      <div className="flex max-w-[300px] min-w-0 flex-1 justify-center sm:hidden">
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-transparent p-0 text-center font-semibold text-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700"
+          className="bg-transparent p-0 text-center font-semibold text-purple-900"
           style={{
             border: 0,
+            outline: "none",
             fontSize: "10px",
             lineHeight: 1.3,
           }}
@@ -158,10 +159,9 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         </button>
       </div>
 
-      {/* Search component remains compatible with existing imports */}
-      <div className="shrink-0">
-        <SearchInput />
-      </div>
+      {/* Keep existing SearchInput import compatibility */}
+      <SearchInput />
+
     </header>
   );
 }
