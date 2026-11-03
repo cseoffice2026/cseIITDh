@@ -91,6 +91,40 @@ const safeLink = (value) => {
 const isLab = (course) =>
   /\blab(?:oratory)?\b/i.test(course.name || "");
 
+/* =========================================================
+   PROGRAMME ADMISSION BROCHURES
+   ========================================================= */
+
+const PROGRAMME_BROCHURES = {
+  "mtech-research": {
+    title: "M.Tech. by Research Admission Brochure",
+    session: "Spring 2026–27",
+    fileName:
+      "MTech-by-Research-Admission-Brochure-Spring-2026-27.pdf",
+    fileUrl: `${
+      import.meta.env.BASE_URL
+    }MTech-by-Research-Admission-Brochure-Spring-2026-27.pdf`,
+    description:
+      "Official IIT Dharwad information brochure for M.Tech. by Research admissions, Spring 2026–27.",
+  },
+
+  phd: {
+    title: "Ph.D. Admission Brochure",
+    session: "Spring 2026–27",
+    fileName:
+      "PhD-Admission-Brochure-Spring-2026-27.pdf",
+    fileUrl: `${
+      import.meta.env.BASE_URL
+    }PhD-Admission-Brochure-Spring-2026-27.pdf`,
+    description:
+      "Official IIT Dharwad information brochure for Ph.D. admissions, Spring 2026–27.",
+  },
+};
+
+/* =========================================================
+   COMMON EMPTY STATE
+   ========================================================= */
+
 function EmptyState({
   title = "Information not available",
   children,
@@ -100,12 +134,100 @@ function EmptyState({
       <p className="font-semibold text-gray-800">
         {title}
       </p>
+
       <p className="mt-1">{children}</p>
     </div>
   );
 }
 
-/* ---------- Banner at the top of every programme page ---------- */
+/* =========================================================
+   BROCHURE COMPONENT
+   ========================================================= */
+
+function ProgrammeBrochureSection({ programmeKey }) {
+  const brochure = PROGRAMME_BROCHURES[programmeKey];
+
+  if (!brochure) return null;
+
+  return (
+    <section className="mb-8 rounded-xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+            <i
+              className="fas fa-file-pdf text-xl"
+              aria-hidden="true"
+            />
+          </span>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
+              Official Admission Document · {brochure.session}
+            </p>
+
+            <h2 className="mt-1 text-lg font-bold text-gray-900">
+              {brochure.title}
+            </h2>
+
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+              {brochure.description}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+          <a
+            href={brochure.fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-md border border-purple-200 bg-white px-4 py-2.5 text-sm font-semibold text-purple-800 transition hover:bg-purple-50"
+          >
+            <i className="fas fa-eye" aria-hidden="true" />
+            View brochure
+          </a>
+
+          <a
+            href={brochure.fileUrl}
+            download={brochure.fileName}
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-purple-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-800"
+          >
+            <i
+              className="fas fa-download"
+              aria-hidden="true"
+            />
+            Download PDF
+          </a>
+        </div>
+      </div>
+
+      <details className="mt-5 border-t border-gray-100 pt-4">
+        <summary className="cursor-pointer text-sm font-semibold text-purple-800 marker:text-purple-700 hover:text-purple-950">
+          Preview brochure on this page
+        </summary>
+
+        <div className="mt-4 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+          <iframe
+            title={brochure.title}
+            src={`${brochure.fileUrl}#view=FitH&toolbar=1`}
+            className="h-[65vh] min-h-[420px] w-full"
+            loading="lazy"
+          />
+        </div>
+
+        <p className="mt-2 text-xs text-gray-500">
+          If the preview is not supported by your browser, use
+          View brochure to open the PDF in a new tab or Download
+          PDF to save it.
+        </p>
+      </details>
+    </section>
+  );
+}
+
+/* =========================================================
+   PROGRAMME HERO
+   ========================================================= */
+
 function ProgrammeHero({
   programme,
   stats = [],
@@ -161,7 +283,7 @@ function ProgrammeHero({
 }
 
 /* =========================================================
-   PHD PAGE — USES THE DEDICATED PHD GOOGLE SHEET
+   PHD PAGE
    ========================================================= */
 
 function PhDOnHoldPage() {
@@ -281,8 +403,7 @@ function PhDOnHoldPage() {
         programme={{
           title: data?.title || "PhD",
           subtitle: DEPARTMENT_NAME,
-          eyebrow:
-            data?.eyebrow || "Doctoral Programme",
+          eyebrow: data?.eyebrow || "Doctoral Programme",
           description:
             data?.overview ||
             (isLoading
@@ -292,6 +413,9 @@ function PhDOnHoldPage() {
         stats={data?.stats || []}
         isLoading={isLoading}
       />
+
+      {/* PhD admission brochure */}
+      <ProgrammeBrochureSection programmeKey="phd" />
 
       {isLoading ? (
         <div className="mb-8">
@@ -318,9 +442,7 @@ function PhDOnHoldPage() {
         </div>
       ) : null}
 
-      {!isLoading &&
-      !isError &&
-      data?.rowCount === 0 ? (
+      {!isLoading && !isError && data?.rowCount === 0 ? (
         <div className="mb-8">
           {emptyState(
             "No PhD information found",
@@ -329,15 +451,14 @@ function PhDOnHoldPage() {
         </div>
       ) : null}
 
-            {/* Research areas (cards only, shown when the sheet has entries) */}
+      {/* Research Areas */}
       {data?.researchAreas?.length ? (
         <section className="mb-10">
           {renderCards(data.researchAreas, "")}
         </section>
       ) : null}
 
-      {/* Coursework and credits */}
-            {/* Coursework and credits (table only, shown when the sheet has entries) */}
+      {/* Coursework and Credits */}
       {data?.courseworkCredits?.length ? (
         <section className="mb-10">
           <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
@@ -355,39 +476,37 @@ function PhDOnHoldPage() {
               </thead>
 
               <tbody>
-                {data.courseworkCredits.map(
-                  (item, index) => (
-                    <tr
-                      key={`${item.title || "requirement"}-${index}`}
-                      className={`border-t border-gray-200 ${
-                        index % 2 === 0
-                          ? "bg-white"
-                          : "bg-purple-50/50"
-                      }`}
-                    >
-                      <td className="px-4 py-3 text-gray-800">
-                        {item.title || "—"}
+                {data.courseworkCredits.map((item, index) => (
+                  <tr
+                    key={`${item.title || "requirement"}-${index}`}
+                    className={`border-t border-gray-200 ${
+                      index % 2 === 0
+                        ? "bg-white"
+                        : "bg-purple-50/50"
+                    }`}
+                  >
+                    <td className="px-4 py-3 text-gray-800">
+                      {item.title || "—"}
 
-                        {item.description ? (
-                          <p className="mt-1 text-xs leading-5 text-gray-500">
-                            {item.description}
-                          </p>
-                        ) : null}
-                      </td>
+                      {item.description ? (
+                        <p className="mt-1 text-xs leading-5 text-gray-500">
+                          {item.description}
+                        </p>
+                      ) : null}
+                    </td>
 
-                      <td className="px-4 py-3 font-semibold text-purple-800">
-                        {item.value || "—"}
-                      </td>
-                    </tr>
-                  )
-                )}
+                    <td className="px-4 py-3 font-semibold text-purple-800">
+                      {item.value || "—"}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </section>
       ) : null}
 
-      {/* Research progress */}
+      {/* Research Progress */}
       <section className="mb-10">
         <div className="mb-5 border-b border-gray-200 pb-3">
           <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
@@ -423,12 +542,9 @@ function PhDOnHoldPage() {
         )}
       </section>
 
-      {/* Additional sections from the PhD sheet */}
+      {/* Additional Sections from PhD Sheet */}
       {data?.otherSections?.map((section) => (
-        <section
-          key={section.title}
-          className="mb-10"
-        >
+        <section key={section.title} className="mb-10">
           <div className="mb-5 border-b border-gray-200 pb-3">
             <h2 className="text-xl font-bold text-gray-900 md:text-2xl">
               {section.title}
@@ -478,6 +594,7 @@ function PhDOnHoldPage() {
 
               <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-purple-800">
                 {resource.label}
+
                 <span
                   aria-hidden="true"
                   className="transition-transform group-hover:translate-x-1"
@@ -612,11 +729,17 @@ export default function Programmes() {
     return {
       title: row?.name || routeFallback.title,
       subtitle: DEPARTMENT_NAME,
+
       eyebrow:
         row?.eyebrow ||
         routeFallback.eyebrow ||
         inferredEyebrow,
-         description: row?.description || routeFallback.description || "",
+
+      description:
+        row?.description ||
+        routeFallback.description ||
+        "",
+
       duration: row?.duration || "",
       semesters,
       level: inferredLevel,
@@ -658,7 +781,7 @@ export default function Programmes() {
 
     if (exactMatch.length > 0) return exactMatch;
 
-    // Use UG/PG only if the sheet has no programme assignments.
+    // Use UG/PG only if the sheet has no Programme assignments.
     if (!hasProgrammeAssignments && programme?.level) {
       return courses.filter(
         (course) => course.level === programme.level
@@ -715,7 +838,6 @@ export default function Programmes() {
   ]);
 
   // PhD uses its dedicated Google Sheet.
-  // All other programme pages use the original programme sheet.
   if (isPhD) {
     return <PhDOnHoldPage />;
   }
@@ -737,6 +859,13 @@ export default function Programmes() {
         stats={stats}
         isLoading={programmesLoading}
       />
+
+      {/* M.Tech with Research admission brochure */}
+      {canonicalRouteKey === "mtech-research" && (
+        <ProgrammeBrochureSection
+          programmeKey="mtech-research"
+        />
+      )}
 
       {programmesError ? (
         <section className="mb-6">
@@ -760,7 +889,7 @@ export default function Programmes() {
         </section>
       ) : null}
 
-      {/* Shown only when the sheet has eligibility text */}
+      {/* Eligibility */}
       {programme?.eligibility ? (
         <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
           <h2 className="text-lg font-semibold text-gray-900">
@@ -773,7 +902,7 @@ export default function Programmes() {
         </section>
       ) : null}
 
-      {/* Shown only when the sheet has a valid link */}
+      {/* Official programme link */}
       {programme?.officialLink ? (
         <section className="mb-8">
           {programme.officialLink.external ? (
@@ -798,7 +927,8 @@ export default function Programmes() {
         </section>
       ) : null}
 
-            <section>
+      {/* Course catalogue */}
+      <section>
         {coursesLoading ? (
           <Loading />
         ) : coursesError ? (

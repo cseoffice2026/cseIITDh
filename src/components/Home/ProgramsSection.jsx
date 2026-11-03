@@ -1,251 +1,974 @@
-import { Link } from "react-router-dom";
-import useAcademicPrograms from "../../hooks/useAcademicPrograms";
+import { lazy, Suspense, useMemo } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
-const fallbackHrefForProgram = (name = "") => {
-  const normalized = name.toLowerCase().replace(/[^a-z0-9]+/g, "");
+import CourseTable from "../components/Programmes/CourseTable";
+import Loading from "../components/Loading";
+import useAcademicPrograms from "../hooks/useAcademicPrograms";
+import useCourses from "../hooks/useCourses";
 
-  if (/phd|doctor/.test(normalized)) {
-    return "/admissions#phd";
-  }
+import {
+  getProgrammeKey,
+  getPhDProgrammePageData,
+} from "../api/api";
 
-  if (
-    /mtechbyresearch|mtr|msresearch|research.*mtech|mtech.*research/.test(
-      normalized
-    )
-  ) {
-    return "/admissions#ms";
-  }
-
-  if (/mtech|master/.test(normalized)) {
-    return "/admissions#mtech";
-  }
-
-  if (/btech|bachelor|undergraduate/.test(normalized)) {
-    return "/admissions#btech";
-  }
-
-  return "/admissions";
-};
-
-const getSafeHref = (value) => {
-  if (!value || typeof value !== "string") {
-    return "";
-  }
-
-  const candidate =
-    value.trim().match(/https?:\/\/[^\s)]+/i)?.[0] ||
-    value.trim();
-
-  if (/^https?:\/\//i.test(candidate)) {
-    try {
-      const parsed = new URL(candidate);
-
-      return parsed.protocol === "http:" ||
-        parsed.protocol === "https:"
-        ? parsed.href
-        : "";
-    } catch {
-      return "";
-    }
-  }
-
-  if (candidate.startsWith("/") && !candidate.startsWith("//")) {
-    return candidate;
-  }
-
-  return "";
-};
-
-const getProgramIcon = (name = "") => {
-  const normalized = name.toLowerCase();
-
-  if (/phd|doctor/.test(normalized)) return "fa-flask";
-  if (/research/.test(normalized)) return "fa-microscope";
-
-  if (/b\.?\s?tech|bachelor|undergraduate/.test(normalized)) {
-    return "fa-graduation-cap";
-  }
-
-  if (/m\.?\s?tech|master/.test(normalized)) {
-    return "fa-laptop-code";
-  }
-
-  return "fa-book-open";
-};
-
-const ProgrammeCard = ({ programme }) => {
-  const href =
-    getSafeHref(programme.link) ||
-    fallbackHrefForProgram(programme.name);
-
-  const isExternal = /^https?:\/\//i.test(href);
-
-  const facts = [
-    ...new Set(
-      [programme.duration, programme.category].filter(Boolean)
-    ),
-  ];
-
-  return (
-    <article className="group flex h-full flex-col overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
-      <div className="h-1.5 bg-purple-700" />
-
-      <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <div className="mb-5 flex items-start justify-between gap-3">
-          {programme.imageUrl && getSafeHref(programme.imageUrl) ? (
-            <img
-              src={getSafeHref(programme.imageUrl)}
-              alt=""
-              loading="lazy"
-              className="h-12 w-12 rounded-xl object-cover"
-            />
-          ) : (
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-purple-50 text-purple-800">
-              <i
-                aria-hidden="true"
-                className={`fas ${getProgramIcon(programme.name)} text-xl`}
-              />
-            </span>
-          )}
-
-          {programme.level && (
-            <span className="rounded-full bg-purple-50 px-3 py-1 text-xs font-semibold text-purple-800">
-              {programme.level}
-            </span>
-          )}
-        </div>
-
-        <h3 className="text-lg font-bold leading-snug text-gray-900">
-          {programme.name}
-        </h3>
-
-        {programme.description && (
-          <p className="mt-3 flex-1 text-sm leading-6 text-gray-600">
-            {programme.description}
-          </p>
-        )}
-
-        {facts.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-2">
-            {facts.map((fact) => (
-              <span
-                key={fact}
-                className="rounded-md bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700"
-              >
-                {fact}
-              </span>
-            ))}
-          </div>
-        )}
-
-        <div className="mt-auto pt-6">
-          {isExternal ? (
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-800 transition-colors hover:text-purple-950"
-            >
-              Explore programme
-              <span aria-hidden="true">→</span>
-            </a>
-          ) : (
-            <Link
-              to={href}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-800 transition-colors hover:text-purple-950"
-            >
-              Explore programme
-              <span aria-hidden="true">→</span>
-            </Link>
-          )}
-        </div>
-      </div>
-    </article>
-  );
-};
-
-const ProgrammeSkeleton = () => (
-  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-    {["one", "two", "three", "four"].map((item) => (
-      <div
-        key={item}
-        className="h-56 animate-pulse rounded-xl bg-gray-200"
-      />
-    ))}
-  </div>
+const BackToTopButton = lazy(() =>
+  import("../components/BackToTopButton")
 );
 
-export default function ProgramsSection() {
-  const {
-    data: programmes = [],
-    isLoading,
-    isError,
-    error,
-  } = useAcademicPrograms();
+const DEPARTMENT_NAME =
+  "Department of Computer Science and Engineering";
+
+/* =========================================================
+   PROGRAMME ROUTE FALLBACKS
+   ========================================================= */
+
+const routeLabels = {
+  btech: {
+    title: "BTech",
+    level: "UG",
+    eyebrow: "Undergraduate Programme",
+    description:
+      "The B.Tech programme in Computer Science and Engineering builds a strong foundation in programming, algorithms, computer systems and the theory of computing. Students can then specialise through electives, laboratories and projects.",
+  },
+
+  mtech: {
+    title: "MTech",
+    level: "PG",
+    eyebrow: "Postgraduate Programme",
+    description:
+      "The M.Tech programme offers advanced coursework in areas such as algorithms, machine learning, computer networks and software systems, along with a technical project.",
+  },
+
+  "mtech-research": {
+    title: "MTech with Research",
+    level: "PG",
+    eyebrow: "Postgraduate Research Programme",
+    description:
+      "The M.Tech with Research programme combines advanced coursework with research work carried out under the guidance of the department's faculty members.",
+  },
+};
+
+/* =========================================================
+   COMMON HELPERS
+   ========================================================= */
+
+const prettifyRoute = (value) =>
+  String(value ?? "")
+    .split("-")
+    .filter(Boolean)
+    .map(
+      (part) =>
+        part.charAt(0).toUpperCase() + part.slice(1)
+    )
+    .join(" ");
+
+const safeLink = (value) => {
+  const candidate = String(value ?? "").trim();
+
+  if (!candidate) return null;
+
+  if (
+    candidate.startsWith("/") &&
+    !candidate.startsWith("//")
+  ) {
+    return {
+      href: candidate,
+      external: false,
+    };
+  }
+
+  try {
+    const parsed = new URL(candidate);
+
+    if (
+      parsed.protocol === "http:" ||
+      parsed.protocol === "https:"
+    ) {
+      return {
+        href: parsed.href,
+        external: true,
+      };
+    }
+  } catch {
+    // Ignore invalid URLs supplied by the sheet.
+  }
+
+  return null;
+};
+
+const isLab = (course) =>
+  /\blab(?:oratory)?\b/i.test(course.name || "");
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+function EmptyState({
+  title = "Information not available",
+  children,
+}) {
+  return (
+    <div className="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3 text-sm leading-6 text-gray-600">
+      <p className="font-semibold text-gray-800">
+        {title}
+      </p>
+
+      <p className="mt-1">{children}</p>
+    </div>
+  );
+}
+
+/* =========================================================
+   ADMISSION BROCHURES
+   VIEW ONLINE + DOWNLOAD PDF
+   ========================================================= */
+
+const PROGRAMME_BROCHURES = {
+  "mtech-research": {
+    title: "M.Tech. by Research Admission Brochure",
+    session: "Spring 2026–27",
+
+    fileName:
+      "MTech-by-Research-Admission-Brochure-Spring-2026-27.pdf",
+
+    fileUrl: `${import.meta.env.BASE_URL}documents/MTech-by-Research-Admission-Brochure-Spring-2026-27.pdf`,
+
+    description:
+      "Official IIT Dharwad information brochure for M.Tech. by Research admissions, Spring 2026–27.",
+  },
+
+  phd: {
+    title: "Ph.D. Admission Brochure",
+    session: "Spring 2026–27",
+
+    fileName:
+      "PhD-Admission-Brochure-Spring-2026-27.pdf",
+
+    fileUrl: `${import.meta.env.BASE_URL}documents/PhD-Admission-Brochure-Spring-2026-27.pdf`,
+
+    description:
+      "Official IIT Dharwad information brochure for Ph.D. admissions, Spring 2026–27.",
+  },
+};
+
+function ProgrammeBrochureSection({ programmeKey }) {
+  const brochure = PROGRAMME_BROCHURES[programmeKey];
+
+  if (!brochure) return null;
 
   return (
-    <section
-      id="academic-programmes"
-      className="py-8 scroll-mt-[136px]"
-    >
-      <div className="mb-7 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
-        <div>
-          <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-purple-700">
-            Academics
-          </p>
+    <section className="mb-8 rounded-xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
-          <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-            Academic Programmes
-          </h2>
+        <div className="flex items-start gap-3">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+            <i
+              className="fas fa-file-pdf text-xl"
+              aria-hidden="true"
+            />
+          </span>
 
-          <p className="mt-2 max-w-2xl text-sm leading-6 text-gray-600 sm:text-base">
-            Explore the academic programmes offered by the Department of
-            Computer Science and Engineering.
-          </p>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
+              Official Admission Document · {brochure.session}
+            </p>
+
+            <h2 className="mt-1 text-lg font-bold text-gray-900">
+              {brochure.title}
+            </h2>
+
+            <p className="mt-1 text-sm leading-6 text-gray-600">
+              {brochure.description}
+            </p>
+          </div>
         </div>
 
-        <Link
-          to="/admissions"
-          className="inline-flex shrink-0 items-center gap-2 self-start text-sm font-semibold text-purple-800 transition-colors hover:text-purple-950 sm:self-auto"
-        >
-          All Programmes
-          <span aria-hidden="true">→</span>
-        </Link>
+        <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
+
+          {/* View brochure */}
+          <a
+            href={brochure.fileUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 rounded-md border border-purple-200 bg-white px-4 py-2.5 text-sm font-semibold text-purple-800 transition hover:bg-purple-50"
+          >
+            <i className="fas fa-eye" aria-hidden="true" />
+            View brochure
+          </a>
+
+          {/* Download brochure */}
+          <a
+            href={brochure.fileUrl}
+            download={brochure.fileName}
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-purple-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-800"
+          >
+            <i className="fas fa-download" aria-hidden="true" />
+            Download PDF
+          </a>
+        </div>
       </div>
 
-      {isLoading ? (
-        <ProgrammeSkeleton />
-      ) : isError ? (
-        <div className="rounded-lg border border-amber-200 bg-amber-50 p-5 text-sm text-amber-900">
-          <p className="font-semibold">
-            Academic programmes are temporarily unavailable.
-          </p>
+      {/* Embedded PDF preview */}
+      <details className="mt-5 border-t border-gray-100 pt-4">
+        <summary className="cursor-pointer text-sm font-semibold text-purple-800 marker:text-purple-700 hover:text-purple-950">
+          Preview brochure on this page
+        </summary>
 
-          <p className="mt-1">
-            Check that the Google Sheet is shared as “Anyone with the link —
-            Viewer” or published to the web.
-          </p>
-
-          {import.meta.env.DEV && error?.message && (
-            <p className="mt-2 break-words text-xs text-amber-800">
-              Details: {error.message}
-            </p>
-          )}
+        <div className="mt-4 overflow-hidden rounded-lg border border-gray-200 bg-gray-50">
+          <iframe
+            title={brochure.title}
+            src={`${brochure.fileUrl}#view=FitH&toolbar=1`}
+            className="h-[65vh] min-h-[420px] w-full"
+            loading="lazy"
+          />
         </div>
-      ) : programmes.length > 0 ? (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-          {programmes.map((programme, index) => (
-            <ProgrammeCard
-              key={`${programme.id || programme.name}-${index}`}
-              programme={programme}
-            />
+
+        <p className="mt-2 text-xs text-gray-500">
+          If the preview is not supported by your browser, use View
+          brochure to open the PDF in a new tab or Download PDF to save it.
+        </p>
+      </details>
+    </section>
+  );
+}
+
+/* =========================================================
+   PROGRAMME HERO
+   ========================================================= */
+
+function ProgrammeHero({
+  programme,
+  stats = [],
+  isLoading = false,
+}) {
+  return (
+    <section
+      id="programmes-top"
+      className="mb-8 w-full rounded-lg border border-gray-200 border-l-4 border-l-purple-800 bg-white px-6 py-7 md:px-8"
+    >
+      <p className="text-sm font-medium text-purple-800">
+        {programme.eyebrow || "Academic Programme"}
+      </p>
+
+      <h1 className="mt-1 text-3xl font-bold leading-tight text-gray-900 md:text-4xl">
+        {programme.title}
+
+        {programme.subtitle ? (
+          <span className="mt-1 block text-lg font-medium text-purple-800 md:text-xl">
+            {programme.subtitle}
+          </span>
+        ) : null}
+      </h1>
+
+      <p className="mt-4 w-full max-w-4xl whitespace-pre-line text-base leading-7 text-gray-700">
+        {programme.description ||
+          (isLoading
+            ? "Loading programme information from the Google Sheet…"
+            : "Programme description is not available in the Google Sheet yet.")}
+      </p>
+
+      {stats.length > 0 ? (
+        <dl className="mt-6 flex flex-wrap gap-x-12 gap-y-4 border-t border-gray-200 pt-5">
+          {stats.map((stat, index) => (
+            <div key={`${stat.label}-${index}`}>
+              <dd className="text-xl font-semibold text-gray-900">
+                {stat.value || "—"}
+              </dd>
+
+              <dt className="mt-0.5 text-sm text-gray-500">
+                {stat.label}
+              </dt>
+            </div>
           ))}
-        </div>
-      ) : (
-        <p className="rounded-lg bg-gray-100 p-5 text-sm text-gray-600">
-          No academic programmes are currently listed.
+        </dl>
+      ) : isLoading ? null : (
+        <p className="mt-5 border-t border-gray-200 pt-4 text-sm text-gray-500">
+          Programme statistics are not available yet.
         </p>
       )}
     </section>
+  );
+}
+
+/* =========================================================
+   PHD PAGE
+   USES THE DEDICATED PHD GOOGLE SHEET
+   ========================================================= */
+
+function PhDOnHoldPage() {
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["phd-programme-page"],
+    queryFn: getPhDProgrammePageData,
+    staleTime: 30 * 1000,
+    refetchInterval: 60 * 1000,
+    refetchIntervalInBackground: false,
+    refetchOnWindowFocus: true,
+    retry: 1,
+  });
+
+  const emptyState = (title, message) => (
+    <div className="rounded-lg border border-gray-200 bg-white p-4">
+      <h3 className="text-sm font-semibold text-gray-900">
+        {title}
+      </h3>
+
+      <p className="mt-1 text-sm leading-6 text-gray-600">
+        {message}
+      </p>
+    </div>
+  );
+
+  const renderCards = (items, emptyMessage) => {
+    if (!items?.length) {
+      return emptyState(
+        "Information not available yet",
+        emptyMessage
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {items.map((item, index) => (
+          <article
+            key={
+              item.id ||
+              `${item.title || item.label || "item"}-${index}`
+            }
+            className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-purple-200 hover:shadow-md"
+          >
+            <h3 className="text-base font-semibold text-gray-900">
+              {item.title ||
+                item.label ||
+                `Item ${index + 1}`}
+            </h3>
+
+            {item.value ? (
+              <p className="mt-2 text-sm font-semibold text-purple-800">
+                {item.value}
+              </p>
+            ) : null}
+
+            {item.description ? (
+              <p className="mt-2 whitespace-pre-line text-sm leading-6 text-gray-600">
+                {item.description}
+              </p>
+            ) : null}
+
+            {item.link ? (
+              <a
+                href={item.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-3 inline-flex text-sm font-semibold text-purple-800 hover:text-purple-950"
+              >
+                Read more <span className="ml-1">↗</span>
+              </a>
+            ) : null}
+          </article>
+        ))}
+      </div>
+    );
+  };
+
+  const resourceLinks = [
+    {
+      title: "CSE Department — PhD Information",
+      description:
+        "Departmental PhD programme information, research areas, eligibility and selection procedures.",
+      url: "https://cse.iitdh.ac.in/admissions",
+      label: "Visit CSE Department",
+    },
+    {
+      title: "IIT Dharwad — PhD Admissions",
+      description:
+        "PhD admission notices, application information and admission brochures.",
+      url: "https://www.iitdh.ac.in/phd",
+      label: "View PhD Admissions",
+    },
+    {
+      title: "PhD Rules and Regulations",
+      description:
+        "Institute doctoral rulebook covering coursework, credit requirements and research regulations.",
+      url: "https://www.iitdh.ac.in/sites/default/files/2026-02/PhD%20Rulebook%20_Rulebook_27Jul25%20%281%29_0.pdf",
+      label: "Read PhD Rulebook",
+    },
+    {
+      title: "Doctoral Programme — IIT Dharwad",
+      description:
+        "Institute doctoral programme information and regulations.",
+      url: "https://www.iitdh.ac.in/doctoral-0",
+      label: "Visit Doctoral Page",
+    },
+  ];
+
+  return (
+    <div className="px-4 py-6 md:px-8">
+
+      <ProgrammeHero
+        programme={{
+          title: data?.title || "PhD",
+          subtitle: DEPARTMENT_NAME,
+          eyebrow:
+            data?.eyebrow || "Doctoral Programme",
+          description:
+            data?.overview ||
+            (isLoading
+              ? "Loading PhD programme information from the Google Sheet…"
+              : "The programme overview has not been added to the connected PhD Google Sheet yet."),
+        }}
+        stats={data?.stats || []}
+        isLoading={isLoading}
+      />
+
+      {/* PhD admission brochure */}
+      <ProgrammeBrochureSection programmeKey="phd" />
+
+      {isLoading ? (
+        <div className="mb-8">
+          <Loading />
+        </div>
+      ) : null}
+
+      {isError ? (
+        <div className="mb-8 rounded-lg border border-red-200 bg-red-50 p-4">
+          <h2 className="text-sm font-semibold text-red-900">
+            PhD information could not be loaded
+          </h2>
+
+          <p className="mt-1 text-sm leading-6 text-red-800">
+            Check that the PhD Google Sheet is publicly readable
+            and that its CSV export URL points to the correct tab.
+          </p>
+
+          {import.meta.env.DEV && error?.message ? (
+            <p className="mt-2 break-words text-xs text-red-800">
+              Details: {error.message}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
+
+      {!isLoading &&
+      !isError &&
+      data?.rowCount === 0 ? (
+        <div className="mb-8">
+          {emptyState(
+            "No PhD information found",
+            "The connected PhD Google Sheet contains no data rows yet."
+          )}
+        </div>
+      ) : null}
+
+      {/* Research Areas */}
+      {data?.researchAreas?.length ? (
+        <section className="mb-10">
+          {renderCards(data.researchAreas, "")}
+        </section>
+      ) : null}
+
+      {/* Coursework and Credits */}
+      {data?.courseworkCredits?.length ? (
+        <section className="mb-10">
+          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
+            <table className="w-full min-w-[500px] border-collapse text-left text-sm">
+              <thead className="bg-purple-800 text-white">
+                <tr>
+                  <th className="px-4 py-3 font-semibold">
+                    Requirement
+                  </th>
+
+                  <th className="px-4 py-3 font-semibold">
+                    Credits / Value
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {data.courseworkCredits.map(
+                  (item, index) => (
+                    <tr
+                      key={`${item.title || "requirement"}-${index}`}
+                      className={`border-t border-gray-200 ${
+                        index % 2 === 0
+                          ? "bg-white"
+                          : "bg-purple-50/50"
+                      }`}
+                    >
+                      <td className="px-4 py-3 text-gray-800">
+                        {item.title || "—"}
+
+                        {item.description ? (
+                          <p className="mt-1 text-xs leading-5 text-gray-500">
+                            {item.description}
+                          </p>
+                        ) : null}
+                      </td>
+
+                      <td className="px-4 py-3 font-semibold text-purple-800">
+                        {item.value || "—"}
+                      </td>
+                    </tr>
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ) : null}
+
+      {/* Research Progress */}
+      <section className="mb-10">
+        <div className="mb-5 border-b border-gray-200 pb-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
+            Doctoral Journey
+          </p>
+
+          <h2 className="mt-2 text-xl font-bold text-gray-900 md:text-2xl">
+            Research Progress and Completion
+          </h2>
+        </div>
+
+        {renderCards(
+          data?.researchStages,
+          "No research milestones, thesis stages or defence information have been added yet."
+        )}
+      </section>
+
+      {/* Admissions */}
+      <section className="mb-10">
+        <div className="mb-5 border-b border-gray-200 pb-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
+            Prospective Candidates
+          </p>
+
+          <h2 className="mt-2 text-xl font-bold text-gray-900 md:text-2xl">
+            Admission and Selection
+          </h2>
+        </div>
+
+        {renderCards(
+          data?.admissions,
+          "No eligibility, admission or selection information has been added to the connected sheet yet."
+        )}
+      </section>
+
+      {/* Additional Sections from PhD Sheet */}
+      {data?.otherSections?.map((section) => (
+        <section
+          key={section.title}
+          className="mb-10"
+        >
+          <div className="mb-5 border-b border-gray-200 pb-3">
+            <h2 className="text-xl font-bold text-gray-900 md:text-2xl">
+              {section.title}
+            </h2>
+          </div>
+
+          {renderCards(
+            section.items,
+            "No entries are available in this section yet."
+          )}
+        </section>
+      ))}
+
+      {/* Rules and Further Information */}
+      <section className="mb-8">
+        <div className="mb-5 border-b border-gray-200 pb-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
+            Official Resources
+          </p>
+
+          <h2 className="mt-2 text-xl font-bold text-gray-900 md:text-2xl">
+            Rules and Further Information
+          </h2>
+
+          <p className="mt-2 text-sm leading-6 text-gray-600">
+            Refer to the official institute and department websites
+            for regulations, admission requirements and updates.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          {resourceLinks.map((resource) => (
+            <a
+              key={resource.title}
+              href={resource.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group flex h-full flex-col rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-purple-300 hover:shadow-md"
+            >
+              <h3 className="text-base font-semibold text-gray-900 transition-colors group-hover:text-purple-800">
+                {resource.title}
+              </h3>
+
+              <p className="mt-2 flex-1 text-sm leading-6 text-gray-600">
+                {resource.description}
+              </p>
+
+              <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-purple-800">
+                {resource.label}
+
+                <span
+                  aria-hidden="true"
+                  className="transition-transform group-hover:translate-x-1"
+                >
+                  ↗
+                </span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <div className="flex justify-center py-4">
+        <a
+          href="#programmes-top"
+          className="inline-flex items-center rounded-md bg-purple-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-purple-800"
+        >
+          Back to Top
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* =========================================================
+   MAIN PROGRAMMES ROUTER
+   ========================================================= */
+
+export default function Programmes() {
+  const params = useParams();
+
+  const programmeId = String(params["*"] ?? "")
+    .replace(/^\/+|\/+$/g, "")
+    .toLowerCase();
+
+  const canonicalRouteKey =
+    getProgrammeKey(programmeId) || programmeId;
+
+  const isPhD = canonicalRouteKey === "phd";
+
+  const {
+    data: sheetProgrammes = [],
+    isLoading: programmesLoading,
+    isError: programmesError,
+    error: programmesErrorDetails,
+  } = useAcademicPrograms();
+
+  const {
+    data: courses = [],
+    isLoading: coursesLoading,
+    isError: coursesError,
+    error: courseError,
+  } = useCourses({
+    enabled: !isPhD,
+  });
+
+  const sheetProgramme = useMemo(() => {
+    if (isPhD) return null;
+
+    return (
+      sheetProgrammes.find((item) => {
+        const keys = [
+          item.routeKey,
+          item.key,
+          item.categoryKey,
+          getProgrammeKey(item.name),
+        ]
+          .filter(Boolean)
+          .map((value) => String(value).toLowerCase());
+
+        return (
+          keys.includes(canonicalRouteKey) ||
+          keys.includes(programmeId)
+        );
+      }) || null
+    );
+  }, [
+    sheetProgrammes,
+    canonicalRouteKey,
+    programmeId,
+    isPhD,
+  ]);
+
+  const routeFallback = useMemo(
+    () =>
+      routeLabels[canonicalRouteKey] || {
+        title: prettifyRoute(programmeId) || "Programme",
+        level: "",
+        eyebrow: "Academic Programme",
+      },
+    [canonicalRouteKey, programmeId]
+  );
+
+  const programme = useMemo(() => {
+    if (isPhD) return null;
+
+    const row = sheetProgramme;
+
+    const rawLevel = String(
+      row?.level ?? ""
+    ).toUpperCase();
+
+    const inferredLevel =
+      /\bUG\b|UNDERGRADUATE/.test(rawLevel)
+        ? "UG"
+        : /\bPG\b|POSTGRADUATE/.test(rawLevel)
+          ? "PG"
+          : routeFallback.level;
+
+    const key =
+      row?.categoryKey ||
+      getProgrammeKey(row?.name) ||
+      canonicalRouteKey;
+
+    const inferredEyebrow =
+      key === "mtech-research"
+        ? "Postgraduate Research Programme"
+        : inferredLevel === "UG"
+          ? "Undergraduate Programme"
+          : inferredLevel === "PG"
+            ? "Postgraduate Programme"
+            : "Academic Programme";
+
+    const semesterCount = Number(row?.semesters);
+
+    const semesters =
+      Number.isFinite(semesterCount) &&
+      semesterCount > 0
+        ? semesterCount
+        : null;
+
+    return {
+      title: row?.name || routeFallback.title,
+      subtitle: DEPARTMENT_NAME,
+
+      eyebrow:
+        row?.eyebrow ||
+        routeFallback.eyebrow ||
+        inferredEyebrow,
+
+      description:
+        row?.description ||
+        routeFallback.description ||
+        "",
+
+      duration: row?.duration || "",
+      semesters,
+      level: inferredLevel,
+      eligibility: row?.eligibility || "",
+      officialLink: safeLink(row?.link),
+      category: row?.category || "",
+      hasSheetRecord: Boolean(row),
+    };
+  }, [
+    isPhD,
+    sheetProgramme,
+    routeFallback,
+    canonicalRouteKey,
+  ]);
+
+  const programmeKey =
+    sheetProgramme?.categoryKey ||
+    getProgrammeKey(sheetProgramme?.name) ||
+    canonicalRouteKey;
+
+  const programmeCourses = useMemo(() => {
+    if (isPhD || !courses.length) return [];
+
+    const hasProgrammeAssignments = courses.some(
+      (course) => course.programmeName
+    );
+
+    const exactMatch = courses.filter((course) => {
+      const key =
+        course.programmeKey ||
+        course.programmeRouteKey;
+
+      return (
+        key &&
+        String(key).toLowerCase() ===
+          String(programmeKey).toLowerCase()
+      );
+    });
+
+    if (exactMatch.length > 0) return exactMatch;
+
+    // Use UG/PG only if the sheet has no Programme assignments.
+    if (!hasProgrammeAssignments && programme?.level) {
+      return courses.filter(
+        (course) => course.level === programme.level
+      );
+    }
+
+    return [];
+  }, [
+    isPhD,
+    courses,
+    programmeKey,
+    programme?.level,
+  ]);
+
+  const stats = useMemo(() => {
+    if (!programme) return [];
+
+    const result = [];
+
+    if (programme.duration) {
+      result.push({
+        label: "Duration",
+        value: programme.duration,
+      });
+    } else if (programme.semesters) {
+      result.push({
+        label: "Semesters",
+        value: programme.semesters,
+      });
+    }
+
+    if (
+      !coursesLoading &&
+      !coursesError &&
+      programmeCourses.length > 0
+    ) {
+      result.push({
+        label: "Catalogue Courses",
+        value: programmeCourses.length,
+      });
+
+      result.push({
+        label: "Lab Courses",
+        value: programmeCourses.filter(isLab).length,
+      });
+    }
+
+    return result;
+  }, [
+    programme,
+    programmeCourses,
+    coursesLoading,
+    coursesError,
+  ]);
+
+  // PhD uses its dedicated Google Sheet.
+  // Other programme pages use the original programme sheet.
+  if (isPhD) {
+    return <PhDOnHoldPage />;
+  }
+
+  const programmeNotFound =
+    !programmesLoading &&
+    !programmesError &&
+    !sheetProgramme;
+
+  const courseHeading =
+    sheetProgramme?.shortName ||
+    sheetProgramme?.name ||
+    routeFallback.title;
+
+  return (
+    <div className="px-4 py-6 md:px-8">
+      <ProgrammeHero
+        programme={programme}
+        stats={stats}
+        isLoading={programmesLoading}
+      />
+
+      {/* M.Tech with Research admission brochure */}
+      <ProgrammeBrochureSection
+        programmeKey={canonicalRouteKey}
+      />
+
+      {programmesError ? (
+        <section className="mb-6">
+          <EmptyState title="Programme information could not be loaded">
+            Check that the original Google Sheet is publicly readable
+            and that its CSV export URL is correct.
+
+            {import.meta.env.DEV &&
+            programmesErrorDetails?.message
+              ? ` Details: ${programmesErrorDetails.message}`
+              : ""}
+          </EmptyState>
+        </section>
+      ) : programmeNotFound ? (
+        <section className="mb-6">
+          <EmptyState title="No programme record was found">
+            There is no matching programme row for “
+            {routeFallback.title}” in the connected Google Sheet.
+            Check the Programme/Program column in the sheet.
+          </EmptyState>
+        </section>
+      ) : null}
+
+      {/* Eligibility */}
+      {programme?.eligibility ? (
+        <section className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+          <h2 className="text-lg font-semibold text-gray-900">
+            Eligibility
+          </h2>
+
+          <p className="mt-2 whitespace-pre-line text-sm leading-6 text-gray-700">
+            {programme.eligibility}
+          </p>
+        </section>
+      ) : null}
+
+      {/* Official programme link */}
+      {programme?.officialLink ? (
+        <section className="mb-8">
+          {programme.officialLink.external ? (
+            <a
+              href={programme.officialLink.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-800 hover:text-purple-950"
+            >
+              Official programme information
+              <span aria-hidden="true">↗</span>
+            </a>
+          ) : (
+            <Link
+              to={programme.officialLink.href}
+              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-800 hover:text-purple-950"
+            >
+              Programme information
+              <span aria-hidden="true">→</span>
+            </Link>
+          )}
+        </section>
+      ) : null}
+
+      {/* Course catalogue */}
+      <section>
+        {coursesLoading ? (
+          <Loading />
+        ) : coursesError ? (
+          <EmptyState title="Course information could not be loaded">
+            {courseError?.message ||
+              "Check that the Google Sheet is publicly readable and contains course rows."}
+          </EmptyState>
+        ) : programmeCourses.length > 0 ? (
+          <CourseTable courses={programmeCourses} />
+        ) : (
+          <EmptyState title="No course data is available for this programme">
+            The Google Sheet does not currently contain course rows
+            mapped to “{courseHeading}”. Add a Programme value to
+            the relevant course rows, or check the Proposed Level
+            (UG/PG) values if using a general UG/PG catalogue.
+          </EmptyState>
+        )}
+      </section>
+
+      <Suspense fallback={null}>
+        <BackToTopButton to="programmes-top" />
+      </Suspense>
+    </div>
   );
 }
