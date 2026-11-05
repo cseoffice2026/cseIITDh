@@ -2,7 +2,6 @@ const slugMap = {
   about: "about",
   academics: "academics",
   "about-pages": "about",
-  admissions: "admissions",
   "academic-pages": "academics",
   "contact-pages": "contact",
   contact: "contact",

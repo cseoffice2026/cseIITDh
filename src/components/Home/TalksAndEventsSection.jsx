@@ -1,3 +1,4 @@
+import { useLayoutEffect, useRef, useState } from "react";
 import { useTalksAndEvents } from "../../hooks/useTalksAndEvents";
 import { Link } from "react-router-dom";
 
@@ -120,7 +121,22 @@ const TalkCard = ({
   dateDisplay,
   description,
   links,
-}) => (
+}) => {
+  const abstractRef = useRef(null);
+  const [isClamped, setIsClamped] = useState(false);
+
+  // Show "See more" only when the abstract is longer than 3 lines.
+  useLayoutEffect(() => {
+    const el = abstractRef.current;
+    if (!el) return undefined;
+
+    const check = () => setIsClamped(el.scrollHeight > el.clientHeight + 1);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, [description]);
+
+  return (
   <div className="flex h-full flex-col rounded-lg bg-white p-4 shadow-sm transition-shadow duration-300 hover:shadow-md">
     <h3 className="mb-2 text-lg font-semibold text-gray-800">
       <span className="italic">Title:</span>{title}
@@ -179,10 +195,24 @@ const TalkCard = ({
     )}
 
     {description && (
-      <div className="mt-2 font-semibold">Abstract: {description}</div>
+      <div className="mt-2">
+        <p ref={abstractRef} className="line-clamp-3 text-sm leading-6 text-gray-600">
+          <span className="font-semibold text-gray-800">Abstract:</span>{" "}
+          {description}
+        </p>
+        {isClamped && (
+          <Link
+            to="/allTalksEvents"
+            className="mt-1 inline-block text-sm font-semibold text-blue-600 hover:underline"
+          >
+            See more →
+          </Link>
+        )}
+      </div>
     )}
   </div>
-);
+  );
+};
 
 export const TalkLoading = () => (
   <div className="space-y-4 animate-pulse">
@@ -288,7 +318,7 @@ export default function TalksAndEventsSection() {
           to="/allTalksEvents"
           className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700"
         >
-          View All Talks and Events
+          View All
         </Link>
       </div>
 

@@ -25,8 +25,7 @@ const routeLabels = {
     title: "BTech",
     level: "UG",
     eyebrow: "Undergraduate Programme",
-    description:
-      "The B.Tech programme in Computer Science and Engineering builds a strong foundation in programming, algorithms, computer systems and the theory of computing. Students can then specialise through electives, laboratories and projects.",
+    
   },
   mtech: {
     title: "MTech",
@@ -252,12 +251,12 @@ function ProgrammeHero({
         ) : null}
       </h1>
 
-      <p className="mt-4 w-full max-w-4xl whitespace-pre-line text-base leading-7 text-gray-700">
+      {/* <p className="mt-4 w-full max-w-4xl whitespace-pre-line text-base leading-7 text-gray-700">
         {programme.description ||
           (isLoading
             ? "Loading programme information from the Google Sheet…"
             : "Programme description is not available in the Google Sheet yet.")}
-      </p>
+      </p> */}
 
       {stats.length > 0 ? (
         <dl className="mt-6 flex flex-wrap gap-x-12 gap-y-4 border-t border-gray-200 pt-5">
@@ -314,66 +313,7 @@ function PhDOnHoldPage() {
     </div>
   );
 
-  const renderCards = (items, emptyMessage) => {
-    if (!items?.length) {
-      return emptyState(
-        "Information not available yet",
-        emptyMessage
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {items.map((item, index) => (
-          <article
-            key={
-              item.id ||
-              `${item.title || item.label || "item"}-${index}`
-            }
-            className="rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-purple-200 hover:shadow-md"
-          >
-            <h3 className="text-base font-semibold text-gray-900">
-              {item.title ||
-                item.label ||
-                `Item ${index + 1}`}
-            </h3>
-
-            {item.value ? (
-              <p className="mt-2 text-sm font-semibold text-purple-800">
-                {item.value}
-              </p>
-            ) : null}
-
-            {item.description ? (
-              <p className="mt-2 whitespace-pre-line text-sm leading-6 text-gray-600">
-                {item.description}
-              </p>
-            ) : null}
-
-            {item.link ? (
-              <a
-                href={item.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-3 inline-flex text-sm font-semibold text-purple-800 hover:text-purple-950"
-              >
-                Read more <span className="ml-1">↗</span>
-              </a>
-            ) : null}
-          </article>
-        ))}
-      </div>
-    );
-  };
-
   const resourceLinks = [
-    {
-      title: "CSE Department — PhD Information",
-      description:
-        "Departmental PhD programme information, research areas, eligibility and selection procedures.",
-      url: "https://cse.iitdh.ac.in/admissions",
-      label: "Visit CSE Department",
-    },
     {
       title: "IIT Dharwad — PhD Admissions",
       description:
@@ -451,13 +391,6 @@ function PhDOnHoldPage() {
         </div>
       ) : null}
 
-      {/* Research Areas */}
-      {data?.researchAreas?.length ? (
-        <section className="mb-10">
-          {renderCards(data.researchAreas, "")}
-        </section>
-      ) : null}
-
       {/* Coursework and Credits */}
       {data?.courseworkCredits?.length ? (
         <section className="mb-10">
@@ -505,58 +438,6 @@ function PhDOnHoldPage() {
           </div>
         </section>
       ) : null}
-
-      {/* Research Progress */}
-      <section className="mb-10">
-        <div className="mb-5 border-b border-gray-200 pb-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
-            Doctoral Journey
-          </p>
-
-          <h2 className="mt-2 text-xl font-bold text-gray-900 md:text-2xl">
-            Research Progress and Completion
-          </h2>
-        </div>
-
-        {renderCards(
-          data?.researchStages,
-          "No research milestones, thesis stages or defence information have been added yet."
-        )}
-      </section>
-
-      {/* Admissions */}
-      <section className="mb-10">
-        <div className="mb-5 border-b border-gray-200 pb-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
-            Prospective Candidates
-          </p>
-
-          <h2 className="mt-2 text-xl font-bold text-gray-900 md:text-2xl">
-            Admission and Selection
-          </h2>
-        </div>
-
-        {renderCards(
-          data?.admissions,
-          "No eligibility, admission or selection information has been added to the connected sheet yet."
-        )}
-      </section>
-
-      {/* Additional Sections from PhD Sheet */}
-      {data?.otherSections?.map((section) => (
-        <section key={section.title} className="mb-10">
-          <div className="mb-5 border-b border-gray-200 pb-3">
-            <h2 className="text-xl font-bold text-gray-900 md:text-2xl">
-              {section.title}
-            </h2>
-          </div>
-
-          {renderCards(
-            section.items,
-            "No entries are available in this section yet."
-          )}
-        </section>
-      ))}
 
       {/* Rules and Further Information */}
       <section className="mb-8">
@@ -819,7 +700,7 @@ export default function Programmes() {
       programmeCourses.length > 0
     ) {
       result.push({
-        label: "Catalogue Courses",
+        label: "Total Courses",
         value: programmeCourses.length,
       });
 

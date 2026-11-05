@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import useGalleryImages from "../../hooks/useGalleryImages";
 import GlobalError from "../GlobalError";
 import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline'; // Import icons
@@ -77,9 +78,10 @@ const Gallery = () => {
       )}
 
       {/* Modal with navigation */}
-      {selectedImageIndex !== null && (
+      {selectedImageIndex !== null &&
+        createPortal(
         <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50 p-4"
+          className="fixed inset-0 bg-black/80 flex items-center justify-center z-[200] p-4"
           onClick={() => setSelectedImageIndex(null)}
         >
           <div
@@ -130,7 +132,8 @@ const Gallery = () => {
               <XMarkIcon className="h-5 w-5" />
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

@@ -52,7 +52,7 @@ export default function NewsSection() {
           to="/allnews"
           className="text-sm bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 transition font-medium"
         >
-          View All News and Announcements
+          View All
         </Link>
       </div>
 

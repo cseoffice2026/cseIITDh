@@ -1218,52 +1218,38 @@ export const getAcademicFaq = async () => {
 	}));
 };
 
-/**
- * Fetch Admissions information.
- */
-export const getAdmissionsInfo = async () => {
-	const { data } = await axiosInstance.get("/admissions-pages");
-	const admissionsInfo = data?.data?.[0]?.allData;
-
-	if (!admissionsInfo || typeof admissionsInfo !== "object") {
-		throw new Error("Fetched Admissions data is not in the expected format.");
-	}
-
-	return admissionsInfo;
-};
 
 /**
  * Fetch People information and sort by last name.
  */
 export const getPeopleInfo = async () => {
-	const { data } = await axiosInstance.get(
-		"/peoples?pagination[pageSize]=50",
-	);
+	const pageSize = 100;
+	let page = 1;
+	let pageCount = 1;
+	const all = [];
 
-	if (!data || !Array.isArray(data.data)) {
-		throw new Error("Fetched People data is not in the expected format.");
-	}
-
-	const getLastName = (fullName) => {
-		if (!fullName || typeof fullName !== "string") {
-			return "";
+	do {
+		const { data } = await axiosInstance.get(
+			`/peoples?pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+		);
+		if (!data || !Array.isArray(data.data)) {
+			throw new Error("Fetched People data is not in the expected format.");
 		}
+		all.push(...data.data);
+		pageCount = data.meta?.pagination?.pageCount ?? 1;
+		page += 1;
+	} while (page <= pageCount);
 
+	// ...keep your existing last-name sort, but use `all` instead of `data.data`
+	const getLastName = (fullName) => {
+		if (!fullName || typeof fullName !== "string") return "";
 		const parts = fullName.trim().split(" ");
 		return parts[parts.length - 1];
 	};
 
-	const sortedData = [...data.data].sort((a, b) => {
-		const fullNameA = a?.Name;
-		const fullNameB = b?.Name;
-
-		const lastNameA = getLastName(fullNameA).toLowerCase();
-		const lastNameB = getLastName(fullNameB).toLowerCase();
-
-		return lastNameA.localeCompare(lastNameB);
-	});
-
-	return sortedData;
+	return [...all].sort((a, b) =>
+		getLastName(a?.Name).toLowerCase().localeCompare(getLastName(b?.Name).toLowerCase()),
+	);
 };
 
 /**
