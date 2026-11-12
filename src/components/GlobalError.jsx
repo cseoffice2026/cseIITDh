@@ -39,7 +39,7 @@ export default function GlobalError({ error, resetErrorBoundary }) {
           <button
             type="button"
             onClick={resetErrorBoundary}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300"
+            className="px-4 py-2 bg-[#19007B] text-white rounded-md hover:bg-[#140063] transition duration-300"
           >
             Try Again
           </button>

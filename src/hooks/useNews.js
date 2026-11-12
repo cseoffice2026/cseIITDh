@@ -31,15 +31,73 @@ const formatDateDisplay = (dateString, date) => {
 		: dateString;
 };
 
+const formatApplicationDate = (dateString) => {
+	if (!dateString) return "";
+
+	const isoDate = dateString.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+	if (isoDate) {
+		const [, year, month, day] = isoDate;
+		return new Date(Number(year), Number(month) - 1, Number(day))
+			.toLocaleDateString("en-US", {
+				year: "numeric",
+				month: "long",
+				day: "numeric",
+			});
+	}
+
+	const parsedDate = parseDate(dateString);
+	return formatDateDisplay(dateString, parsedDate);
+};
+
+const extractApplicationDates = (description) => {
+	const patterns = {
+		applicationOpens: /\bapplication\s+opens?\s*[:\-–]?\s*(.+?)(?=\r?\n|$)/i,
+		applicationDeadline:
+			/\bapplication\s+deadline\s*[:\-–]?\s*(.+?)(?=\r?\n|$)/i,
+	};
+	let remainingDescription = description;
+	const dates = {};
+
+	for (const [field, pattern] of Object.entries(patterns)) {
+		const match = remainingDescription.match(pattern);
+		dates[field] = match?.[1]?.trim() || "";
+		if (match) remainingDescription = remainingDescription.replace(pattern, "");
+	}
+
+	return {
+		...dates,
+		description: remainingDescription
+			.replace(/\bimportant\s+dates\b[:\s-]*/gi, "")
+			.replace(/\n{2,}/g, "\n")
+			.trim(),
+	};
+};
+
 const transformNews = (news) =>
 	// Present data in the same order as it appears in the Google Sheet (no sorting)
 	news?.map((item) => {
-		const date = parseDate(item.date);
+		const publishedDate = item.date || item.published_date;
+		const date = parseDate(publishedDate);
+		const featuredValue = String(item.featured ?? "").toLowerCase();
+		const extractedDates = extractApplicationDates(item.description || "");
 		return {
-			title: item.Title || "",
+			title: item.title || item.Title || "",
 			date, // Date object (or null) for filtering/sorting
-			dateDisplay: formatDateDisplay(item.date, date),
-			description: item.description || "",
+			dateDisplay: formatDateDisplay(publishedDate, date),
+			description: extractedDates.description,
+			applicationOpens: formatApplicationDate(
+				item.applicationOpens ||
+					item.application_opens ||
+					extractedDates.applicationOpens,
+			),
+			applicationDeadline: formatApplicationDate(
+				item.applicationDeadline ||
+					item.application_deadline ||
+					extractedDates.applicationDeadline,
+			),
+			category: item.category || "News",
+			status: item.status || "",
+			featured: ["true", "yes", "1"].includes(featuredValue),
 			link: item.link || null,
 		};
 	}) || [];

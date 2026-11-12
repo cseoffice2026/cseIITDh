@@ -31,12 +31,12 @@ export default function SearchInput() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search"
-          className="w-28 rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-800 outline-none focus:border-purple-700 focus:ring-2 focus:ring-purple-200 xl:w-36"
+          className="w-28 rounded-md border border-gray-300 px-2 py-1.5 text-sm text-gray-800 outline-none focus:border-brand-700 focus:ring-2 focus:ring-brand-200 xl:w-36"
         />
         <button
           type="submit"
           aria-label="Search"
-          className="flex h-9 w-9 items-center justify-center rounded-md text-purple-800 hover:bg-purple-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700"
+          className="flex h-9 w-9 items-center justify-center rounded-md text-brand-800 hover:bg-brand-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
         >
           <SearchIcon />
         </button>
@@ -48,7 +48,7 @@ export default function SearchInput() {
         aria-expanded={isSearchOpen}
         aria-controls="compact-site-search"
         onClick={() => setIsSearchOpen((open) => !open)}
-        className="flex h-9 w-9 items-center justify-center rounded-md text-purple-800 hover:bg-purple-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700 lg:hidden"
+        className="flex h-9 w-9 items-center justify-center rounded-md text-brand-800 hover:bg-brand-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 lg:hidden"
       >
         <SearchIcon />
       </button>
@@ -70,11 +70,11 @@ export default function SearchInput() {
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search"
             autoFocus
-            className="min-w-0 flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-purple-700 focus:ring-2 focus:ring-purple-200"
+            className="min-w-0 flex-1 rounded-md border border-gray-300 px-3 py-2 text-sm text-gray-800 outline-none focus:border-brand-700 focus:ring-2 focus:ring-brand-200"
           />
           <button
             type="submit"
-            className="rounded-md bg-purple-800 px-3 py-2 text-sm font-semibold text-white hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-purple-700"
+            className="rounded-md bg-[#19007B] px-3 py-2 text-sm font-semibold text-white hover:bg-[#140063] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
           >
             Search
           </button>

@@ -18,7 +18,10 @@ const Programmes = lazy(() => import("./pages/Programmes")); // NEW
 const JoinAsFaculty = lazy(() => import("./pages/JoinAsFaculty"));
 const Contact = lazy(() => import("./pages/Contact"));
 const People = lazy(() => import("./pages/People"));
+const Students = lazy(() => import("./pages/Students"));
+const Alumni = lazy(() => import("./pages/Alumni"));
 const Research = lazy(() => import("./pages/Research"));
+const ResearchAreasPage = lazy(() => import("./pages/ResearchAreasPage"));
 const About = lazy(() => import("./pages/About"));
 const SearchResults = lazy(() => import("./pages/SearchResults"));
 const Allnews = lazy(() => import("./pages/Allnews"));
@@ -83,6 +86,14 @@ function App() {
                 />
 
                 <Route
+                  path="/people/students"
+                  element={<LazyRoute element={Students} />}
+                />
+                <Route
+                  path="/people/alumni"
+                  element={<LazyRoute element={Alumni} />}
+                />
+                <Route
                   path="/people"
                   element={<LazyRoute element={People} />}
                 />
@@ -93,6 +104,10 @@ function App() {
                 <Route
                   path="/contact"
                   element={<LazyRoute element={Contact} />}
+                />
+                <Route
+                  path="/research/research-areas"
+                  element={<LazyRoute element={ResearchAreasPage} />}
                 />
                 <Route
                   path="/research"

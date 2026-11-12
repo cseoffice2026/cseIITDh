@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import Loading from "../components/Loading";
 
 const ContactPoints = lazy(() =>
   import("../components/ContactUs/ContactPoints")
@@ -17,9 +18,7 @@ const LocationAndDirections = lazy(() =>
   import("../components/ContactUs/LocationAndDirections")
 );
 
-const fallback = (
-  <div className="text-center py-8 text-gray-400">Loading...</div>
-);
+const fallback = <Loading className="py-8" />;
 
 const Contact = () => {
   return (

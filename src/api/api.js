@@ -70,13 +70,29 @@ export const getNews = async () => {
 								]) || "";
 
 							const date = getValue([
+								"published_date",
+								"published date",
 								"date",
 								"news date",
-								"published date",
 								"publish date",
 								"datetime",
 							]);
 
+							const applicationOpens = getValue([
+								"application_opens",
+								"application opens",
+								"application open date",
+							]);
+
+							const applicationDeadline = getValue([
+								"application_deadline",
+								"application deadline",
+								"application closing date",
+							]);
+
+							const category = getValue(["category"]);
+							const status = getValue(["status"]);
+							const featured = getValue(["featured"]);
 							const link = getValue([
 								"link",
 								"url",
@@ -89,11 +105,18 @@ export const getNews = async () => {
 								Title: title,
 								date,
 								description,
+								applicationOpens,
+								applicationDeadline,
+								category,
+								status,
+								featured,
 								link,
 							};
 						});
 
-					resolve(transformedData);
+					resolve(
+						transformedData.filter((event) => event.Title),
+					);
 				},
 
 				error: (error) => {
@@ -117,6 +140,47 @@ export const getNews = async () => {
 };
 
 /**
+ * Fetch placement company names from Google Sheets CSV.
+ */
+export const getPlacementCompanies = async () => {
+	try {
+		const response = await axios.get(
+			constant.placementCompaniesSheetCSV,
+			{ responseType: "text" },
+		);
+		const results = Papa.parse(response.data, {
+			delimiter: ",",
+			header: true,
+			skipEmptyLines: true,
+			transformHeader: (header) =>
+				header.replace(/^\uFEFF/, "").trim().toLowerCase(),
+		});
+
+		if (results.errors.length > 0) {
+			throw new Error(
+				`Failed to parse placement companies CSV: ${results.errors[0].message}`,
+			);
+		}
+		if (!results.meta.fields?.includes("company name")) {
+			throw new Error(
+				'Placement companies CSV is missing the "Company Name" column.',
+			);
+		}
+
+		return results.data
+			.map((row) => row["company name"]?.trim())
+			.filter(Boolean);
+	} catch (error) {
+		console.error(
+			"Error fetching placement companies from Google Sheets:",
+			error,
+		);
+
+		throw error;
+	}
+};
+
+/**
  * Fetch Talks and Events from Google Sheets CSV.
  */
 export const getTalksAndEvents = async () => {
@@ -132,7 +196,8 @@ export const getTalksAndEvents = async () => {
 			Papa.parse(response.data, {
 				header: true,
 				skipEmptyLines: true,
-				transformHeader: (header) => header.trim().toLowerCase(),
+				transformHeader: (header) =>
+					header.replace(/^\uFEFF/, "").trim().toLowerCase(),
 
 				complete: (results) => {
 					if (
@@ -174,6 +239,12 @@ export const getTalksAndEvents = async () => {
 									"topic",
 								]) || "";
 
+							const eventType = getValue([
+								"event type",
+								"type",
+								"category",
+							]);
+
 							const speaker = getValue([
 								"speaker",
 								"speaker name",
@@ -212,12 +283,17 @@ export const getTalksAndEvents = async () => {
 								"event date",
 							]);
 
-							const eventTime = getValue([
-								"time",
-								"event time",
-								"timing",
-								"date/time",
-							]);
+							const startTime = getValue(["start time"]);
+							const endTime = getValue(["end time"]);
+							const eventTime =
+								getValue([
+									"time",
+									"event time",
+									"timing",
+									"date/time",
+								]) ||
+								[startTime, endTime].filter(Boolean).join(" - ") ||
+								null;
 
 							const date = getValue([
 								"date",
@@ -239,10 +315,22 @@ export const getTalksAndEvents = async () => {
 							const links = getValue([
 								"link",
 								"event links",
+								"gmeet link (if any)",
+								"gmeet link",
+							]);
+							const speakerBio = getValue([
+								"speaker bio-data",
+								"speaker bio data",
+								"speaker bio",
+							]);
+							const email = getValue([
+								"email address",
+								"email",
 							]);
 
 							return {
 								Title: title,
+								eventType,
 								Speaker: speaker,
 								designation,
 								venue,
@@ -253,6 +341,8 @@ export const getTalksAndEvents = async () => {
 								sortingDate: endDate || startDate || date,
 								description,
 								links,
+								speakerBio,
+								email,
 							};
 						});
 
@@ -412,6 +502,105 @@ const fetchAcademicSheetRows = async () => {
 	return parsed.data.filter((row) =>
 		Object.values(row).some((value) => String(value ?? "").trim() !== ""),
 	);
+};
+
+const semesterNames = [
+	"I",
+	"II",
+	"III",
+	"IV",
+	"V",
+	"VI",
+	"VII",
+	"VIII",
+];
+
+const getCatalogueLink = (value) => {
+	const text = String(value ?? "").trim();
+	if (!text) return null;
+
+	const formulaMatch = text.match(
+		/^=?\s*HYPERLINK\s*\(\s*["'](https?:\/\/[^"']+)["']\s*[,;]\s*["']([^"']*)["']\s*\)$/i,
+	);
+	const markdownMatch = text.match(/\[([^\]]*)\]\((https?:\/\/[^)]+)\)/i);
+	const urlMatch = text.match(/https?:\/\/[^\s)]+/i);
+	const href = formulaMatch?.[1] || markdownMatch?.[2] || urlMatch?.[0];
+	const label =
+		formulaMatch?.[2] ||
+		markdownMatch?.[1] ||
+		(urlMatch && text === urlMatch[0] ? "" : text);
+
+	if (!href) return { label, href: null };
+
+	try {
+		const parsed = new URL(href);
+		if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+			return { label, href: parsed.href };
+		}
+	} catch {
+		return { label, href: null };
+	}
+
+	return { label, href: null };
+};
+
+/** Fetch B.Tech batch and semester links from its public sheet. */
+export const getBTechProgrammeCatalogue = async () => {
+	const sheetUrl = constant.btechProgrammeCatalogueSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The B.Tech catalogue Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The B.Tech catalogue sheet did not return CSV data. Make the sheet publicly readable and verify its CSV URL.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: normalizeProgrammeHeader,
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the B.Tech catalogue sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = parsed.meta.fields || [];
+	const batchField = fields.find((field) => /^(batch|year|cohort)$/.test(field));
+	const semesterFields = semesterNames.map((name, index) => {
+		const numeral = String(index + 1);
+		return fields.find(
+			(field) =>
+				new RegExp(`^semester\\s*(${name.toLowerCase()}|${numeral})$`).test(
+					field,
+				),
+		);
+	});
+
+	if (!batchField || semesterFields.every((field) => !field)) {
+		throw new Error(
+			"The B.Tech catalogue sheet must include a Batch column and at least one Semester I–VIII column.",
+		);
+	}
+
+	return parsed.data
+		.filter((row) => String(row[batchField] ?? "").trim())
+		.map((row) => ({
+			batch: String(row[batchField]).trim(),
+			semesters: semesterFields.map((field) =>
+				field ? getCatalogueLink(row[field]) : null,
+			),
+		}));
 };
 
 /**
@@ -985,16 +1174,12 @@ export const getAcademicCourses = async () => {
 
 
 /**
- * Fetch Students from Google Sheets CSV.
- * Existing student division logic is preserved.
+ * Fetch Alumni from Google Sheets CSV.
  */
-export const getStudents = async () => {
-	const response = await axios.get(
-		constant.studentsSheetCSV,
-		{
-			responseType: "text",
-		},
-	);
+export const getAlumni = async () => {
+	const response = await axios.get(constant.alumniSheetCSV, {
+		responseType: "text",
+	});
 
 	const parsed = Papa.parse(response.data, {
 		header: true,
@@ -1004,23 +1189,73 @@ export const getStudents = async () => {
 
 	if (parsed.errors.length > 0) {
 		throw new Error(
-			`Failed to parse student roster CSV: ${parsed.errors[0].message}`,
+			`Failed to parse alumni roster CSV: ${parsed.errors[0].message}`,
 		);
 	}
 
 	const rows = parsed.data;
-
-	const headers = new Set(
-		Object.keys(rows[0] || {}),
+	const headers = new Set(Object.keys(rows[0] || {}));
+	const requiredHeaders = [
+		"roll no",
+		"alumni name",
+		"program",
+		"discipline",
+		"yog",
+		"gender",
+		"alumni email",
+	];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !headers.has(header),
 	);
 
-	const requiredHeaders = [
-		"degree",
-		"branch",
-		"roll no",
-		"name",
-	];
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`Alumni roster is missing required columns: ${missingHeaders.join(", ")}`,
+		);
+	}
 
+	return rows
+		.map((row) => ({
+			rollNo: (row["roll no"] || "").trim(),
+			name: (row["alumni name"] || "").trim(),
+			program: (row.program || "").trim(),
+			discipline: (row.discipline || "").trim(),
+			yog: (row.yog || "").trim(),
+			gender: (row.gender || "").trim(),
+			email: (row["alumni email"] || "").trim(),
+		}))
+		.filter((alumnus) => alumnus.name && alumnus.yog);
+};
+
+/**
+ * Fetch all student cohorts from the student roster sheet.
+ */
+export const getStudents = async () => {
+	const response = await axios.get(constant.studentsSheetCSV, {
+		responseType: "text",
+	});
+
+	const parsed = Papa.parse(response.data, {
+		header: true,
+		skipEmptyLines: true,
+		transformHeader: (header) =>
+			header.replace(/^\uFEFF/, "").trim().toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0) {
+		throw new Error(
+			`Failed to parse student roster CSV: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const headers = new Set(parsed.meta.fields || []);
+	const requiredHeaders = [
+		"roll no",
+		"student name",
+		"program",
+		"discipline",
+		"yoj",
+	];
 	const missingHeaders = requiredHeaders.filter(
 		(header) => !headers.has(header),
 	);
@@ -1031,101 +1266,22 @@ export const getStudents = async () => {
 		);
 	}
 
-	const studentsByDivision = {
-		"btech-cse": [],
-		"btech-mnc": [],
-		"mtech-cse": [],
-		mfr: [],
-	};
+	return parsed.data
+		.map((row) => {
+			const yoj = (row.yoj || "").trim();
 
-	const normalize = (value) =>
-		(value || "")
-			.toLowerCase()
-			.replace(/[^a-z0-9]/g, "");
-
-	const getDivision = (row) => {
-		const rollNo = (row["roll no"] || "").trim().toUpperCase();
-
-		if (/^MC\d+BT/.test(rollNo)) return "btech-mnc";
-		if (/^CS\d+BT/.test(rollNo)) return "btech-cse";
-		if (/^CS\d+MT/.test(rollNo)) return "mtech-cse";
-		if (/^CS\d+MR/.test(rollNo)) return "mfr";
-
-		const degree = normalize(row.degree);
-		const branch = normalize(row.branch);
-
-		const isBtech = degree === "btech";
-		const isMtech =
-			degree === "mtech" ||
-			degree === "mtechbyresearch";
-
-		if (
-			isBtech &&
-			[
-				"cse",
-				"computerscience",
-				"computerscienceengineering",
-			].includes(branch)
-		) {
-			return "btech-cse";
-		}
-
-		if (
-			isBtech &&
-			[
-				"mnc",
-				"mathcomputing",
-				"mathematicscomputing",
-			].includes(branch)
-		) {
-			return "btech-mnc";
-		}
-
-		if (
-			isMtech &&
-			(branch === "mtr" || degree === "mtechbyresearch")
-		) {
-			return "mfr";
-		}
-
-		if (
-			isMtech &&
-			[
-				"cse",
-				"computerscience",
-				"computerscienceengineering",
-			].includes(branch)
-		) {
-			return "mtech-cse";
-		}
-
-		return null;
-	};
-
-	for (const row of rows) {
-		const division = getDivision(row);
-		const rollNo = (row["roll no"] || "").trim();
-		const name = (row.name || "").trim();
-
-		if (division && rollNo && name) {
-			studentsByDivision[division].push({
-				rollNo,
-				name,
-			});
-		}
-	}
-
-	if (
-		!Object.values(studentsByDivision).some(
-			(students) => students.length > 0,
-		)
-	) {
-		throw new Error(
-			"No students in the roster matched the supported CSE divisions.",
-		);
-	}
-
-	return studentsByDivision;
+			return {
+				rollNo: (row["roll no"] || "").trim(),
+				name: (row["student name"] || "").trim(),
+				program: (row.program || "").trim(),
+				discipline: (row.discipline || "").trim(),
+				yoj,
+				year: yoj.match(/\d{4}/)?.[0] || "",
+				gender: (row.gender || "").trim(),
+				email: (row["student email"] || "").trim(),
+			};
+		})
+		.filter((student) => student.name && student.year);
 };
 
 /**
@@ -1191,56 +1347,358 @@ export const getCseConclaveSchedule = async () => {
 };
 
 /**
- * Fetch About page data from the API.
+ * Fetch About page content from the public Google Sheet.
  */
 export const getAboutPageData = async () => {
-	const { data } = await axiosInstance.get("/about-pages");
-	return data?.data;
+	const sheetUrl = constant.aboutPageSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The About page Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The About page sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the About page sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = ["title", "description"];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
+	);
+
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The About page sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	return parsed.data
+		.map((row, index) => ({
+			id: index,
+			Title: String(row.title ?? "").trim(),
+			Description: String(row.description ?? "")
+				.split(/\r?\n\s*\r?\n/)
+				.map((text) => text.trim())
+				.filter(Boolean)
+				.map((text) => ({
+					type: "paragraph",
+					children: [{ text }],
+				})),
+		}))
+		.filter((section) => section.Title);
 };
 
 /**
- * Fetch Academic Rules.
+ * Fetch Academic Rules from the public Google Sheet.
  */
 export const getAcademicRules = async () => {
-	const { data } = await axiosInstance.get("/academic-ruless");
-	return data?.data?.[0]?.Rules;
+	const sheetUrl = constant.academicRulesSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The Academic Rules Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The Academic Rules sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the Academic Rules sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = ["title", "description"];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
+	);
+
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The Academic Rules sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	const rulesRow = parsed.data.find(
+		(row) => String(row.title ?? "").trim().toLowerCase() === "academic rules",
+	);
+	if (!rulesRow) {
+		throw new Error(
+			'The Academic Rules sheet does not contain a row titled "Academic Rules".',
+		);
+	}
+
+	const lines = String(rulesRow.description ?? "")
+		.replace(/\\n/g, "\n")
+		.split(/\r?\n/)
+		.map((line) => line.trim())
+		.filter(Boolean);
+	const attendanceHeading = "attendance requirements";
+	const integrityHeading = "academic integrity";
+	const attendanceIndex = lines.findIndex(
+		(line) => line.toLowerCase() === attendanceHeading,
+	);
+	const integrityIndex = lines.findIndex(
+		(line) => line.toLowerCase() === integrityHeading,
+	);
+
+	if (attendanceIndex === -1 || integrityIndex === -1) {
+		throw new Error(
+			"The Academic Rules description must include Attendance Requirements and Academic Integrity sections.",
+		);
+	}
+
+	const attendanceLines = lines.slice(attendanceIndex + 1, integrityIndex);
+	const medicalNoteIndex = attendanceLines.findIndex((line) =>
+		/^[-•]\s*/.test(line),
+	);
+	const attendanceDescriptionLines =
+		medicalNoteIndex === -1
+			? attendanceLines
+			: attendanceLines.slice(0, medicalNoteIndex);
+	const attendanceDescription = attendanceDescriptionLines.join(" ");
+	const medicalAbsencesNote =
+		medicalNoteIndex === -1
+			? ""
+			: attendanceLines[medicalNoteIndex].replace(/^[-•]\s*/, "");
+
+	const integrityLines = lines.slice(integrityIndex + 1);
+	const consequencesIndex = integrityLines.findIndex((line) =>
+		/violations may result in:?/i.test(line),
+	);
+	const consequenceLines =
+		consequencesIndex === -1
+			? []
+			: integrityLines
+					.slice(consequencesIndex + 1)
+					.filter((line) => /^[-•]\s*/.test(line))
+					.map((line) => line.replace(/^[-•]\s*/, ""));
+	const integrityDescriptionLines =
+		consequencesIndex === -1
+			? integrityLines
+			: integrityLines.slice(0, consequencesIndex + 1);
+
+	const grades = String(rulesRow.grading ?? "")
+		.split(/\r?\n/)
+		.map((line) => line.trim())
+		.filter((line) => line.startsWith("|"))
+		.map((line) =>
+			line
+				.replace(/^\|/, "")
+				.replace(/\|$/, "")
+				.split("|")
+				.map((cell) => cell.trim()),
+		)
+		.filter(
+			(cells) =>
+				cells.length >= 3 &&
+				!cells.every((cell) => /^:?-{3,}:?$/.test(cell)),
+		)
+		.slice(1)
+		.map(([grade, percentageRange, gradePoints]) => ({
+			grade,
+			percentage_range: percentageRange,
+			grade_points: Number(gradePoints),
+		}));
+
+	if (grades.some((grade) => !Number.isFinite(grade.grade_points))) {
+		throw new Error(
+			"The Academic Rules grading content must include a Markdown table with Grade, Percentage Range, and Grade Points columns.",
+		);
+	}
+
+	return {
+		attendance_requirements: {
+			heading: "Attendance Requirements",
+			description: attendanceDescription,
+			medical_absences_note: medicalAbsencesNote,
+		},
+		...(grades.length > 0 && {
+			grading_policy: {
+				heading: "Grading Policy",
+				grades,
+			},
+		}),
+		academic_integrity: {
+			heading: "Academic Integrity",
+			description: integrityDescriptionLines.join(" "),
+			consequences: consequenceLines,
+		},
+	};
 };
 
 /**
- * Fetch Academic FAQs.
+ * Fetch Academic FAQs from the public Google Sheet.
  */
 export const getAcademicFaq = async () => {
-	const { data } = await axiosInstance.get("/acad-faqs");
+	const sheetUrl = constant.academicFaqSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The Academic FAQs Google Sheet URL is not configured.");
+	}
 
-	return data?.data?.map((item) => ({
-		question: item.Question,
-		answer: item.Answer,
-	}));
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The Academic FAQs sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the Academic FAQs sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = ["question", "answer"];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
+	);
+
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The Academic FAQs sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	return parsed.data
+		.map((row) => ({
+			question: String(row.question ?? "").trim(),
+			answer: String(row.answer ?? "").trim(),
+		}))
+		.filter((faq) => faq.question && faq.answer);
 };
 
 
 /**
- * Fetch People information and sort by last name.
+ * Fetch People information from Google Sheets and sort by last name.
  */
 export const getPeopleInfo = async () => {
-	const pageSize = 100;
-	let page = 1;
-	let pageCount = 1;
-	const all = [];
+	if (!constant.peopleSheetCSV) {
+		throw new Error("The People Google Sheet URL is not configured.");
+	}
 
-	do {
-		const { data } = await axiosInstance.get(
-			`/peoples?pagination[page]=${page}&pagination[pageSize]=${pageSize}`,
+	const response = await axios.get(constant.peopleSheetCSV, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The People sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
 		);
-		if (!data || !Array.isArray(data.data)) {
-			throw new Error("Fetched People data is not in the expected format.");
-		}
-		all.push(...data.data);
-		pageCount = data.meta?.pagination?.pageCount ?? 1;
-		page += 1;
-	} while (page <= pageCount);
+	}
 
-	// ...keep your existing last-name sort, but use `all` instead of `data.data`
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase()
+				.replace(/[_-]+/g, " ")
+				.replace(/\s+/g, " "),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the People sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = [
+		"role",
+		"name",
+		"designation",
+		"domain",
+		"email",
+		"website",
+	];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
+	);
+
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The People sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	const all = parsed.data
+		.map((row, index) => ({
+			documentId: index,
+			Role: String(row.role ?? "").trim(),
+			Name: String(row.name ?? "").trim(),
+			Designation: String(row.designation ?? "").trim(),
+			Domain: String(row.domain ?? "").trim(),
+			Email: String(row.email ?? "").trim(),
+			Website: String(row.website ?? "").trim(),
+			Contact: String(row.contact ?? "").trim(),
+			Image: String(row.image ?? "").trim(),
+			Period: String(row.period ?? "").trim(),
+			CurrentAffiliation: String(row["current affiliation"] ?? "").trim(),
+		}))
+		.filter((person) => person.Name);
+
 	const getLastName = (fullName) => {
 		if (!fullName || typeof fullName !== "string") return "";
 		const parts = fullName.trim().split(" ");
@@ -1253,41 +1711,308 @@ export const getPeopleInfo = async () => {
 };
 
 /**
- * Fetch Research Labs.
+ * Fetch Research Labs from the public Google Sheet.
  */
 export const getResearchData = async () => {
-	const { data } = await axiosInstance.get("/research-labs");
-	return data?.data;
+	const sheetUrl = constant.researchLabsSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The Research Labs Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The Research Labs sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the Research Labs sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = ["type", "name", "link"];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
+	);
+
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The Research Labs sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	return parsed.data
+		.map((row, index) => ({
+			documentId: index,
+			Type: String(row.type ?? "").trim(),
+			Name: String(row.name ?? "").trim(),
+			Link: String(row.link ?? "").trim(),
+		}))
+		.filter((lab) => lab.Name);
 };
 
-/**
- * Fetch Research Projects.
- */
+const normalizeResearchAreaHeader = (value) =>
+	String(value ?? "")
+		.replace(/^\uFEFF/, "")
+		.trim()
+		.toLowerCase()
+		.replace(/[_-]+/g, " ")
+		.replace(/\s+/g, " ");
+
+/** Fetch research areas from the public Google Sheet. */
+export const getResearchAreas = async () => {
+	const sheetUrl = constant.researchAreasSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The Research Areas Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The Research Areas sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: normalizeResearchAreaHeader,
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the Research Areas sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = parsed.meta.fields || [];
+	const sectorField = fields.find((field) => field === "sector");
+	const descriptionField = fields.find((field) => field === "description");
+	const facultyField = fields.find(
+		(field) => field === "faculty members" || field === "faculty",
+	);
+
+	if (!sectorField || !descriptionField || !facultyField) {
+		throw new Error(
+			"The Research Areas sheet must include Sector, Description, and Faculty Members columns.",
+		);
+	}
+
+	return parsed.data
+		.map((row) => ({
+			sector: String(row[sectorField] ?? "").trim(),
+			description: String(row[descriptionField] ?? "").trim(),
+			facultyMembers: String(row[facultyField] ?? "")
+				.split(/\r?\n|;/)
+				.map((name) => name.replace(/^\s*[-•]\s*/, "").trim())
+				.filter(Boolean),
+		}))
+		.filter((area) => area.sector);
+};
+
+/** Fetch Research Projects from the public Google Sheet. */
 export const getResearchProjectsData = async () => {
-	const { data } = await axiosInstance.get("/research-projects");
-	return data?.data;
+	const sheetUrl = constant.researchProjectsSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The Research Projects Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The Research Projects sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase()
+				.replace(/\s+/g, ""),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the Research Projects sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = [
+		"type",
+		"title",
+		"area",
+		"duration",
+		"pi",
+		"copi",
+		"currentstatus",
+	];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
+	);
+
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The Research Projects sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	return parsed.data
+		.map((row) => ({
+			Type: String(row.type ?? "").trim(),
+			Title: String(row.title ?? "").trim(),
+			Area: String(row.area ?? "").trim(),
+			Duration: String(row.duration ?? "").trim(),
+			PI: String(row.pi ?? "").trim(),
+			CoPI: String(row.copi ?? "").trim(),
+			CurrentStatus: String(row.currentstatus ?? "").trim(),
+		}))
+		.filter((project) => project.Title);
 };
 
 /**
- * Fetch Carousel images.
+ * Fetch carousel images from the public Google Sheet.
  */
 export const getCarouselImages = async () => {
-	const { data } = await axiosInstance.get(
-		"/carousel-imagess?populate=*",
+	const sheetUrl = constant.carouselImagesSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The Carousel Images Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The Carousel Images sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the Carousel Images sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = ["description", "link", "image"];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
 	);
 
-	return data?.data;
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The Carousel Images sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	return parsed.data
+		.map((row) => ({
+			description: String(row.description ?? "").trim(),
+			link: String(row.link ?? "").trim() || null,
+			image: String(row.image ?? "").trim(),
+		}))
+		.filter((item) => item.image);
 };
 
-/**
- * Fetch Gallery images.
- */
+/** Fetch Gallery images from the public Google Sheet. */
 export const getGalleryImages = async () => {
-	const { data } = await axiosInstance.get(
-		"/gallery-images?populate=*",
+	const sheetUrl = constant.galleryImagesSheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The Gallery images Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The Gallery sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the Gallery sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = ["description", "image"];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
 	);
 
-	return data?.data;
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The Gallery sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	return parsed.data
+		.map((row) => ({
+			url: String(row.image ?? "").trim(),
+			description: String(row.description ?? "").trim(),
+		}))
+		.filter((image) => image.url);
 };
 
 /**
@@ -1314,14 +2039,75 @@ export const getSearchResult = async (query) => {
 };
 
 /**
- * Fetch Join as Faculty page data.
+ * Fetch Join as Faculty page data from the public Google Sheet.
  */
 export const getJoinAsFacultyData = async () => {
-	const { data } = await axiosInstance.get(
-		"/join-as-faculty-pages",
+	const sheetUrl = constant.joinAsFacultySheetCSV;
+	if (!sheetUrl) {
+		throw new Error("The Join as Faculty Google Sheet URL is not configured.");
+	}
+
+	const response = await axios.get(sheetUrl, {
+		responseType: "text",
+		params: { _ts: Date.now() },
+	});
+	const csvText = String(response.data ?? "").trim();
+
+	if (!csvText || /<\s*!doctype\s+html|<\s*html[\s>]/i.test(csvText)) {
+		throw new Error(
+			"The Join as Faculty sheet did not return CSV data. Make the sheet publicly readable or publish the tab to the web.",
+		);
+	}
+
+	const parsed = Papa.parse(csvText, {
+		header: true,
+		skipEmptyLines: "greedy",
+		transformHeader: (header) =>
+			header
+				.replace(/^\uFEFF/, "")
+				.trim()
+				.toLowerCase(),
+	});
+
+	if (parsed.errors.length > 0 && parsed.data.length === 0) {
+		throw new Error(
+			`Could not parse the Join as Faculty sheet: ${parsed.errors[0].message}`,
+		);
+	}
+
+	const fields = new Set(parsed.meta.fields || []);
+	const requiredHeaders = ["level", "title", "description"];
+	const missingHeaders = requiredHeaders.filter(
+		(header) => !fields.has(header),
 	);
 
-	return data?.data?.sort(
-		(a, b) => a.Level - b.Level,
-	) || [];
+	if (missingHeaders.length > 0) {
+		throw new Error(
+			`The Join as Faculty sheet is missing required columns: ${missingHeaders.join(", ")}.`,
+		);
+	}
+
+	const rows = parsed.data
+		.filter((row) =>
+			Object.values(row).some((value) => String(value ?? "").trim()),
+		)
+		.map((row) => ({
+			Level: Number(row.level),
+			Title: String(row.title ?? "").trim(),
+			Description: String(row.description ?? "").trim(),
+		}));
+
+	const invalidRow = rows.find(
+		(row) =>
+			!Number.isFinite(row.Level) ||
+			!row.Title ||
+			!row.Description,
+	);
+	if (invalidRow) {
+		throw new Error(
+			"Every Join as Faculty sheet row must include a numeric Level, Title, and Description.",
+		);
+	}
+
+	return rows.sort((a, b) => a.Level - b.Level);
 };

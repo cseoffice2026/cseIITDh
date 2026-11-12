@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import Loading from "../components/Loading";
 
 const Carousel = lazy(() => import("../components/Carousel/Carousel"));
 const Gallery = lazy(() => import("../components/Gallery/Gallery"));
@@ -10,9 +11,7 @@ const PlacementSection = lazy(() =>
   import("../components/Academics/PlacementSection")
 );
 
-const fallback = (
-  <div className="text-center py-8 text-gray-400">Loading...</div>
-);
+const fallback = <Loading className="py-8" />;
 
 const Home = () => {
   return (

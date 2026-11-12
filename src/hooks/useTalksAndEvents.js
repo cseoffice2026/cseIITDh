@@ -132,6 +132,7 @@ const transformTalksAndEvents = (talks) => {
         ...item,
 
         title: item.Title || item.title || "",
+        eventType: item.eventType || item.event_type || item.category || "",
         speaker: item.Speaker || item.speaker || null,
         designation: item.designation || null,
         venue: item.venue || null,

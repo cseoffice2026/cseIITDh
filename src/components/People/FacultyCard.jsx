@@ -28,7 +28,7 @@ export default function FacultyCard({
             }}
           />
         ) : null}
-        <div className={`text-8xl text-indigo-200 ${image ? "hidden" : ""}`}>
+        <div className={`text-8xl text-brand-200 ${image ? "hidden" : ""}`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
@@ -45,8 +45,8 @@ export default function FacultyCard({
         </div>
       </div>
       <div className="p-4 flex-grow">
-        <h3 className="text-lg font-semibold text-gray-800">{name}</h3>
-        <p className="text-indigo-600 font-medium">{title}</p>
+        <h3 className="text-lg font-semibold text-gray-900">{name}</h3>
+        <p className="text-brand-600 font-medium">{title}</p>
         {expertise && (
           <div className="mt-2">
             <p className="text-sm text-gray-700 font-medium">Research Areas</p>
@@ -68,7 +68,7 @@ export default function FacultyCard({
             </svg>
             <a
               href={`mailto:${email}`}
-              className="text-indigo-600 hover:underline truncate"
+              className="text-brand-600 hover:underline truncate"
             >
               {email}
             </a>
@@ -105,7 +105,7 @@ export default function FacultyCard({
               href={website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-indigo-600 hover:underline truncate"
+              className="text-brand-600 hover:underline truncate"
             >
               Website
             </a>

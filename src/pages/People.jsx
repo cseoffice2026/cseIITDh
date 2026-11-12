@@ -1,4 +1,5 @@
 import { lazy, Suspense, useMemo } from "react";
+import { Link } from "react-router-dom";
 
 import GlobalError from "../components/GlobalError";
 import Loading from "../components/Loading";
@@ -25,10 +26,6 @@ const PhDScholarSection = lazy(() =>
 
 const GraduatedScholarSection = lazy(() =>
   import("../components/People/GraduatedScholarSection")
-);
-
-const StudentsSection = lazy(() =>
-  import("../components/People/StudentsSection")
 );
 
 const BackToTopButton = lazy(() =>
@@ -78,13 +75,25 @@ function QuickNavigation() {
         viewText={"View Members"}
       />
 
-      {/* Students */}
-      <NavCard
-        title="Students"
-        icon={<i className="fas fa-user-graduate"></i>}
-        targetId="students"
-        viewText={"View Members"}
-      />
+      <Link to="/people/students" className="cursor-pointer">
+        <div className="flex h-full flex-col items-center justify-center rounded-lg bg-white p-5 text-center shadow-md transition hover:bg-brand-50 hover:shadow-lg">
+          <div className="mb-3 text-3xl text-brand-800">
+            <i className="fas fa-user-graduate" aria-hidden="true"></i>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800">Students</h3>
+          <p className="mt-2 text-sm text-gray-600">View student directory</p>
+        </div>
+      </Link>
+
+      <Link to="/people/alumni" className="cursor-pointer">
+        <div className="flex h-full flex-col items-center justify-center rounded-lg bg-white p-5 text-center shadow-md transition hover:bg-brand-50 hover:shadow-lg">
+          <div className="mb-3 text-3xl text-brand-800">
+            <i className="fas fa-user-graduate" aria-hidden="true"></i>
+          </div>
+          <h3 className="text-lg font-semibold text-gray-800">Alumni</h3>
+          <p className="mt-2 text-sm text-gray-600">View alumni directory</p>
+        </div>
+      </Link>
     </div>
   );
 }
@@ -105,6 +114,7 @@ const getPeopleData = (data) => {
     switch (person.Role) {
       case "Faculty Members":
       case "Department Leadership":
+      case "PHD":
       case "PhD Scholars":
       case "Graduated Scholars":
         return {
@@ -132,11 +142,7 @@ const getPeopleData = (data) => {
   });
 };
 
-const fallback = (
-  <div className="text-center py-8 text-gray-400">
-    Loading...
-  </div>
-);
+const fallback = <Loading className="py-8" />;
 
 // People Page Component
 const People = () => {
@@ -217,11 +223,6 @@ const People = () => {
         <GraduatedScholarSection
           GraduatedScholars={GraduatedScholars}
         />
-      </Suspense>
-
-      {/* Students Section */}
-      <Suspense fallback={fallback}>
-        <StudentsSection />
       </Suspense>
 
       {/* Back to Top Button */}

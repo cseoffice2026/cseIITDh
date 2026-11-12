@@ -45,7 +45,7 @@ export default function BTechSection({ btech_admission }) {
           )}
 
           {/*btech_admission.important_dates && (
-              <div className="bg-indigo-50 p-4 rounded-md">
+              <div className="bg-brand-50 p-4 rounded-md">
                 <h3 className="text-lg font-semibold mb-2">{btech_admission.important_dates.heading}</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {btech_admission.important_dates.dates.map((item, index) => (
@@ -68,7 +68,7 @@ export default function BTechSection({ btech_admission }) {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300 mr-4"
+                className="inline-block bg-[#19007B] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300 mr-4"
               >
                 {
                   btech_admission.links.jee_advanced_website.match(
@@ -80,7 +80,7 @@ export default function BTechSection({ btech_admission }) {
                 href={btech_admission.links.josaa_portal.match(/\((.*?)\)/)[1]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
+                className="inline-block bg-[#19007B] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300"
               >
                 {btech_admission.links.josaa_portal.match(/\[(.*?)\]/)[1]}
               </a>

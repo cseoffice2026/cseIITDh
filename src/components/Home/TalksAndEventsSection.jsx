@@ -1,6 +1,6 @@
-import { useLayoutEffect, useRef, useState } from "react";
 import { useTalksAndEvents } from "../../hooks/useTalksAndEvents";
 import { Link } from "react-router-dom";
+import TalkEventCard from "./TalkEventCard";
 
 /**
  * Parse an event date safely.
@@ -111,109 +111,6 @@ const parseEventDate = (rawDate, position = "start") => {
   return result;
 };
 
-const TalkCard = ({
-  title,
-  speaker,
-  designation,
-  venue,
-  time,
-  date,
-  dateDisplay,
-  description,
-  links,
-}) => {
-  const abstractRef = useRef(null);
-  const [isClamped, setIsClamped] = useState(false);
-
-  // Show "See more" only when the abstract is longer than 3 lines.
-  useLayoutEffect(() => {
-    const el = abstractRef.current;
-    if (!el) return undefined;
-
-    const check = () => setIsClamped(el.scrollHeight > el.clientHeight + 1);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, [description]);
-
-  return (
-  <div className="flex h-full flex-col rounded-lg bg-white p-4 shadow-sm transition-shadow duration-300 hover:shadow-md">
-    <h3 className="mb-2 text-lg font-semibold text-gray-800">
-      <span className="italic">Title:</span>{title}
-    </h3>
-
-    {speaker && (
-      <div className="mb-2">
-        <span className="font-semibold">Speaker:</span>{speaker}
-        <br />
-        {designation && (
-          <span className="text-sm text-gray-600">
-            {designation}
-          </span>
-        )}
-      </div>
-    )}
-
-    {(dateDisplay || date) && (
-      <div className="mb-1">
-        <span className="font-semibold text-gray-600">
-          📅 Date:
-        </span>{" "}
-        {dateDisplay || date}
-      </div>
-    )}
-
-    {time && (
-      <div className="mb-1">
-        <span className="font-semibold text-blue-600">
-          ⏰ Time:
-        </span>{" "}
-        {time}
-      </div>
-    )}
-
-    {venue && (
-      <div className="mb-1">
-        <span className="font-semibold text-red-600">
-          📍 Venue:
-        </span>{" "}
-        {venue}
-      </div>
-    )}
-
-    {links && (
-      <div className="mt-1">
-        <a
-          href={links}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="break-words text-sm text-blue-600 hover:underline"
-        >
-          🔗 View Event Details
-        </a>
-      </div>
-    )}
-
-    {description && (
-      <div className="mt-2">
-        <p ref={abstractRef} className="line-clamp-3 text-sm leading-6 text-gray-600">
-          <span className="font-semibold text-gray-800">Abstract:</span>{" "}
-          {description}
-        </p>
-        {isClamped && (
-          <Link
-            to="/allTalksEvents"
-            className="mt-1 inline-block text-sm font-semibold text-blue-600 hover:underline"
-          >
-            See more →
-          </Link>
-        )}
-      </div>
-    )}
-  </div>
-  );
-};
-
 export const TalkLoading = () => (
   <div className="space-y-4 animate-pulse">
     {["skeleton-1", "skeleton-2", "skeleton-3"].map((label) => (
@@ -316,9 +213,9 @@ export default function TalksAndEventsSection() {
 
         <Link
           to="/allTalksEvents"
-          className="rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-indigo-700"
+            className="shrink-0 text-sm font-semibold text-brand-600 hover:text-brand-700"
         >
-          View All
+          View All →
         </Link>
       </div>
 
@@ -338,7 +235,7 @@ export default function TalksAndEventsSection() {
           </div>
         ) : recentTalks.length > 0 ? (
           recentTalks.map(({ item, index }) => (
-            <TalkCard
+            <TalkEventCard
               key={`${item.Title || item.title || "event"}-${
                 item.startDate || item.date || ""
               }-${index}`}
@@ -353,7 +250,7 @@ export default function TalksAndEventsSection() {
 
             <Link
               to="/allTalksEvents"
-              className="font-medium text-indigo-600 hover:text-indigo-700"
+              className="font-medium text-brand-600 hover:text-brand-700"
             >
               View past events and more →
             </Link>

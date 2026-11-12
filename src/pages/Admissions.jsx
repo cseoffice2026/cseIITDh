@@ -30,9 +30,7 @@ function AdmissionDetails() {
   const { btech_admission, mtech_admission, ms_admission, phd_admission } =
     admissionsData;
 
-  const fallback = (
-    <div className="text-center py-8 text-gray-400">Loading...</div>
-  );
+  const fallback = <Loading className="py-8" />;
 
   return (
     <>
@@ -83,7 +81,7 @@ const Admissions = () => {
           href="https://www.iitdh.ac.in/admissions"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
+          className="inline-block bg-[#19007B] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300"
         >
           Redirect to main website
         </a>

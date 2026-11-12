@@ -1,7 +1,38 @@
 import React from 'react';
 import { useQuery } from "@tanstack/react-query";
 import { getCseConclaveSchedule } from "../api/api";
+import DataTable from "../components/DataTable";
+import Loading from "../components/Loading";
 import poster from "../content/conclave2_0.png";
+
+const scheduleColumns = [
+	{
+		accessorKey: "date",
+		header: "Date",
+		cell: ({ getValue }) => getValue() || "—",
+	},
+	{
+		id: "time",
+		header: "Time",
+		accessorFn: (item) => `${item.startTime || ""} ${item.endTime || ""}`,
+		cell: ({ row }) => {
+			const { startTime, endTime } = row.original;
+			return startTime || endTime
+				? `${startTime || "—"} – ${endTime || "—"}`
+				: "—";
+		},
+	},
+	{
+		accessorKey: "particulars",
+		header: "Particulars",
+		cell: ({ getValue }) => getValue() || "—",
+	},
+	{
+		accessorKey: "title",
+		header: "Title",
+		cell: ({ getValue }) => getValue() || "—",
+	},
+];
 
 const CseConclave = () => {
   const {
@@ -17,17 +48,17 @@ const CseConclave = () => {
   });
 console.log("Schedule:", schedule);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-amber-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 to-amber-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
 
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-purple-100 p-6 sm:p-8 md:p-12 space-y-10">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-brand-100 p-6 sm:p-8 md:p-12 space-y-10">
 
         {/* Header */}
         <div className="text-center space-y-3">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight leading-tight">
-            CSE Conclave <span className="text-purple-600">2026</span>
+            CSE Conclave <span className="text-brand-600">2026</span>
           </h1>
 
-          <p className="uppercase tracking-wider text-purple-600 text-xs sm:text-sm font-medium">
+          <p className="uppercase tracking-wider text-brand-600 text-xs sm:text-sm font-medium">
             Exploring Frontiers in Computer Science
           </p>
 
@@ -97,7 +128,7 @@ console.log("Schedule:", schedule);
           </div>
         </div>
         {/* About */}
-        <div className="bg-purple-50 rounded-lg p-5 sm:p-6 text-gray-700 text-sm sm:text-base leading-relaxed">
+        <div className="bg-brand-50 rounded-lg p-5 sm:p-6 text-gray-700 text-sm sm:text-base leading-relaxed">
           CSE Conclave 2026 is a two-day technical gathering bringing together
           eminent academicians, industry leaders, and researchers from premier
           institutions and global organizations. The conclave fosters dialogue,
@@ -122,7 +153,7 @@ console.log("Schedule:", schedule);
                   href="https://www.iitg.ac.in/hemangee/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                  Prof. Hemangee Kapoor
                 </a>{" "}
@@ -134,7 +165,7 @@ console.log("Schedule:", schedule);
                   href="https://scholar.google.co.in/citations?hl=en&user=lJbcSBUAAAAJ&view_op=list_works&sortby=pubdate"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Prof. Dipti Prasad Mukherjee
                 </a>{" "}
@@ -146,7 +177,7 @@ console.log("Schedule:", schedule);
                   href="https://www.microsoft.com/en-us/research/people/karam/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Dr. Karthik Ramachandra
                 </a>{" "}
@@ -158,7 +189,7 @@ console.log("Schedule:", schedule);
                   href="https://research.ibm.com/people/padmanabha-venkatagiri-seshadri"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Dr. Padmanabha Sheshadri
                 </a>{" "}
@@ -170,7 +201,7 @@ console.log("Schedule:", schedule);
                   href="https://kumarmadhukar.github.io/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Prof. Kumar Madhukar
                 </a>{" "}
@@ -182,7 +213,7 @@ console.log("Schedule:", schedule);
                   href="https://www.linkedin.com/in/prabu-chandran-aab7253b/?isSelfProfile=false"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                 Dr. Prabhuchandran K </a>{" "} – Adobe
               </li>
@@ -237,9 +268,7 @@ console.log("Schedule:", schedule);
           </h2>
 
           {scheduleIsLoading ? (
-            <p className="py-8 text-center text-gray-500" role="status">
-              Loading event schedule...
-            </p>
+            <Loading className="m-0 py-8" children="Loading event schedule..." />
           ) : scheduleHasError ? (
             <div className="py-6 text-center text-red-700" role="alert">
               <p>
@@ -249,7 +278,7 @@ console.log("Schedule:", schedule);
               <button
                 type="button"
                 onClick={() => refetchSchedule()}
-                className="mt-3 rounded-md bg-purple-700 px-4 py-2 text-white hover:bg-purple-800"
+                className="mt-3 rounded-md bg-[#19007B] px-4 py-2 text-white hover:bg-[#140063]"
               >
                 Try again
               </button>
@@ -259,45 +288,19 @@ console.log("Schedule:", schedule);
               No schedule details are available yet.
             </p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-left text-sm border border-gray-200 rounded-lg overflow-hidden">
-                <thead className="bg-purple-50 text-gray-700 uppercase text-xs tracking-wider">
-                  <tr>
-                    <th scope="col" className="px-4 py-3">Date</th>
-                    <th scope="col" className="px-4 py-3">Time</th>
-                
-                    <th scope="col" className="px-4 py-3">Particulars</th>                  
-                    <th scope="col" className="px-4 py-3">Title </th>                                          
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {schedule.map((item, index) => (
-                    <tr
-                      key={`${item.date}-${item.startTime}-${index}`}
-                      className="odd:bg-gray-50"
-                    >
-                      <td className="px-4 py-3 whitespace-nowrap">{item.date || "—"}</td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        {item.startTime || item.endTime
-                          ? `${item.startTime || "—"} – ${item.endTime || "—"}`
-                          : "—"}
-                      </td>
-                      
-                      <td className="px-4 py-3">{item.particulars || "—"}</td>
-                     
-                      <td className="px-4 py-3">{item.title || "—"}</td>                      
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <DataTable
+              columns={scheduleColumns}
+              data={schedule}
+              emptyMessage="No schedule details are available yet."
+              searchPlaceholder="Search the event schedule..."
+            />
           )}
         </div>
         {/* CTA */}
         <div className="text-center pt-4">
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSeOFteVo1GLJ8zG0yIN-83w3pY-FxsZ4Cam8kRyWSrfhRtfAQ/viewform?usp=publish-editor"
-            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-purple-700 text-white rounded-lg font-medium shadow-md hover:bg-purple-800 transition"
+            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-[#19007B] text-white rounded-lg font-medium shadow-md hover:bg-[#140063] transition"
           >
             Register
         </a>

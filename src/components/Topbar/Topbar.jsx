@@ -14,7 +14,7 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between border-t-[5px] border-[#263c38] bg-white px-4 shadow-sm sm:px-6"
+      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between bg-white px-4 shadow-sm sm:px-6"
       style={{
         height: "70px",
         minHeight: "70px",
@@ -36,7 +36,7 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
           type="button"
           onClick={openInstituteWebsite}
           aria-label="Visit IIT Dharwad website"
-          className="hidden bg-transparent p-0 sm:block"
+          className="hidden bg-transparent p-0 lg:block"
           style={{ lineHeight: 0, border: 0 }}
         >
           <img
@@ -56,7 +56,7 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         </button>
 
         {/* Mobile menu and logo */}
-        <div className="flex items-center gap-2 sm:hidden">
+        <div className="flex items-center gap-2 lg:hidden">
           <button
             type="button"
             onClick={toggleMobileMenu}
@@ -130,7 +130,7 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-transparent p-0 text-center font-semibold tracking-wide text-purple-900"
+          className="bg-transparent p-0 text-center font-semibold tracking-wide text-brand-900"
           style={{
             border: 0,
             outline: "none",
@@ -147,7 +147,7 @@ function Topbar({ toggleMobileMenu, isMobileMenuOpen }) {
         <button
           type="button"
           onClick={() => navigate("/")}
-          className="bg-transparent p-0 text-center font-semibold text-purple-900"
+          className="bg-transparent p-0 text-center font-semibold text-brand-900"
           style={{
             border: 0,
             outline: "none",

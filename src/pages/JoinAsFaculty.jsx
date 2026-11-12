@@ -33,7 +33,7 @@ const JoinAsFacultyData = () => {
               <div className="text-center mt-6">
                 <a
                   href="https://www.iitdh.ac.in/faculty-recruitment"
-                  className="inline-block bg-indigo-600 text-white px-6 py-3 rounded-md hover:bg-indigo-700 transition duration-300 font-medium"
+                  className="inline-block bg-[#19007B] text-white px-6 py-3 rounded-md hover:bg-[#140063] transition duration-300 font-medium"
                   target="_blank"
                   rel="noopener noreferrer"
                 >

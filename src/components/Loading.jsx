@@ -1,10 +1,9 @@
 import PropTypes from "prop-types";
+import { DotsRing } from "./loading-ui/dots-ring";
 
 export default function Loading({
-  children = "Loading...",
+  children,
   className = "",
-  spinnerColor = "border-indigo-600",
-  spinnerSize = "h-8 w-8",
   ...props
 }) {
   return (
@@ -13,30 +12,10 @@ export default function Loading({
       aria-live="polite"
       {...props}
     >
-      <div className="flex items-center justify-center mb-3">
-        <svg
-          className={`animate-spin ${spinnerSize} ${spinnerColor}`}
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          aria-hidden="true"
-        >
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          ></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-          ></path>
-        </svg>
-      </div>
-      <span className="text-gray-700 text-base font-medium">{children}</span>
+      <DotsRing className="mb-3 size-10 [--duration:900ms]" />
+      <span className="text-gray-700 text-base font-medium">
+        {children || "Loading..."}
+      </span>
     </div>
   );
 }
@@ -44,6 +23,4 @@ export default function Loading({
 Loading.propTypes = {
   children: PropTypes.node,
   className: PropTypes.string,
-  spinnerColor: PropTypes.string,
-  spinnerSize: PropTypes.string,
 };

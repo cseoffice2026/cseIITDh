@@ -10,7 +10,7 @@ export default function MarkDownLink({ text }) {
         {parts[0]}
         <a
           href={url}
-          className="text-blue-600 hover:underline"
+          className="text-brand-600 hover:underline"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -23,7 +23,7 @@ export default function MarkDownLink({ text }) {
     return (
       <a
         href={text}
-        className="text-blue-600 hover:underline"
+        className="text-brand-600 hover:underline"
         target="_blank"
         rel="noopener noreferrer"
       >

@@ -13,14 +13,14 @@ const sectionLinks = {
 
   // Each item has its own page path (`to`)
   programmes: [
-    { id: "btech", label: "B.Tech", to: "/programmes/btech" },
-    { id: "mtech", label: "M.Tech", to: "/programmes/mtech" },
+    { id: "btech", label: "B.Tech.", to: "/programmes/btech" },
+    { id: "mtech", label: "M.Tech.", to: "/programmes/mtech" },
     {
       id: "mtech-research",
-      label: "M.Tech with Research",
+      label: "M.Tech. with Research",
       to: "/programmes/mtech-research",
     },
-    { id: "phd", label: "PhD", to: "/programmes/phd" },
+    { id: "phd", label: "Ph.D.", to: "/programmes/phd" },
   ],
 
   people: [
@@ -29,12 +29,14 @@ const sectionLinks = {
     { id: "former-members", label: "Former Members" },
     { id: "phd-scholars", label: "PhD Scholars" },
     { id: "graduated-scholars", label: "Graduated Scholars" },
-    { id: "students", label: "Students" },
+    { id: "students", label: "Students", to: "/people/students" },
+    { id: "alumni", label: "Alumni", to: "/people/alumni" },
   ],
 
   research: [
-    { id: "research-projects", label: "Research Projects" },
-    // { id: "Department Facilities", label: "Department Facilities" },
+    { id: "research-areas", label: "Areas", to: "/research/research-areas" },
+    { id: "labs", label: "Labs" },
+    { id: "research-projects", label: "Projects" },
   ],
 };
 
@@ -115,9 +117,10 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
   }, [openDropdown]);
 
   const linkClass = (active) =>
-    `flex items-center justify-start px-5 py-3.5 text-sm font-semibold transition-colors lg:justify-center lg:px-3 lg:py-3 xl:px-4 ${active
-      ? "bg-purple-950 text-white"
-      : "text-purple-50 hover:bg-purple-900 hover:text-white"
+    `main-navigation-link flex items-center justify-start gap-1 px-5 py-3.5 text-sm font-semibold text-white transition-colors duration-200 lg:h-full lg:justify-center lg:px-4 lg:py-0 ${
+      active
+        ? "main-navigation-link-active"
+        : "hover:text-white"
     }`;
 
   // Hover opens the dropdown only for a mouse on a wide screen.
@@ -152,24 +155,24 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
     <nav
       id="main-navigation"
       aria-label="Main navigation"
-      className={`fixed left-0 right-0 top-[70px] z-[100] bg-purple-800 shadow-sm max-lg:right-auto max-lg:bottom-0 max-lg:w-72 max-lg:max-w-[85vw] max-lg:overflow-y-auto max-lg:overflow-x-hidden max-lg:shadow-xl max-lg:transition-all max-lg:duration-300 max-lg:ease-out ${
+      className={`main-navigation fixed left-0 right-0 top-[70px] z-[100] bg-[#19007B] shadow-none max-lg:bottom-0 max-lg:w-72 max-lg:max-w-[85vw] max-lg:overflow-y-auto max-lg:overflow-x-hidden max-lg:shadow-xl max-lg:transition-all max-lg:duration-300 max-lg:ease-out lg:absolute lg:h-[54px] lg:w-full ${
         isMobileMenuOpen
           ? "mobile-nav-open"
           : "mobile-nav-closed"
       }`}
     >
-      <ul className="mx-auto flex max-w-7xl flex-col lg:flex-row lg:items-stretch lg:justify-center">
+      <ul className="mx-auto flex  flex-col lg:h-full lg:w-full lg:max-w-[1440px] lg:flex-row lg:items-stretch lg:justify-center lg:bg-[#19007B]">
         {navLinks.map((item) => (
           <li
             key={item.label}
-            className="relative border-b border-purple-700/70 last:border-b-0 lg:border-b-0"
+            className="relative border-b border-[#19007B] last:border-b-0 lg:flex lg:h-full lg:items-stretch lg:border-b-0"
             onPointerEnter={(e) => handlePointerEnter(e, item)}
             onPointerLeave={(e) => handlePointerLeave(e, item)}
           >
             {item.sections ? (
-              <div className="relative">
+              <div className="relative lg:flex lg:h-full">
                 {/* Row: main link + arrow button */}
-                <div className="flex items-stretch">
+                <div className="relative flex items-stretch lg:h-full">
                   <NavLink
                     to={item.to}
                     onClick={() => {
@@ -177,7 +180,7 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                       closeMenu?.();
                     }}
                     className={({ isActive }) =>
-                      `${linkClass(isActiveItem(item, isActive))} flex-1`
+                      `${linkClass(isActiveItem(item, isActive))} flex-none pr-0 lg:pr-0`
                     }
                   >
                     {item.label}
@@ -193,7 +196,7 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                         current === item.label ? null : item.label
                       )
                     }
-                    className="flex items-center border-l border-purple-700/70 px-5 text-white hover:bg-purple-900 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:border-l-0 lg:px-2"
+                    className="flex h-auto w-5 shrink-0 items-center justify-center text-white transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white lg:h-full lg:flex-none"
                   >
                     <svg
                       className={`h-4 w-4 transition-transform duration-200 ${openDropdown === item.label ? "rotate-180" : ""
@@ -216,7 +219,7 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                 {/* Dropdown: inline list below lg, floating panel on lg+ */}
                 <div
                   id={`${dropdownId}-${item.label.toLowerCase()}`}
-                  className="bg-purple-900 lg:absolute lg:left-0 lg:top-full lg:min-w-[220px] lg:rounded-b-md lg:bg-purple-800 lg:shadow-lg"
+                  className="main-navigation-dropdown lg:absolute lg:left-0 lg:top-full lg:min-w-[220px] lg:shadow-md"
                   style={{
                     display: openDropdown === item.label ? "block" : "none",
                   }}
@@ -231,7 +234,7 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                         setOpenDropdown(null);
                         closeMenu?.();
                       }}
-                      className="block whitespace-nowrap px-9 py-3 text-sm font-medium text-purple-50 transition-colors hover:bg-purple-950 hover:text-white lg:px-5 lg:text-white lg:hover:bg-purple-900"
+                      className="main-navigation-dropdown-link block whitespace-nowrap px-9 py-3 text-sm font-medium text-white transition-colors duration-200 lg:px-5"
                     >
                       {section.label}
                     </NavLink>
@@ -250,7 +253,7 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
 
                 <svg
                   aria-hidden="true"
-                  className="ml-1 h-3.5 w-3.5"
+                  className="h-3.5 w-3.5"
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
@@ -267,7 +270,9 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
               <NavLink
                 to={item.to}
                 onClick={closeMenu}
-                className={({ isActive }) => linkClass(isActive)}
+                className={({ isActive }) =>
+                  linkClass(isActive)
+                }
               >
                 {item.label}
               </NavLink>

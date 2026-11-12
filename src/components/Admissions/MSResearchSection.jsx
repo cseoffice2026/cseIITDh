@@ -1,5 +1,11 @@
 import Section from "../Section";
 import MarkDownLink from "./MarkdownLink";
+import DataTable from "../DataTable";
+
+const dateColumns = [
+	{ accessorKey: "event", header: "Event" },
+	{ accessorKey: "date", header: "Date" },
+];
 
 export default function MSResearchSection({ ms_admission }) {
   return (
@@ -206,23 +212,11 @@ export default function MSResearchSection({ ms_admission }) {
               <h3 className="text-xl font-semibold mb-3">
                 {ms_admission.important_dates.heading}
               </h3>
-              <div className="overflow-x-auto">
-                <table className="min-w-full text-sm text-gray-700">
-                  <tbody>
-                    {ms_admission.important_dates.dates.map(
-                      (dateItem, index) => (
-                        <tr
-                          key={index}
-                          className={index % 2 === 0 ? "bg-gray-50" : ""}
-                        >
-                          <td className="px-4 py-2 border">{dateItem.event}</td>
-                          <td className="px-4 py-2 border">{dateItem.date}</td>
-                        </tr>
-                      )
-                    )}
-                  </tbody>
-                </table>
-              </div>
+              <DataTable
+                columns={dateColumns}
+                data={ms_admission.important_dates.dates}
+                emptyMessage="No important dates are available."
+              />
             </div>
           )}
 

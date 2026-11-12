@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import Loading from "../components/Loading";
 
 const BackToTopButton = lazy(() => import("../components/BackToTopButton"));
 
@@ -13,6 +14,12 @@ const ResearchProjects = lazy(() =>
 function QuickNavigation() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
+      <NavCard
+        title="Research Areas"
+        icon={<i className="fas fa-flask"></i>}
+        to="/research/research-areas"
+        viewText={"View Details"}
+      />
       <NavCard
         title="Research Labs"
         icon={<i className="fas fa-flask"></i>}
@@ -29,9 +36,7 @@ function QuickNavigation() {
   );
 }
 
-const fallback = (
-  <div className="text-center py-8 text-gray-400">Loading...</div>
-);
+const fallback = <Loading className="py-8" />;
 
 // Research Page Component
 const Research = () => {
@@ -67,7 +72,7 @@ const Research = () => {
             href="https://rnd.iitdh.ac.in"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-600 hover:underline font-medium"
+            className="text-brand-600 hover:underline font-medium"
           >
             click here
           </a>.

@@ -2,6 +2,7 @@ import Section from "../Section";
 import FormerMemberCard from "./FormerMemberCard";
 
 export default function FormerMemberSection({ formerFaculty, formerStaff }) {
+  console.log("Former Faculty:", formerFaculty);
   return (
     <Section id="former-members" title="Former Members">
       <div className="space-y-10">

@@ -20,10 +20,10 @@ const CustomCarousel = () => {
     return () => clearInterval(timer);
   }, [currentIndex, images]);
 
-  // Loading skeleton
+  // Keep the carousel skeleton while its image data is loading.
   if (isLoading) {
     return (
-      <div className="relative w-full rounded-lg shadow-md max-w-full aspect-[3/1] bg-gray-200 animate-pulse flex items-center justify-center">
+      <div className="relative w-full rounded-lg shadow-md max-w-full aspect-[4/3] md:aspect-[3/1] bg-gray-200 animate-pulse flex items-center justify-center">
         <p className="text-gray-500">Loading Images...</p>
       </div>
     );
@@ -69,7 +69,7 @@ const CustomCarousel = () => {
       onTouchEnd={handleTouchEnd}
     >
       {/* Carousel wrapper */}
-      <div className="relative w-full aspect-[3/1] overflow-hidden">
+      <div className="relative w-full aspect-[4/3] md:aspect-[3/1] overflow-hidden">
         {images.map((item, index) => (
           <div
             key={item.image}
@@ -87,7 +87,7 @@ const CustomCarousel = () => {
               >
                 <img
                   src={item.image}
-                  alt={`Slide ${index + 1}`}
+                  alt={item.description || `Slide ${index + 1}`}
                   className="absolute w-full h-full object-cover cursor-pointer"
                   style={{
                     transform: "translate(-50%, -50%)",
@@ -99,7 +99,7 @@ const CustomCarousel = () => {
             ) : (
               <img
                 src={item.image}
-                alt={`Slide ${index + 1}`}
+                alt={item.description || `Slide ${index + 1}`}
                 className="absolute w-full h-full object-cover"
                 style={{
                   transform: "translate(-50%, -50%)",

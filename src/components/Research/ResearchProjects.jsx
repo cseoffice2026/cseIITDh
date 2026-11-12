@@ -1,6 +1,34 @@
 import useResearchProjectsData from "../../hooks/useResearchProjectsData";
 import GlobalError from "../GlobalError";
 import Loading from "../Loading";
+import DataTable from "../DataTable";
+
+const getProjectColumns = (titleHeader) => [
+	{
+		id: "serial",
+		header: "S. No.",
+		cell: ({ row }) => row.index + 1,
+		enableSorting: false,
+	},
+	{ accessorKey: "Title", header: titleHeader },
+	{ accessorKey: "Area", header: "Area" },
+	{ accessorKey: "Duration", header: "Duration" },
+	{
+		accessorKey: "PI",
+		header: "PI",
+		cell: ({ getValue }) => getValue() || "-",
+	},
+	{
+		accessorKey: "CoPI",
+		header: "Co-PI",
+		cell: ({ getValue }) => getValue() || "-",
+	},
+	{
+		accessorKey: "CurrentStatus",
+		header: "Status",
+		cell: ({ getValue }) => getValue() || "-",
+	},
+];
 
 function ResearchProjectsData() {
   const {
@@ -30,95 +58,31 @@ function ResearchProjectsData() {
       <div className="mb-4 text-center">
         <div className="mx-auto max-w-3xl">
           <h2 className="mt-6 text-2xl font-bold text-gray-800">
-            R&D Sponsored Projects in the Past Five Years
+            Sponsored Projects in the Past Five Years
           </h2>
         </div>
       </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse text-left text-sm">
-          <thead className="bg-gray-100 text-gray-800">
-            <tr>
-              <th className="border border-gray-400 px-4 py-2">S. No.</th>
-              <th className="border border-gray-400 px-4 py-2">Project Title</th>
-              <th className="border border-gray-400 px-4 py-2">Project Area</th>
-              <th className="border border-gray-400 px-4 py-2">Duration</th>
-              <th className="border border-gray-400 px-4 py-2">PI</th>
-              <th className="border border-gray-400 px-4 py-2">Co-PI</th>
-              <th className="border border-gray-400 px-4 py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sponsoredProjects.map((project, idx) => (
-              <tr key={project.id}>
-                <td className="border border-gray-400 px-4 py-2">{idx + 1}</td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.Title}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">{project.Area}</td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.Duration}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.PI || "-"}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.CoPI || "-"}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.CurrentStatus || "-"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        columns={getProjectColumns("Project Title")}
+        data={sponsoredProjects}
+        emptyMessage="No sponsored projects are available."
+        searchPlaceholder="Search sponsored projects..."
+      />
 
       <div className="mb-4 text-center">
         <div className="mx-auto max-w-3xl">
           <h2 className="mt-14 text-2xl font-bold text-gray-800">
-            Consultancy/Testing Projects in the past five years
+            Consultancy Projects in the past five years
           </h2>
         </div>
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="min-w-full border-collapse text-left text-sm">
-          <thead className="bg-gray-100 text-gray-800">
-            <tr>
-              <th className="border border-gray-400 px-4 py-2">S. No.</th>
-              <th className="border border-gray-400 px-4 py-2">Title</th>
-              <th className="border border-gray-400 px-4 py-2">Area</th>
-              <th className="border border-gray-400 px-4 py-2">Duration</th>
-              <th className="border border-gray-400 px-4 py-2">PI</th>
-              <th className="border border-gray-400 px-4 py-2">Co-PI</th>
-              <th className="border border-gray-400 px-4 py-2">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {consultancyProjects.map((project, idx) => (
-              <tr key={project.id}>
-                <td className="border border-gray-400 px-4 py-2">{idx + 1}</td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.Title}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">{project.Area}</td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.Duration}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.PI || "-"}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.CoPI || "-"}
-                </td>
-                <td className="border border-gray-400 px-4 py-2">
-                  {project.CurrentStatus || "-"}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        columns={getProjectColumns("Title")}
+        data={consultancyProjects}
+        emptyMessage="No consultancy or testing projects are available."
+        searchPlaceholder="Search consultancy projects..."
+      />
     </>
   );
 }

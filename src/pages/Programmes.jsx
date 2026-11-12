@@ -3,6 +3,9 @@ import { Link, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import CourseTable from "../components/Programmes/CourseTable";
+import BTechProgrammeCatalogue from "../components/Programmes/BTechProgrammeCatalogue";
+import MTechCurriculum from "../components/Programmes/MTechCurriculum";
+import DataTable from "../components/DataTable";
 import Loading from "../components/Loading";
 import useAcademicPrograms from "../hooks/useAcademicPrograms";
 import useCourses from "../hooks/useCourses";
@@ -15,32 +18,65 @@ const BackToTopButton = lazy(() =>
   import("../components/BackToTopButton")
 );
 
-// Shown under the title on every programme page
-const DEPARTMENT_NAME = "Department of Computer Science and Engineering";
+const courseworkColumns = [
+	{
+		id: "requirement",
+		header: "Requirement",
+		accessorFn: (item) =>
+			`${item.title || ""} ${item.description || ""}`,
+		cell: ({ row }) => (
+			<>
+				{row.original.title || "—"}
+				{row.original.description ? (
+					<p className="mt-1 text-xs leading-5 text-gray-500">
+						{row.original.description}
+					</p>
+				) : null}
+			</>
+		),
+	},
+	{
+		accessorKey: "value",
+		header: "Credits / Value",
+		cell: ({ getValue }) => (
+			<span className="font-semibold text-brand-800">
+				{getValue() || "—"}
+			</span>
+		),
+	},
+];
 
 // Route labels are fallbacks only. Programme details come
 // from the original Google Sheet.
 const routeLabels = {
   btech: {
-    title: "BTech",
+    title: "B.Tech. Programme Structure",
     level: "UG",
     eyebrow: "Undergraduate Programme",
-    
+    description:
+      "The B.Tech. programme builds a strong foundation in computer science, combining core theory with hands-on learning across software, algorithms, and computer systems. Students develop the skills to understand, design, and build technology while exploring a broad range of areas in the field.",
   },
   mtech: {
-    title: "MTech",
+    title: "M.Tech. Programme Structure",
     level: "PG",
     eyebrow: "Postgraduate Programme",
     description:
-      "The M.Tech programme offers advanced coursework in areas such as algorithms, machine learning, computer networks and software systems, along with a technical project.",
+      "The M.Tech. programme deepens students’ expertise in computer science through advanced coursework and project-based learning. It offers opportunities to explore areas such as algorithms, artificial intelligence, data science, networks, and systems while developing the ability to tackle challenging technical problems.",
   },
   "mtech-research": {
-    title: "MTech with Research",
+    title: "M.Tech. with Research Programme Structure",
     level: "PG",
     eyebrow: "Postgraduate Research Programme",
     description:
-      "The M.Tech with Research programme combines advanced coursework with research work carried out under the guidance of the department's faculty members.",
+      "The M.Tech. with Research programme combines advanced study in computer science with sustained, supervised research. Students develop research methods, investigate a focused problem, and contribute original work under the guidance of a faculty advisor.",
   },
+};
+
+const programmeTitles = {
+  btech: "B.Tech. Programme Structure",
+  mtech: "M.Tech. Programme Structure",
+  "mtech-research": "M.Tech. with Research Programme Structure",
+  phd: "Ph.D. Programme Structure",
 };
 
 const prettifyRoute = (value) =>
@@ -149,10 +185,10 @@ function ProgrammeBrochureSection({ programmeKey }) {
   if (!brochure) return null;
 
   return (
-    <section className="mb-8 rounded-xl border border-purple-100 bg-white p-5 shadow-sm sm:p-6">
+    <section className="mb-8 rounded-xl border border-brand-100 bg-white p-5 shadow-sm sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-purple-50 text-purple-800">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-800">
             <i
               className="fas fa-file-pdf text-xl"
               aria-hidden="true"
@@ -160,7 +196,7 @@ function ProgrammeBrochureSection({ programmeKey }) {
           </span>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-700">
               Official Admission Document · {brochure.session}
             </p>
 
@@ -179,7 +215,7 @@ function ProgrammeBrochureSection({ programmeKey }) {
             href={brochure.fileUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-md border border-purple-200 bg-white px-4 py-2.5 text-sm font-semibold text-purple-800 transition hover:bg-purple-50"
+            className="inline-flex items-center justify-center gap-2 rounded-md border border-brand-200 bg-white px-4 py-2.5 text-sm font-semibold text-brand-800 transition hover:bg-brand-50"
           >
             <i className="fas fa-eye" aria-hidden="true" />
             View brochure
@@ -188,7 +224,7 @@ function ProgrammeBrochureSection({ programmeKey }) {
           <a
             href={brochure.fileUrl}
             download={brochure.fileName}
-            className="inline-flex items-center justify-center gap-2 rounded-md bg-purple-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-purple-800"
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-[#19007B] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#140063]"
           >
             <i
               className="fas fa-download"
@@ -200,7 +236,7 @@ function ProgrammeBrochureSection({ programmeKey }) {
       </div>
 
       <details className="mt-5 border-t border-gray-100 pt-4">
-        <summary className="cursor-pointer text-sm font-semibold text-purple-800 marker:text-purple-700 hover:text-purple-950">
+        <summary className="cursor-pointer text-sm font-semibold text-brand-800 marker:text-brand-700 hover:text-brand-950">
           Preview brochure on this page
         </summary>
 
@@ -235,9 +271,9 @@ function ProgrammeHero({
   return (
     <section
       id="programmes-top"
-      className="mb-8 w-full rounded-lg border border-gray-200 border-l-4 border-l-purple-800 bg-white px-6 py-7 md:px-8"
+      className="mb-8 w-full rounded-lg border border-gray-200 border-l-4 border-l-brand-800 bg-white px-6 py-7 md:px-8"
     >
-      <p className="text-sm font-medium text-purple-800">
+      <p className="text-sm font-medium text-brand-800">
         {programme.eyebrow || "Academic Programme"}
       </p>
 
@@ -245,28 +281,34 @@ function ProgrammeHero({
         {programme.title}
 
         {programme.subtitle ? (
-          <span className="mt-1 block text-lg font-medium text-purple-800 md:text-xl">
+          <span className="mt-1 block text-lg font-medium text-brand-800 md:text-xl">
             {programme.subtitle}
           </span>
         ) : null}
       </h1>
 
-      {/* <p className="mt-4 w-full max-w-4xl whitespace-pre-line text-base leading-7 text-gray-700">
-        {programme.description ||
-          (isLoading
-            ? "Loading programme information from the Google Sheet…"
-            : "Programme description is not available in the Google Sheet yet.")}
-      </p> */}
+      {programme.description ? (
+        <p className="mt-4 w-full max-w-4xl whitespace-pre-line text-base leading-7 text-gray-700">
+          {programme.description}
+        </p>
+      ) : isLoading ? (
+        <p className="mt-4 text-sm text-gray-500" role="status">
+          Loading programme overview…
+        </p>
+      ) : null}
 
       {stats.length > 0 ? (
-        <dl className="mt-6 flex flex-wrap gap-x-12 gap-y-4 border-t border-gray-200 pt-5">
+        <dl className="mt-5 flex flex-wrap gap-2 border-t border-gray-200 pt-4">
           {stats.map((stat, index) => (
-            <div key={`${stat.label}-${index}`}>
-              <dd className="text-xl font-semibold text-gray-900">
+            <div
+              key={`${stat.label}-${index}`}
+              className="min-w-[7.5rem] rounded-lg border border-brand-100 bg-brand-50/80 px-3 py-2"
+            >
+              <dd className="text-2xl font-bold leading-tight text-brand-900">
                 {stat.value || "—"}
               </dd>
 
-              <dt className="mt-0.5 text-sm text-gray-500">
+              <dt className="mt-0.5 text-sm font-medium text-brand-700">
                 {stat.label}
               </dt>
             </div>
@@ -341,14 +383,13 @@ function PhDOnHoldPage() {
     <div className="px-4 py-6 md:px-8">
       <ProgrammeHero
         programme={{
-          title: data?.title || "PhD",
-          subtitle: DEPARTMENT_NAME,
+          title: programmeTitles.phd,
           eyebrow: data?.eyebrow || "Doctoral Programme",
           description:
             data?.overview ||
             (isLoading
               ? "Loading PhD programme information from the Google Sheet…"
-              : "The programme overview has not been added to the connected PhD Google Sheet yet."),
+              : "The Ph.D. programme prepares students for independent research and advanced careers in computer science. Through doctoral coursework and sustained research under faculty guidance, scholars investigate important problems and contribute original knowledge to the field."),
         }}
         stats={data?.stats || []}
         isLoading={isLoading}
@@ -394,55 +435,18 @@ function PhDOnHoldPage() {
       {/* Coursework and Credits */}
       {data?.courseworkCredits?.length ? (
         <section className="mb-10">
-          <div className="overflow-x-auto rounded-lg border border-gray-200 bg-white shadow-sm">
-            <table className="w-full min-w-[500px] border-collapse text-left text-sm">
-              <thead className="bg-purple-800 text-white">
-                <tr>
-                  <th className="px-4 py-3 font-semibold">
-                    Requirement
-                  </th>
-
-                  <th className="px-4 py-3 font-semibold">
-                    Credits / Value
-                  </th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {data.courseworkCredits.map((item, index) => (
-                  <tr
-                    key={`${item.title || "requirement"}-${index}`}
-                    className={`border-t border-gray-200 ${
-                      index % 2 === 0
-                        ? "bg-white"
-                        : "bg-purple-50/50"
-                    }`}
-                  >
-                    <td className="px-4 py-3 text-gray-800">
-                      {item.title || "—"}
-
-                      {item.description ? (
-                        <p className="mt-1 text-xs leading-5 text-gray-500">
-                          {item.description}
-                        </p>
-                      ) : null}
-                    </td>
-
-                    <td className="px-4 py-3 font-semibold text-purple-800">
-                      {item.value || "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <DataTable
+            columns={courseworkColumns}
+            data={data.courseworkCredits}
+            emptyMessage="No coursework credit details are available."
+          />
         </section>
       ) : null}
 
       {/* Rules and Further Information */}
       <section className="mb-8">
         <div className="mb-5 border-b border-gray-200 pb-3">
-          <p className="text-xs font-semibold uppercase tracking-wider text-purple-700">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-700">
             Official Resources
           </p>
 
@@ -463,9 +467,9 @@ function PhDOnHoldPage() {
               href={resource.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex h-full flex-col rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-purple-300 hover:shadow-md"
+              className="group flex h-full flex-col rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition-all hover:border-brand-300 hover:shadow-md"
             >
-              <h3 className="text-base font-semibold text-gray-900 transition-colors group-hover:text-purple-800">
+              <h3 className="text-base font-semibold text-gray-900 transition-colors group-hover:text-brand-800">
                 {resource.title}
               </h3>
 
@@ -473,7 +477,7 @@ function PhDOnHoldPage() {
                 {resource.description}
               </p>
 
-              <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-purple-800">
+              <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-800">
                 {resource.label}
 
                 <span
@@ -491,7 +495,7 @@ function PhDOnHoldPage() {
       <div className="flex justify-center py-4">
         <a
           href="#programmes-top"
-          className="inline-flex items-center rounded-md bg-purple-700 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-purple-800"
+          className="inline-flex items-center rounded-md bg-[#19007B] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#140063]"
         >
           Back to Top
         </a>
@@ -608,9 +612,7 @@ export default function Programmes() {
         : null;
 
     return {
-      title: row?.name || routeFallback.title,
-      subtitle: DEPARTMENT_NAME,
-
+      title: programmeTitles[key] || routeFallback.title,
       eyebrow:
         row?.eyebrow ||
         routeFallback.eyebrow ||
@@ -791,7 +793,7 @@ export default function Programmes() {
               href={programme.officialLink.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-800 hover:text-purple-950"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-800 hover:text-brand-950"
             >
               Official programme information
               <span aria-hidden="true">↗</span>
@@ -799,7 +801,7 @@ export default function Programmes() {
           ) : (
             <Link
               to={programme.officialLink.href}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-800 hover:text-purple-950"
+              className="inline-flex items-center gap-2 text-sm font-semibold text-brand-800 hover:text-brand-950"
             >
               Programme information
               <span aria-hidden="true">→</span>
@@ -809,7 +811,15 @@ export default function Programmes() {
       ) : null}
 
       {/* Course catalogue */}
+      {canonicalRouteKey === "btech" ? (
+        <BTechProgrammeCatalogue />
+      ) : null}
+      {canonicalRouteKey === "mtech" ? <MTechCurriculum /> : null}
+
       <section>
+        <h2 className="mb-4 text-xl font-bold text-gray-900 md:text-2xl">
+          Courses List
+        </h2>
         {coursesLoading ? (
           <Loading />
         ) : coursesError ? (

@@ -1,19 +1,48 @@
 import React from 'react';
+import DataTable from "../components/DataTable";
 import poster from "../content/cse-conclave.jpeg";
+
+const eventSchedule = [
+	{ date: "7 March 2026", time: "9:30 – 10:00 AM", speaker: "Registration and Opening Remarks", title: "—" },
+	{ date: "7 March 2026", time: "10:00 – 11:00 AM", speaker: "Dr. Naveen Sivadasan", title: "Biological Data Analysis with Applications in Medicine" },
+	{ date: "7 March 2026", time: "11:00 – 11:15 AM", speaker: "Switching / Buffer Time", title: "—" },
+	{ date: "7 March 2026", time: "11:15 – 12:15 PM", speaker: "Prof. N. R. Aravind", title: "Algorithms Using Predictions" },
+	{ date: "7 March 2026", time: "12:15 – 2:00 PM", speaker: "Lunch Break", title: "—" },
+	{ date: "7 March 2026", time: "2:00 – 3:00 PM", speaker: "Mr. Mehul Jain", title: "Building Smart Agents with MCP and SSH" },
+	{ date: "7 March 2026", time: "3:00 – 3:15 PM", speaker: "Switching / Buffer Time", title: "—" },
+	{ date: "7 March 2026", time: "3:15 – 4:15 PM", speaker: "Dr. Ashish Mishra", title: "Revolution of Limited Supervision in Computer Vision" },
+	{ date: "7 March 2026", time: "4:15 – 5:15 PM", speaker: "Tea Break-cum-Poster Session", title: "—" },
+	{ date: "7 March 2026", time: "5:15 – 6:15 PM", speaker: "Sushim Shrivastava", title: "Constrained Compute: Challenges and Opportunities" },
+	{ date: "8 March 2026", time: "9:00 – 10:00 AM", speaker: "Prof. Hema Murthy", title: "Beyond Backpropagation: Exact and Random Feedback Alignment" },
+	{ date: "8 March 2026", time: "10:00 – 10:15 AM", speaker: "Switching / Buffer Time", title: "—" },
+	{ date: "8 March 2026", time: "10:15 – 11:15 AM", speaker: "Dr. Chitradeep M", title: "Building the AI-Native 6G Era" },
+	{ date: "8 March 2026", time: "11:15 – 11:45 AM", speaker: "Tea Break", title: "—" },
+	{ date: "8 March 2026", time: "11:45 – 12:45 PM", speaker: "Prof. Amit Awekar", title: "Model Compression" },
+	{ date: "8 March 2026", time: "12:45 – 2:00 PM", speaker: "Lunch Break", title: "—" },
+	{ date: "8 March 2026", time: "2:00 – 3:00 PM", speaker: "Mr. Himanshu Gautam", title: "Blockchain Security: From Foundations to Post-Quantum Resilience" },
+	{ date: "8 March 2026", time: "3:00 – 3:30 PM", speaker: "Tea Break", title: "—" },
+];
+
+const eventScheduleColumns = [
+	{ accessorKey: "date", header: "Date" },
+	{ accessorKey: "time", header: "Time" },
+	{ accessorKey: "speaker", header: "Speaker / Session" },
+	{ accessorKey: "title", header: "Title" },
+];
 
 const CseConclave = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-amber-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 to-amber-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
 
-      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-purple-100 p-6 sm:p-8 md:p-12 space-y-10">
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-brand-100 p-6 sm:p-8 md:p-12 space-y-10">
 
         {/* Header */}
         <div className="text-center space-y-3">
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 tracking-tight leading-tight">
-            CSE Conclave <span className="text-purple-600">2026</span>
+            CSE Conclave <span className="text-brand-600">2026</span>
           </h1>
 
-          <p className="uppercase tracking-wider text-purple-600 text-xs sm:text-sm font-medium">
+          <p className="uppercase tracking-wider text-brand-600 text-xs sm:text-sm font-medium">
             Exploring Frontiers in Computer Science
           </p>
 
@@ -83,7 +112,7 @@ const CseConclave = () => {
           </div>
         </div>
         {/* About */}
-        <div className="bg-purple-50 rounded-lg p-5 sm:p-6 text-gray-700 text-sm sm:text-base leading-relaxed">
+        <div className="bg-brand-50 rounded-lg p-5 sm:p-6 text-gray-700 text-sm sm:text-base leading-relaxed">
           CSE Conclave 2026 is a two-day technical gathering bringing together
           eminent academicians, industry leaders, and researchers from premier
           institutions and global organizations. The conclave fosters dialogue,
@@ -108,7 +137,7 @@ const CseConclave = () => {
                   href="https://people.iith.ac.in/aravind/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                  Prof. N. R. Aravind
                 </a>{" "}
@@ -120,7 +149,7 @@ const CseConclave = () => {
                   href="https://www.cse.iitm.ac.in/~hema/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Prof. Hema Murthy
                 </a>{" "}
@@ -132,7 +161,7 @@ const CseConclave = () => {
                   href="https://in.linkedin.com/in/naveen-sivadasan-b71027b2?trk=people-guest_people_search-card"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Dr. Naveen Sivadasan
                 </a>{" "}
@@ -144,7 +173,7 @@ const CseConclave = () => {
                   href="https://www.iitg.ac.in/awekar/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Prof. Amit Awekar
                 </a>{" "}
@@ -156,7 +185,7 @@ const CseConclave = () => {
                   href="https://www.linkedin.com/in/ashish-mishra-bb378050/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Dr. Ashish Mishra
                 </a>{" "}
@@ -168,7 +197,7 @@ const CseConclave = () => {
                   href="https://in.linkedin.com/in/chitradeep-majumdar-27689113"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                 Dr. Chitradeep M </a>{" "} – Nokia
               </li>
@@ -178,7 +207,7 @@ const CseConclave = () => {
                   href="https://www.linkedin.com/in/j13mehul/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Mr. Mehul Jain
                 </a>{" "}
@@ -190,7 +219,7 @@ const CseConclave = () => {
                   href="https://www.linkedin.com/in/sushim/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Sushim Shrivastava
                 </a>{" "}
@@ -202,7 +231,7 @@ const CseConclave = () => {
                   href="https://www.linkedin.com/in/himanshu-gautam-69647289/"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-blue-600 hover:underline"
+                  className="font-medium text-brand-600 hover:underline"
                 >
                   Mr. Himanshu Gautam
                 </a>{" "}
@@ -257,157 +286,19 @@ const CseConclave = () => {
     Event Schedule
   </h2>
 
-  <div className="overflow-x-auto">
-    <table className="min-w-full text-sm text-left border border-gray-200 rounded-lg overflow-hidden">
-      
-      <thead className="bg-purple-50 text-gray-700 uppercase text-xs tracking-wider">
-        <tr>
-          <th className="px-4 py-3">Date</th>
-          <th className="px-4 py-3">Time</th>
-          <th className="px-4 py-3">Speaker / Session</th>
-          <th className="px-4 py-3">Title</th>
-        </tr>
-      </thead>
-
-      <tbody className="divide-y divide-gray-200">
-
-        {/* Day 1 */}
-        <tr className="bg-gray-50">
-          <td className="px-4 py-3 font-medium">7 March 2026</td>
-          <td className="px-4 py-3">9:30 – 10:00 AM</td>
-          <td className="px-4 py-3">Registration and Opening Remarks</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">10:00 – 11:00 AM</td>
-          <td className="px-4 py-3">Dr. Naveen Sivadasan</td>
-          <td className="px-4 py-3">Biological Data Analysis with Applications in Medicine</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">11:00 – 11:15 AM</td>
-          <td className="px-4 py-3">Switching / Buffer Time</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">11:15 – 12:15 PM</td>
-          <td className="px-4 py-3">Prof. N. R. Aravind</td>
-          <td className="px-4 py-3">Algorithms Using Predictions</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">12:15 – 2:00 PM</td>
-          <td className="px-4 py-3">Lunch Break</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">2:00 – 3:00 PM</td>
-          <td className="px-4 py-3">Mr. Mehul Jain</td>
-          <td className="px-4 py-3">Building Smart Agents with MCP and SSH</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">3:00 – 3:15 PM</td>
-          <td className="px-4 py-3">Switching / Buffer Time</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">3:15 – 4:15 PM</td>
-          <td className="px-4 py-3">Dr. Ashish Mishra</td>
-          <td className="px-4 py-3">Revolution of Limited Supervision in Computer Vision</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">4:15 – 5:15 PM</td>
-          <td className="px-4 py-3">Tea Break-cum-Poster Session</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">5:15 – 6:15 PM</td>
-          <td className="px-4 py-3">Sushim Shrivastava</td>
-          <td className="px-4 py-3">Constrained Compute: Challenges and Opportunities</td>
-        </tr>
-
-        {/* Day 2 */}
-        <tr className="bg-purple-50">
-          <td className="px-4 py-3 font-medium">8 March 2026</td>
-          <td className="px-4 py-3">9:00 – 10:00 AM</td>
-          <td className="px-4 py-3">Prof. Hema Murthy</td>
-          <td className="px-4 py-3">Beyond Backpropagation: Exact and Random Feedback Alignment</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">10:00 – 10:15 AM</td>
-          <td className="px-4 py-3">Switching / Buffer Time</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">10:15 – 11:15 AM</td>
-          <td className="px-4 py-3">Dr. Chitradeep M</td>
-          <td className="px-4 py-3">Building the AI-Native 6G Era</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">11:15 – 11:45 AM</td>
-          <td className="px-4 py-3">Tea Break</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">11:45 – 12:45 PM</td>
-          <td className="px-4 py-3">Prof. Amit Awekar</td>
-          <td className="px-4 py-3">Model Compression</td>
-        </tr>
-
-        <tr>
-          <td></td>
-          <td className="px-4 py-3">12:45 – 2:00 PM</td>
-          <td className="px-4 py-3">Lunch Break</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">2:00 – 3:00 PM</td>
-          <td className="px-4 py-3">Mr. Himanshu Gautam</td>
-          <td className="px-4 py-3">Blockchain Security: From Foundations to Post-Quantum Resilience</td>
-        </tr>
-
-        <tr className="bg-gray-50">
-          <td></td>
-          <td className="px-4 py-3">3:00 – 3:30 PM</td>
-          <td className="px-4 py-3">Tea Break</td>
-          <td className="px-4 py-3">—</td>
-        </tr>
-
-      </tbody>
-    </table>
-  </div>
+  <DataTable
+    columns={eventScheduleColumns}
+    data={eventSchedule}
+    enableSorting={false}
+    emptyMessage="No event schedule is available."
+    searchPlaceholder="Search the event schedule..."
+  />
 </div>
         {/* CTA */}
         <div className="text-center pt-4">
           <a
             href=""
-            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-purple-700 text-white rounded-lg font-medium shadow-md hover:bg-purple-800 transition"
+            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-[#19007B] text-white rounded-lg font-medium shadow-md hover:bg-[#140063] transition"
           >
             Registration Closed
         </a>

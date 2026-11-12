@@ -115,7 +115,7 @@ export default function MTechSection({ mtech_admission }) {
           )}
 
           {mtech_admission.program_structure && (
-            <div className="bg-indigo-50 p-4 rounded-md">
+            <div className="bg-brand-50 p-4 rounded-md">
               <h3 className="text-lg font-semibold mb-2">
                 {mtech_admission.program_structure.heading}
               </h3>
@@ -186,7 +186,7 @@ export default function MTechSection({ mtech_admission }) {
               </p>
               <a
                 href={mtech_admission.contact.email.match(/\((.*?)\)/)[1]}
-                className="inline-block bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
+                className="inline-block bg-[#19007B] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300"
               >
                 {mtech_admission.contact.email.match(/\[(.*?)\]/)[1]}
               </a>

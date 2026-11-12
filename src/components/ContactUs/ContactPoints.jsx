@@ -14,7 +14,7 @@ export default function ContactPoints() {
               Email:{" "}
               <a
                 href="mailto:cse.office@iitdh.ac.in"
-                className="text-indigo-600 hover:underline"
+                className="text-brand-600 hover:underline"
               >
                 cse.office@iitdh.ac.in
               </a>
@@ -26,7 +26,7 @@ export default function ContactPoints() {
               Email:{" "}
               <a
                 href="mailto:head.cse@iitdh.ac.in"
-                className="text-indigo-600 hover:underline"
+                className="text-brand-600 hover:underline"
               >
                 head.cse@iitdh.ac.in
               </a>
@@ -40,7 +40,7 @@ export default function ContactPoints() {
               Email:{" "}
               <a
                 href="mailto:pgadmissions.cse@iitdh.ac.in"
-                className="text-indigo-600 hover:underline"
+                className="text-brand-600 hover:underline"
               >
                 pgadmissions.cse@iitdh.ac.in
               </a>
@@ -55,7 +55,7 @@ export default function ContactPoints() {
             Email:{" "}
             <a
               href="mailto:tpo@iitdh.ac.in"
-              className="text-indigo-600 hover:underline"
+              className="text-brand-600 hover:underline"
             >
               tpo@iitdh.ac.in
             </a>
@@ -63,7 +63,7 @@ export default function ContactPoints() {
             <span className="ml-[3.2rem]">
               <a
                 href="mailto:sameerjoshi@iitdh.ac.in"
-                className="text-indigo-600 hover:underline"
+                className="text-brand-600 hover:underline"
               >
                 sameerjoshi@iitdh.ac.in
               </a>
@@ -79,7 +79,7 @@ export default function ContactPoints() {
               Email:{" "}
               <a
                 href="mailto:adean.rnd@iitdh.ac.in"
-                className="text-indigo-600 hover:underline"
+                className="text-brand-600 hover:underline"
               >
                 adean.rnd@iitdh.ac.in
               </a>

@@ -22,7 +22,7 @@ export default function ContactUsFaq() {
             To schedule a visit, please email{" "}
             <a
               href="mailto:office.cse@iitdh.ac.in"
-              className="text-indigo-600 hover:underline"
+              className="text-brand-600 hover:underline"
             >
               office.cse@iitdh.ac.in
             </a>{" "}
@@ -38,7 +38,7 @@ export default function ContactUsFaq() {
             booking inquiries, please contact{" "}
             <a
               href="mailto:guesthouse@iitdh.ac.in"
-              className="text-indigo-600 hover:underline"
+              className="text-brand-600 hover:underline"
             >
               guesthouse@iitdh.ac.in
             </a>

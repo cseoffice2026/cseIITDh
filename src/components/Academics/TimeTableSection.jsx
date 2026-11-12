@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import Section from "../Section";
+import Loading from "../Loading";
 
 const PDFViewer = lazy(() => import("../PDFViewer/PDFViewer"));
 
@@ -19,7 +20,9 @@ export default function TimeTableSection() {
 
         {/* PDF Viewer Component */}
         <div className="mt-6">
-          <Suspense fallback={<div>Loading timetable...</div>}>
+          <Suspense
+            fallback={<Loading className="m-0 py-8" children="Loading timetable..." />}
+          >
             <PDFViewer pdfFile="/timetable.pdf" />
           </Suspense>
         </div>
@@ -33,7 +36,7 @@ export default function TimeTableSection() {
     href="https://www.iitdh.ac.in/timetable-autumn-2026-27"
     target="_blank"
     rel="noopener noreferrer"
-    className="inline-block px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow hover:bg-indigo-700 transition"
+    className="inline-block px-4 py-2 bg-[#19007B] text-white text-sm font-medium rounded-lg shadow hover:bg-[#140063] transition"
   >
     Open Timetable
   </a>

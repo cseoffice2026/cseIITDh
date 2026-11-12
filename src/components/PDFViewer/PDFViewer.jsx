@@ -7,6 +7,7 @@ import {
 // import "./PDFViewer.css";
 import { Document, Page, pdfjs } from "react-pdf";
 
+import Loading from "../Loading";
 import PDFErrorFallback from "./PDFErrorFallback";
 
 // Set up the worker source for PDF.js (only once)
@@ -97,7 +98,7 @@ const PDFViewer = ({ pdfFile }) => {
                 href={absolutePdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-indigo-600 hover:text-indigo-800 ml-1"
+                className="text-brand-600 hover:text-brand-800 ml-1"
               >
                 Click here to download the PDF file.
               </a>
@@ -109,7 +110,7 @@ const PDFViewer = ({ pdfFile }) => {
             href={absolutePdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-indigo-600 hover:text-indigo-800 font-medium inline-flex items-center"
+            className="text-brand-600 hover:text-brand-800 font-medium inline-flex items-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -143,9 +144,7 @@ const PDFViewer = ({ pdfFile }) => {
   return (
     <div className="pdf-viewer" ref={containerRef}>
       {loading && (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-        </div>
+        <Loading className="m-0 h-64" children="Loading PDF..." />
       )}
       <div className="pdf-container">
         <Document
@@ -155,11 +154,7 @@ const PDFViewer = ({ pdfFile }) => {
           className="flex flex-col items-center"
           error={<PDFErrorFallback pdfFile={absolutePdfUrl} />}
           noData={<PDFErrorFallback pdfFile={absolutePdfUrl} />}
-          loading={
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
-            </div>
-          }
+          loading={<Loading className="m-0 h-64" children="Loading PDF..." />}
         >
           {numPages !== null && (
             <Page
@@ -183,7 +178,7 @@ const PDFViewer = ({ pdfFile }) => {
               type="button"
               onClick={goToPreviousPage}
               disabled={pageNumber <= 1}
-              className="px-3 py-1 bg-indigo-600 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-3 py-1 bg-[#19007B] text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Previous
             </button>
@@ -191,7 +186,7 @@ const PDFViewer = ({ pdfFile }) => {
               type="button"
               onClick={goToNextPage}
               disabled={pageNumber >= numPages}
-              className="px-3 py-1 bg-indigo-600 text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-3 py-1 bg-[#19007B] text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Next
             </button>
@@ -201,7 +196,7 @@ const PDFViewer = ({ pdfFile }) => {
               href={absolutePdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center"
+              className="text-brand-600 hover:text-brand-800 font-medium flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -224,7 +219,7 @@ const PDFViewer = ({ pdfFile }) => {
             <button
               type="button"
               onClick={switchToFallback}
-              className="text-indigo-600 hover:text-indigo-800 font-medium flex items-center"
+              className="text-brand-600 hover:text-brand-800 font-medium flex items-center"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

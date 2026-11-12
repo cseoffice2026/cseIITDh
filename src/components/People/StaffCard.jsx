@@ -29,7 +29,7 @@ export default function StaffCard({
               />
             ) : null}
             <div
-              className={`text-4xl text-indigo-200 ${image ? "hidden" : ""}`}
+              className={`text-4xl text-brand-200 ${image ? "hidden" : ""}`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -48,10 +48,10 @@ export default function StaffCard({
           </div>
         </div>
         <div className="min-w-0">
-          <h3 className="text-lg font-semibold text-gray-800 truncate">
+          <h3 className="truncate text-lg font-semibold text-gray-900">
             {name}
           </h3>
-          <p className="text-indigo-600 truncate">{title}</p>
+          <p className="text-brand-600 truncate">{title}</p>
         </div>
       </div>
       <div className="p-4 bg-gray-50 text-sm flex-grow">
@@ -68,7 +68,7 @@ export default function StaffCard({
             </svg>
             <a
               href={`mailto:${email}`}
-              className="text-indigo-600 hover:underline truncate"
+              className="text-brand-600 hover:underline truncate"
             >
               {email}
             </a>

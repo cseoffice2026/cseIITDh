@@ -112,7 +112,7 @@ function SearchResults() {
                     <button
                       type="button"
                       onClick={() => handleResultClick(category)}
-                      className="text-blue-500 hover:underline text-sm focus:outline-none"
+                      className="text-brand-600 hover:underline text-sm focus:outline-none"
                     >
                       Read more
                     </button>

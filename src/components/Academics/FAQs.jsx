@@ -1,38 +1,9 @@
 import useAcademicFaq from "../../hooks/useAcademicFaqs";
 import Section from "../Section";
+import Loading from "../Loading";
 
 function FAQsLoading() {
-  return (
-    <div className="flex justify-center items-center py-8">
-      <div className="flex items-center space-x-3">
-        <svg
-          className="animate-spin h-5 w-5 text-indigo-600"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          aria-label="Loading"
-        >
-          <title>Loading</title>
-          <circle
-            className="opacity-25"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          ></circle>
-          <path
-            className="opacity-75"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-          ></path>
-        </svg>
-        <span className="text-gray-700 text-base font-medium">
-          Loading FAQs, please wait...
-        </span>
-      </div>
-    </div>
-  );
+  return <Loading className="py-8" children="Loading FAQs, please wait..." />;
 }
 
 function FAQsError({ error }) {
@@ -109,7 +80,7 @@ export default function FAQs() {
               Contact the Academic Office at{" "}
               <a
                 href="mailto:academics@cs.iitdh.ac.in"
-                className="text-indigo-600 hover:underline"
+                className="text-brand-600 hover:underline"
               >
                 academicstaff@iitdh.ac.in
               </a>{" "}

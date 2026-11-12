@@ -1,11 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useGalleryImages from "../../hooks/useGalleryImages";
 import GlobalError from "../GlobalError";
-import { ChevronLeftIcon, ChevronRightIcon, XMarkIcon } from '@heroicons/react/24/outline'; // Import icons
+import Loading from "../Loading";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { A11y, Autoplay, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/pagination";
 
 const Gallery = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
+  const swiperRef = useRef(null);
 
   const { data: galleryImages, isLoading, isError, error } = useGalleryImages();
 
@@ -36,7 +46,7 @@ const Gallery = () => {
       <div className="py-8 text-center">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6">Gallery</h2>
         <div className="flex justify-center items-center h-44">
-          <p className="text-gray-500">Loading Gallery...</p>
+          <Loading className="m-0" children="Loading gallery..." />
         </div>
       </div>
     );
@@ -52,26 +62,88 @@ const Gallery = () => {
   }
 
   return (
-    <div className="py-8">
-      <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-6 text-center">Gallery</h2>
+    <section className="py-8 sm:py-12">
+      <div className="mb-6 text-center sm:mb-8">
+        <h1 className="mb-2 font-semibold text-xl uppercase tracking-[0.15em] text-brand-700">
+          Moments from our community
+        </h1>
+        {/* <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Gallery</h2> */}
+      </div>
 
       {galleryImages && galleryImages.length > 0 ? (
-        <div className="flex overflow-x-auto space-x-4 p-4 scrollbar-thin scrollbar-thumb-indigo-600 scrollbar-track-gray-200">
-          {galleryImages.map((imageObj, index) => (
-            <button
-              type="button"
-              key={imageObj.url}
-              className="flex-shrink-0 w-64 h-44 sm:w-80 sm:h-56 cursor-pointer"
-              onClick={() => setSelectedImageIndex(index)}
-            >
-              <img
-                src={imageObj.url}
-                alt={imageObj.description || `Gallery image ${index + 1}`}
-                loading="lazy"
-                className="w-full h-full object-cover rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-              />
-            </button>
-          ))}
+        <div className="relative rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-brand-50 p-3 shadow-sm sm:p-5">
+          <Swiper
+            className="gallery-swiper"
+            modules={[A11y, Autoplay, Pagination]}
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+            }}
+            slidesPerView="auto"
+            spaceBetween={16}
+            pagination={{ clickable: true }}
+            rewind
+            autoplay={{
+              delay: 3500,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
+            breakpoints={{
+              640: { spaceBetween: 20 },
+              1024: { spaceBetween: 24 },
+            }}
+            a11y={{ enabled: true }}
+          >
+            {galleryImages.map((imageObj, index) => {
+              const description =
+                imageObj.description || `Gallery image ${index + 1}`;
+
+              return (
+                <SwiperSlide
+                  key={imageObj.url}
+                  className="!h-auto !w-[86%] sm:!w-[48%]"
+                >
+                  <button
+                    type="button"
+                    className="group relative block h-80 w-full overflow-hidden rounded-2xl bg-brand-100 text-left shadow-md transition duration-300 hover:-translate-y-1 hover:shadow-xl focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-2 focus-visible:outline-brand-600 sm:h-80 lg:h-88"
+                    onClick={() => setSelectedImageIndex(index)}
+                    aria-label={`Open ${description} in full size`}
+                  >
+                    <img
+                      src={imageObj.url}
+                      alt={description}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                    />
+                    {imageObj.description ? (
+                      <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/25 to-transparent px-4 pb-4 pt-12 text-sm font-medium text-white sm:px-5 sm:pb-5">
+                        {imageObj.description}
+                      </span>
+                    ) : null}
+                  </button>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+          {galleryImages.length > 1 ? (
+            <>
+              <button
+                type="button"
+                onClick={() => swiperRef.current?.slidePrev()}
+                className="absolute left-5 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-brand-900 shadow-lg transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 sm:left-7 sm:h-12 sm:w-12"
+                aria-label="Previous gallery images"
+              >
+                <ChevronLeftIcon className="h-6 w-6" />
+              </button>
+              <button
+                type="button"
+                onClick={() => swiperRef.current?.slideNext()}
+                className="absolute right-5 top-1/2 z-10 inline-flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/95 text-brand-900 shadow-lg transition hover:scale-105 hover:bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700 sm:right-7 sm:h-12 sm:w-12"
+                aria-label="Next gallery images"
+              >
+                <ChevronRightIcon className="h-6 w-6" />
+              </button>
+            </>
+          ) : null}
         </div>
       ) : (
         <p className="text-center text-gray-500">No images in the gallery yet.</p>
@@ -135,7 +207,7 @@ const Gallery = () => {
         </div>,
         document.body
       )}
-    </div>
+    </section>
   );
 };
 

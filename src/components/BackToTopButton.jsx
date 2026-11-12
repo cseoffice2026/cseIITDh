@@ -18,9 +18,10 @@ export default function BackToTopButton({ to }) {
       <button
         type="button"
         onClick={handleBackToTop}
-        className="inline-block cursor-pointer bg-indigo-600 text-white px-4 py-2 rounded-md hover:bg-indigo-700 transition duration-300"
+        aria-label="Back to top"
+        className="inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[#19007B] text-2xl text-white shadow-md transition duration-300 hover:bg-[#140063]"
       >
-        Back to Top
+        <span aria-hidden="true">↑</span>
       </button>
     </div>
   );

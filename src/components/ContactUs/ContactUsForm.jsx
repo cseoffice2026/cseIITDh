@@ -16,7 +16,7 @@ export default function ContactUsForm() {
             <input
               type="text"
               id="name"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
               placeholder="Your name"
             />
           </div>
@@ -30,7 +30,7 @@ export default function ContactUsForm() {
             <input
               type="email"
               id="email"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
               placeholder="Your email"
             />
           </div>
@@ -44,7 +44,7 @@ export default function ContactUsForm() {
             <input
               type="text"
               id="subject"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
               placeholder="Subject of your message"
             />
           </div>
@@ -58,14 +58,14 @@ export default function ContactUsForm() {
             <textarea
               id="message"
               rows="4"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-500"
               placeholder="Your message"
             ></textarea>
           </div>
           <div className="md:col-span-2 text-right">
             <button
               type="submit"
-              className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition duration-300"
+              className="px-4 py-2 bg-[#19007B] text-white rounded-md hover:bg-[#140063] transition duration-300"
             >
               Send Message
             </button>

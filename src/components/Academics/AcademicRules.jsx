@@ -1,36 +1,16 @@
 import useAcademicRules from "../../hooks/useAcademicRules";
 import Section from "../Section";
+import DataTable from "../DataTable";
+import Loading from "../Loading";
+
+const gradeColumns = [
+	{ accessorKey: "grade", header: "Grade" },
+	{ accessorKey: "percentage_range", header: "Percentage Range" },
+	{ accessorKey: "grade_points", header: "Grade Points" },
+];
 
 const AcademicLoading = () => (
-  <div className="flex justify-center items-center py-8">
-    <div className="flex items-center space-x-3">
-      <svg
-        className="animate-spin h-5 w-5 text-indigo-600"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        aria-label="Loading"
-      >
-        <title>Loading</title>
-        <circle
-          className="opacity-25"
-          cx="12"
-          cy="12"
-          r="10"
-          stroke="currentColor"
-          strokeWidth="4"
-        ></circle>
-        <path
-          className="opacity-75"
-          fill="currentColor"
-          d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-        ></path>
-      </svg>
-      <span className="text-gray-700 text-base font-medium">
-        Loading academic rules, please wait...
-      </span>
-    </div>
-  </div>
+  <Loading className="py-8" children="Loading academic rules, please wait..." />
 );
 
 const AcademicError = ({ error }) => (
@@ -123,38 +103,11 @@ export default function AcademicRules() {
                 <h3 className="text-xl font-semibold mb-3">
                   {academicRules.grading_policy.heading}
                 </h3>
-                <div className="overflow-x-auto">
-                  <table className="min-w-full bg-white border-collapse">
-                    <thead>
-                      <tr className="bg-gray-100">
-                        <th className="border border-gray-200 px-4 py-2">
-                          Grade
-                        </th>
-                        <th className="border border-gray-200 px-4 py-2">
-                          Percentage Range
-                        </th>
-                        <th className="border border-gray-200 px-4 py-2">
-                          Grade Points
-                        </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {academicRules.grading_policy.grades.map((gradeItem, index) => (
-                        <tr key={index}>
-                          <td className="border border-gray-200 px-4 py-2 text-center">
-                            {gradeItem.grade}
-                          </td>
-                          <td className="border border-gray-200 px-4 py-2">
-                            {gradeItem.percentage_range}
-                          </td>
-                          <td className="border border-gray-200 px-4 py-2 text-center">
-                            {gradeItem.grade_points}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <DataTable
+                  columns={gradeColumns}
+                  data={academicRules.grading_policy.grades}
+                  emptyMessage="No grading details are available."
+                />
               </div>
             )}
 
@@ -187,7 +140,7 @@ export default function AcademicRules() {
     href="https://res.cloudinary.com/dncpxsaxa/image/upload/v1779210363/UG_Rulebook_v5_31Mar26_jkjtd0.pdf"
     target="_blank"
     rel="noopener noreferrer"
-    className="inline-block px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg shadow hover:bg-indigo-700 transition"
+    className="inline-block px-4 py-2 bg-[#19007B] text-white text-sm font-medium rounded-lg shadow hover:bg-[#140063] transition"
   >
     Open Rulebook
   </a>

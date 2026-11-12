@@ -1,21 +1,6 @@
 import { useNews } from "../../hooks/useNews";
-import { Link } from "react-router-dom"; // ← make sure this is imported
-
-const NewsCard = ({ title, dateDisplay, description, link }) => (
-  <button
-    type="button"
-    onClick={() => {
-      if (link) window.open(link, "_blank");
-    }}
-    className="cursor-pointer bg-white rounded-lg shadow-sm p-4 hover:shadow-md transition-shadow duration-300 flex flex-col h-full text-left"
-  >
-    <h3 className="text-lg font-semibold text-gray-800">{title}</h3>
-    {dateDisplay && (
-      <p className="text-sm text-indigo-600 font-medium mt-1">{dateDisplay}</p>
-    )}
-    <p className="text-gray-600 text-sm mt-2 flex-grow">{description}</p>
-  </button>
-);
+import { Link } from "react-router-dom";
+import NewsCard from "./NewsCard";
 
 const NewsLoading = () => (
   <div className="animate-pulse space-y-4">
@@ -41,49 +26,51 @@ export default function NewsSection() {
   };
 
   const recentNews = getRecentNews();
-  const hasRecentNews = recentNews.length > 0;
 
   return (
-    <div>
-      {/* Header with button */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-800">News and Announcements</h2>
+    <section className="space-y-5">
+      <div className="flex items-end justify-between gap-4">
+        <div>        
+          <h2 className="text-2xl font-bold text-gray-800">Latest News</h2>
+         
+        </div>
         <Link
           to="/allnews"
-          className="text-sm bg-indigo-600 text-white px-3 py-1.5 rounded-md hover:bg-indigo-700 transition font-medium"
+          className="shrink-0 text-sm font-semibold text-brand-600 hover:text-brand-700"
         >
-          View All
+          View All →
         </Link>
       </div>
 
-      {/* News Content */}
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 gap-4">
         {newsLoading ? (
           <NewsLoading />
         ) : newsError ? (
-          <div className="text-red-500 p-4 bg-red-50 rounded-lg">
+          <div className="rounded-lg bg-red-50 p-4 text-red-500">
             <p>Error loading News and Announcements: {newsError?.message}</p>
             <p className="text-sm mt-2">Please try refreshing the page.</p>
           </div>
-        ) : hasRecentNews ? (
+        ) : recentNews.length > 0 ? (
           recentNews.map((item, index) => (
             <NewsCard
               key={`news-${item?.id ?? item?.link ?? `${item?.title ?? item?.Title ?? "entry"}-${index}`}`}
-              {...item}
+              item={item}
             />
           ))
         ) : (
-          <div className="text-center py-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-600 mb-4">No recent News and Announcements in the past month.</p>
+          <div className="rounded-lg bg-gray-50 py-8 text-center">
+            <p className="mb-4 text-gray-600">
+              No recent News and Announcements in the past month.
+            </p>
             <Link
               to="/allnews"
-              className="inline-block text-indigo-600 hover:text-indigo-700 font-medium"
+              className="font-medium text-brand-600 hover:text-brand-700"
             >
               View past news and Announcements, more →
             </Link>
           </div>
         )}
       </div>
-    </div>
+    </section>
   );
 }

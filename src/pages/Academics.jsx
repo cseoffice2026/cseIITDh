@@ -1,4 +1,5 @@
 import { lazy, Suspense } from "react";
+import Loading from "../components/Loading";
 
 const AcademicRules = lazy(() =>
   import("../components/Academics/AcademicRules")
@@ -19,9 +20,7 @@ const PlacementSection = lazy(() =>
 );
 const BackToTopButton = lazy(() => import("../components/BackToTopButton"));
 
-const fallback = (
-  <div className="text-center py-8 text-gray-400">Loading...</div>
-);
+const fallback = <Loading className="py-8" />;
 
 // Academics Page
 const Academics = () => {

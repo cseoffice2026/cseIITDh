@@ -1,9 +1,123 @@
 @import "tailwindcss";
 @import "flowbite";
 
+@theme {
+  --color-brand-50: #f4f2f8;
+  --color-brand-100: #e8e6f2;
+  --color-brand-200: #d1cce5;
+  --color-brand-300: #a399ca;
+  --color-brand-400: #7566b0;
+  --color-brand-500: #473395;
+  --color-brand-600: #19007b;
+  --color-brand-700: #140063;
+  --color-brand-800: #10004f;
+  --color-brand-900: #0c003b;
+  --color-brand-950: #08002a;
+}
+
 * {
   box-sizing: border-box;
   font-family: Roboto, sans-serif;
+}
+
+#main-navigation {
+  background-color: #19007b;
+}
+
+#main-navigation > ul {
+  background-color: #19007b;
+}
+
+#main-navigation .main-navigation-dropdown {
+  background-color: #19007b;
+  border: 1px solid #19007b;
+}
+
+#main-navigation .main-navigation-link-active {
+  position: relative;
+  background-color: #19007b;
+  color: white;
+}
+
+#main-navigation .main-navigation-link {
+  position: relative;
+}
+
+#main-navigation .main-navigation-link::after {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.4rem;
+  left: 1rem;
+  height: 2px;
+  background-color: white;
+  content: "";
+  transform: scaleX(0);
+  transition: transform 180ms ease;
+}
+
+#main-navigation .main-navigation-link:hover::after,
+#main-navigation .main-navigation-link-active::after {
+  transform: scaleX(1);
+}
+
+#main-navigation .main-navigation-link-active::after {
+  bottom: 0.4rem;
+}
+
+#main-navigation .main-navigation-dropdown-link {
+  color: white;
+}
+
+#main-navigation .main-navigation-dropdown-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+
+@media (min-width: 1024px) {
+  #main-navigation {
+    background-color: #19007b;
+    border-color: transparent;
+  }
+
+  #main-navigation .main-navigation-link {
+    color: white;
+  }
+
+  #main-navigation .main-navigation-link:hover {
+    color: white;
+  }
+
+  #main-navigation .main-navigation-link-active {
+    background-color: #19007b;
+    color: white;
+  }
+
+  #main-navigation button {
+    color: white;
+  }
+
+  #main-navigation button:hover {
+    color: white;
+  }
+}
+
+.data-table tbody tr:nth-child(even) {
+  background-color: #19007b;
+  color: white;
+}
+
+.data-table tbody tr:nth-child(even) a {
+  color: white;
+  text-decoration: underline;
+}
+
+.data-table tbody tr:hover {
+  background-color: #19007b;
+  color: white;
+}
+
+.data-table tbody tr:hover a {
+  color: white;
 }
 
 @media (max-width: 1023px) {
@@ -25,6 +139,56 @@
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.gallery-swiper .swiper-pagination {
+  position: static;
+  margin-top: 1.25rem;
+}
+
+.gallery-swiper .swiper-pagination-bullet {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: #19007b;
+  opacity: 0.35;
+  transition: width 180ms ease, opacity 180ms ease;
+}
+
+.gallery-swiper .swiper-pagination-bullet-active {
+  width: 1.5rem;
+  border-radius: 9999px;
+  opacity: 1;
+}
+
+.directory-step {
+  animation: directory-step-enter 180ms ease-out;
+}
+
+.dots-ring {
+  animation: dots-ring-spin var(--duration, 1s) linear infinite;
+}
+
+@keyframes dots-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes directory-step-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.35rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .directory-step {
+    animation: none;
+  }
 }
 
 /* PDF Viewer Styles */

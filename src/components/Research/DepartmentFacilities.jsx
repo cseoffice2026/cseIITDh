@@ -47,7 +47,7 @@ function DepartmentFacilitiesData() {
                   href={lab.link}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-indigo-600 hover:underline"
+                  className="text-brand-600 hover:underline"
                 >
                   {lab.name}
                   {lab.img && (

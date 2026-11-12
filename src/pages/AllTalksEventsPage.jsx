@@ -1,45 +1,5 @@
 import { useTalksAndEvents } from "../hooks/useTalksAndEvents";
-
-const TalkCard = ({
-  title,
-  speaker,
-  designation,
-  venue,
-  time,
-  dateDisplay,
-  description,
-  links,
-}) => (
-  <div className="
-    bg-white rounded-2xl p-6 transition-all duration-300
-    transform hover:-translate-y-1 shadow-md hover:shadow-xl
-    text-left flex flex-col h-full
-  ">
-    <h3 className="text-xl font-semibold text-gray-900 mb-2 italic">{title}</h3>
-    {speaker && (
-      <div className="mb-2">
-        <strong className="font-semibold text-gray-800">Speaker:</strong> {speaker}
-        {designation && <div className="text-sm text-gray-600">{designation}</div>}
-      </div>
-    )}
-    {dateDisplay && <div className="mt-1"><strong>📅 Date:</strong> {dateDisplay}</div>}
-    {time && <div className="mt-1"><strong>⏰ Time:</strong> {time}</div>}
-    {venue && <div className="mt-2"><strong>📍 Venue:</strong> {venue}</div>}
-    {description && <p className="mt-4 font-medium text-gray-700">{description}</p>}
-    {links && (
-  <div className="mt-2">
-    <a
-      href={links}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-600 hover:underline break-words"
-    >
-      🔗 View Event Details
-    </a>
-  </div>
-    )}
-  </div>
-);
+import TalkEventCard from "../components/Home/TalkEventCard";
 
 const TalksLoading = () => (
   <div className="space-y-6 animate-pulse">
@@ -81,7 +41,7 @@ export default function AllTalksEventsPage() {
         ) : sortedTalks.length > 0 ? (
           <div className="space-y-8">
             {sortedTalks.map((item, index) => (
-              <TalkCard
+              <TalkEventCard
                 key={`talk-${item.id ?? item.Title ?? item.title ?? index}`}
                 {...item}
               />

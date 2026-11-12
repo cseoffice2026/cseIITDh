@@ -1,4 +1,5 @@
 import useAboutData from "../hooks/useAboutData";
+import Loading from "../components/Loading";
 
 const AboutDescription = ({ description }) => {
   if (!Array.isArray(description) || description.length === 0) {
@@ -48,24 +49,7 @@ const AboutDescription = ({ description }) => {
 const AboutData = () => {
   const { data: aboutData, isLoading, isError, error } = useAboutData();
 
-  if (isLoading) {
-    return (
-      <div className="py-6 px-4 md:px-8">
-        <div className="animate-pulse space-y-6">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
-              <div className="space-y-3">
-                <div className="h-4 bg-gray-200 rounded"></div>
-                <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-                <div className="h-4 bg-gray-200 rounded w-4/6"></div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  if (isLoading) return <Loading className="py-8" />;
 
   if (isError) {
     return (

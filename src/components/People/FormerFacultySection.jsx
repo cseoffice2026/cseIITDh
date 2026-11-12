@@ -2,6 +2,13 @@ import Section from "../Section";
 import FormerMemberCard from "./FormerMemberCard";
 
 export default function FormerFacultySection({ formerFaculty }) {
+
+   useEffect(() => {
+
+    console.log(formerFaculty);
+   }, [formerFaculty]);
+ 
+
   return (
     <Section id="former-faculty" title="Former Faculty">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

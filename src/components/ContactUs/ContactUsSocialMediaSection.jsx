@@ -8,7 +8,7 @@ export default function ContactUsSocialMediaSection() {
         <a
           // biome-ignore lint/a11y/useValidAnchor: <no link yet>
           href="#"
-          className="text-gray-600 hover:text-indigo-600 transition-colors duration-300"
+          className="text-gray-600 hover:text-brand-600 transition-colors duration-300"
         >
           <span className="sr-only">Facebook</span>
           <svg
@@ -27,7 +27,7 @@ export default function ContactUsSocialMediaSection() {
         <a
           // biome-ignore lint/a11y/useValidAnchor: <no link yet>
           href="#"
-          className="text-gray-600 hover:text-indigo-600 transition-colors duration-300"
+          className="text-gray-600 hover:text-brand-600 transition-colors duration-300"
         >
           <span className="sr-only">Twitter</span>
           <svg
@@ -42,7 +42,7 @@ export default function ContactUsSocialMediaSection() {
         <a
           // biome-ignore lint/a11y/useValidAnchor: <no link yet>
           href="#"
-          className="text-gray-600 hover:text-indigo-600 transition-colors duration-300"
+          className="text-gray-600 hover:text-brand-600 transition-colors duration-300"
         >
           <span className="sr-only">LinkedIn</span>
           <svg
@@ -61,7 +61,7 @@ export default function ContactUsSocialMediaSection() {
         <a
           // biome-ignore lint/a11y/useValidAnchor: no link yet
           href="#"
-          className="text-gray-600 hover:text-indigo-600 transition-colors duration-300"
+          className="text-gray-600 hover:text-brand-600 transition-colors duration-300"
         >
           <span className="sr-only">YouTube</span>
           <svg
