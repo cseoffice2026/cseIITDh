@@ -68,7 +68,7 @@ export default function BTechSection({ btech_admission }) {
                 }
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-[#19007B] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300 mr-4"
+                className="inline-block bg-[#19007b] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300 mr-4"
               >
                 {
                   btech_admission.links.jee_advanced_website.match(
@@ -80,7 +80,7 @@ export default function BTechSection({ btech_admission }) {
                 href={btech_admission.links.josaa_portal.match(/\((.*?)\)/)[1]}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block bg-[#19007B] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300"
+                className="inline-block bg-[#19007b] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300"
               >
                 {btech_admission.links.josaa_portal.match(/\[(.*?)\]/)[1]}
               </a>

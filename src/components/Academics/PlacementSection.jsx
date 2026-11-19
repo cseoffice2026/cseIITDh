@@ -26,7 +26,7 @@ const programStats = {
 
 const segmentColors = {
   placed: "#10b981",
-  competitiveExams: "#19007B",
+  competitiveExams: "#19007b",
   higherEducation: "#3b82f6",
   remaining: "#f59e0b",
 };
@@ -111,7 +111,7 @@ function RecruitingCompanies() {
           <button
             type="button"
             onClick={() => refetch()}
-            className="mt-3 rounded-lg bg-[#19007B] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#140063] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+            className="mt-3 rounded-lg bg-[#19007b] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#140063] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
           >
             Try again
           </button>

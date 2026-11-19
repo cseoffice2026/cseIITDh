@@ -3,7 +3,7 @@ const DOTS = Array.from({ length: 8 }, (_, index) => index);
 export function DotsRing({ className = "" }) {
 	return (
 		<span
-			className={`dots-ring relative inline-block shrink-0 text-[#19007B] ${className}`}
+			className={`dots-ring relative inline-block shrink-0 text-[#19007b] ${className}`}
 			style={{ fontSize: "1.5rem", animationDuration: "var(--duration, 1s)" }}
 			role="status"
 			aria-label="Loading"

@@ -31,7 +31,7 @@ export default function NewsSection() {
     <section className="space-y-5">
       <div className="flex items-end justify-between gap-4">
         <div>        
-          <h2 className="text-2xl font-bold text-gray-800">Latest News</h2>
+          <h2 className="text-2xl font-bold text-gray-800">Latest News and Announcements</h2>
          
         </div>
         <Link

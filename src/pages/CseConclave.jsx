@@ -298,7 +298,7 @@ const CseConclave = () => {
         <div className="text-center pt-4">
           <a
             href=""
-            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-[#19007B] text-white rounded-lg font-medium shadow-md hover:bg-[#140063] transition"
+            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-[#19007b] text-white rounded-lg font-medium shadow-md hover:bg-[#140063] transition"
           >
             Registration Closed
         </a>

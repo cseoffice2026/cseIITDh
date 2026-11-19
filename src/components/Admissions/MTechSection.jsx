@@ -186,7 +186,7 @@ export default function MTechSection({ mtech_admission }) {
               </p>
               <a
                 href={mtech_admission.contact.email.match(/\((.*?)\)/)[1]}
-                className="inline-block bg-[#19007B] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300"
+                className="inline-block bg-[#19007b] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300"
               >
                 {mtech_admission.contact.email.match(/\[(.*?)\]/)[1]}
               </a>

@@ -41,8 +41,8 @@ export default function DataTable({
 	const lastVisibleRow = Math.min((pageIndex + 1) * pageSize, filteredCount);
 
 	return (
-		<div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-			<div className="flex flex-col gap-3 border-b border-gray-200 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+		<div className="data-table overflow-hidden rounded-xl border border-brand-200 bg-white shadow-sm">
+			<div className="flex flex-col gap-3 border-b border-brand-200 bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
 				<label className="sr-only" htmlFor={searchId}>
 					Search table
 				</label>
@@ -55,7 +55,7 @@ export default function DataTable({
 						table.setPageIndex(0);
 					}}
 					placeholder={searchPlaceholder}
-					className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#19007B] focus:ring-2 focus:ring-brand-100 sm:max-w-xs"
+					className="w-full rounded-lg border border-brand-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 sm:max-w-xs"
 				/>
 				<p className="text-sm text-gray-600" aria-live="polite">
 					{filteredCount.toLocaleString()}{" "}
@@ -64,8 +64,8 @@ export default function DataTable({
 			</div>
 
 			<div className="overflow-x-auto">
-				<table className="min-w-full text-left text-sm text-gray-900">
-					<thead className="bg-[#19007B] text-xs uppercase tracking-wide text-white">
+				<table className="min-w-full text-left text-sm text-brand-950">
+					<thead className="bg-[#19007b] text-xs uppercase tracking-wide text-white">
 						{table.getHeaderGroups().map((headerGroup) => (
 							<tr key={headerGroup.id}>
 								{headerGroup.headers.map((header) => (
@@ -103,12 +103,12 @@ export default function DataTable({
 							</tr>
 						))}
 					</thead>
-					<tbody className="divide-y divide-gray-200">
+					<tbody className="divide-y divide-brand-200">
 						{table.getRowModel().rows.length > 0 ? (
 							table.getRowModel().rows.map((row) => (
 								<tr
 									key={row.id}
-									className="odd:bg-white even:bg-gray-50 hover:bg-brand-50"
+									className="odd:bg-white even:bg-gray-50"
 								>
 									{row.getVisibleCells().map((cell) => (
 										<td key={cell.id} className="px-4 py-3 align-top">
@@ -124,7 +124,7 @@ export default function DataTable({
 							<tr>
 								<td
 									colSpan={columns.length}
-									className="px-4 py-8 text-center text-gray-600"
+									className="px-4 py-8 text-center text-brand-700"
 								>
 									{globalFilter ? "No matching rows." : emptyMessage}
 								</td>
@@ -134,7 +134,7 @@ export default function DataTable({
 				</table>
 			</div>
 
-			<div className="flex flex-col gap-3 border-t border-gray-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+			<div className="flex flex-col gap-3 border-t border-brand-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
 				<div className="flex flex-wrap items-center gap-x-4 gap-y-2">
 					<label className="flex items-center gap-2 text-sm text-gray-700">
 						Show
@@ -144,7 +144,7 @@ export default function DataTable({
 								onChange={(event) =>
 									table.setPageSize(Number(event.target.value))
 								}
-								className="w-[4.5rem] appearance-none rounded-md border border-gray-300 bg-white py-1.5 pl-3 pr-7 text-sm text-gray-900 focus:border-[#19007B] focus:outline-none focus:ring-2 focus:ring-brand-100"
+								className="w-[4.5rem] appearance-none rounded-md border border-brand-300 bg-white py-1.5 pl-3 pr-7 text-sm text-gray-900 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-100"
 							>
 								{[10, 25, 50, 100].map((size) => (
 									<option key={size} value={size}>
@@ -178,7 +178,7 @@ export default function DataTable({
 							type="button"
 							onClick={() => table.previousPage()}
 							disabled={!table.getCanPreviousPage()}
-							className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:border-brand-300 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+							className="rounded-lg border border-brand-300 px-3 py-1.5 text-sm font-medium text-brand-800 transition hover:border-brand-400 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
 						>
 							Previous
 						</button>
@@ -186,7 +186,7 @@ export default function DataTable({
 							type="button"
 							onClick={() => table.nextPage()}
 							disabled={!table.getCanNextPage()}
-							className="rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:border-brand-300 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
+							className="rounded-lg border border-brand-300 px-3 py-1.5 text-sm font-medium text-brand-800 transition hover:border-brand-400 hover:bg-brand-50 disabled:cursor-not-allowed disabled:opacity-40"
 						>
 							Next
 						</button>

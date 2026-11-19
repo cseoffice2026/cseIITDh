@@ -48,7 +48,7 @@ const CseConclave = () => {
   });
 console.log("Schedule:", schedule);
   return (
-    <div className="min-h-screen bg-gradient-to-br from-brand-50 to-amber-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
+    <div className="min-h-screen bg-gradient-to-br from-brand-50 to-brand-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
 
       <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl border border-brand-100 p-6 sm:p-8 md:p-12 space-y-10">
 
@@ -251,7 +251,7 @@ console.log("Schedule:", schedule);
         </div>
 
         {/* Benefits */}
-        <div className="bg-amber-50 rounded-lg p-5 sm:p-6 text-sm sm:text-base text-gray-700">
+        <div className="bg-brand-50 rounded-lg p-5 sm:p-6 text-sm sm:text-base text-gray-700">
           <h3 className="font-semibold mb-3">
             What You Will Gain
           </h3>
@@ -270,7 +270,7 @@ console.log("Schedule:", schedule);
           {scheduleIsLoading ? (
             <Loading className="m-0 py-8" children="Loading event schedule..." />
           ) : scheduleHasError ? (
-            <div className="py-6 text-center text-red-700" role="alert">
+            <div className="py-6 text-center text-brand-700" role="alert">
               <p>
                 Unable to load the event schedule
                 {scheduleError instanceof Error ? `: ${scheduleError.message}` : "."}
@@ -278,7 +278,7 @@ console.log("Schedule:", schedule);
               <button
                 type="button"
                 onClick={() => refetchSchedule()}
-                className="mt-3 rounded-md bg-[#19007B] px-4 py-2 text-white hover:bg-[#140063]"
+                className="mt-3 rounded-md bg-[#19007b] px-4 py-2 text-white hover:bg-[#140063]"
               >
                 Try again
               </button>
@@ -300,7 +300,7 @@ console.log("Schedule:", schedule);
         <div className="text-center pt-4">
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSeOFteVo1GLJ8zG0yIN-83w3pY-FxsZ4Cam8kRyWSrfhRtfAQ/viewform?usp=publish-editor"
-            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-[#19007B] text-white rounded-lg font-medium shadow-md hover:bg-[#140063] transition"
+            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-[#19007b] text-white rounded-lg font-medium shadow-md hover:bg-[#140063] transition"
           >
             Register
         </a>

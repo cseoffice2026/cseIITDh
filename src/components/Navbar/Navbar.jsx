@@ -155,17 +155,17 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
     <nav
       id="main-navigation"
       aria-label="Main navigation"
-      className={`main-navigation fixed left-0 right-0 top-[70px] z-[100] bg-[#19007B] shadow-none max-lg:bottom-0 max-lg:w-72 max-lg:max-w-[85vw] max-lg:overflow-y-auto max-lg:overflow-x-hidden max-lg:shadow-xl max-lg:transition-all max-lg:duration-300 max-lg:ease-out lg:absolute lg:h-[54px] lg:w-full ${
+      className={`main-navigation fixed left-0 right-0 top-[70px] z-[100] bg-[#19007b] shadow-none max-lg:bottom-0 max-lg:w-72 max-lg:max-w-[85vw] max-lg:overflow-y-auto max-lg:overflow-x-hidden max-lg:shadow-xl max-lg:transition-all max-lg:duration-300 max-lg:ease-out lg:absolute lg:h-[54px] lg:w-full ${
         isMobileMenuOpen
           ? "mobile-nav-open"
           : "mobile-nav-closed"
       }`}
     >
-      <ul className="mx-auto flex  flex-col lg:h-full lg:w-full lg:max-w-[1440px] lg:flex-row lg:items-stretch lg:justify-center lg:bg-[#19007B]">
+      <ul className="mx-auto flex  flex-col lg:h-full lg:w-full lg:max-w-[1440px] lg:flex-row lg:items-stretch lg:justify-center lg:bg-[#19007b]">
         {navLinks.map((item) => (
           <li
             key={item.label}
-            className="relative border-b border-[#19007B] last:border-b-0 lg:flex lg:h-full lg:items-stretch lg:border-b-0"
+            className="relative border-b border-[#19007b] last:border-b-0 lg:flex lg:h-full lg:items-stretch lg:border-b-0"
             onPointerEnter={(e) => handlePointerEnter(e, item)}
             onPointerLeave={(e) => handlePointerLeave(e, item)}
           >

@@ -36,7 +36,7 @@ export default function TimeTableSection() {
     href="https://www.iitdh.ac.in/timetable-autumn-2026-27"
     target="_blank"
     rel="noopener noreferrer"
-    className="inline-block px-4 py-2 bg-[#19007B] text-white text-sm font-medium rounded-lg shadow hover:bg-[#140063] transition"
+    className="inline-block px-4 py-2 bg-[#19007b] text-white text-sm font-medium rounded-lg shadow hover:bg-[#140063] transition"
   >
     Open Timetable
   </a>

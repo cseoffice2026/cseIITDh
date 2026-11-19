@@ -58,7 +58,7 @@ const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-8 bg-[#19007B] text-brand-50">
+    <footer className="mt-8 bg-[#19007b] text-brand-50">
       <div className="mx-auto w-full max-w-7xl px-3 py-7 sm:px-8 lg:px-10">
 
         {/* Department Branding */}

@@ -30,7 +30,7 @@ function BTechProgrammeCatalogue() {
             Loading B.Tech batches and semester catalogues…
           </p>
         ) : isError ? (
-          <div className="px-5 py-6 text-sm text-red-800" role="alert">
+          <div className="px-5 py-6 text-sm text-brand-800" role="alert">
             <p className="font-semibold">B.Tech catalogue could not be loaded.</p>
             <p className="mt-1">
               {error?.message || "Check that the Google Sheet is publicly readable."}
@@ -46,7 +46,7 @@ function BTechProgrammeCatalogue() {
               <caption className="sr-only">
                 B.Tech batch and semester course catalogue links
               </caption>
-              <thead className="bg-[#19007B] text-white">
+              <thead className="bg-[#19007b] text-white">
                 <tr>
                   <th scope="col" className="border border-brand-900 px-4 py-3 font-semibold">Batch</th>
                   {Array.from({ length: 8 }, (_, index) => (
@@ -62,7 +62,7 @@ function BTechProgrammeCatalogue() {
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {data.map((row) => (
-                  <tr key={row.batch} className="odd:bg-white even:bg-gray-50 hover:bg-brand-50">
+                  <tr key={row.batch} className="odd:bg-white even:bg-gray-50">
                     <th scope="row" className="border border-gray-200 px-4 py-4 font-medium">
                       {row.batch}
                     </th>

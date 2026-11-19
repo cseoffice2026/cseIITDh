@@ -101,25 +101,6 @@
   }
 }
 
-.data-table tbody tr:nth-child(even) {
-  background-color: #19007b;
-  color: white;
-}
-
-.data-table tbody tr:nth-child(even) a {
-  color: white;
-  text-decoration: underline;
-}
-
-.data-table tbody tr:hover {
-  background-color: #19007b;
-  color: white;
-}
-
-.data-table tbody tr:hover a {
-  color: white;
-}
-
 @media (max-width: 1023px) {
   .mobile-nav-open {
     visibility: visible;

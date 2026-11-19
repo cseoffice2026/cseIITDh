@@ -178,7 +178,7 @@ const PDFViewer = ({ pdfFile }) => {
               type="button"
               onClick={goToPreviousPage}
               disabled={pageNumber <= 1}
-              className="px-3 py-1 bg-[#19007B] text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-3 py-1 bg-[#19007b] text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Previous
             </button>
@@ -186,7 +186,7 @@ const PDFViewer = ({ pdfFile }) => {
               type="button"
               onClick={goToNextPage}
               disabled={pageNumber >= numPages}
-              className="px-3 py-1 bg-[#19007B] text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="px-3 py-1 bg-[#19007b] text-white rounded-md disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
               Next
             </button>

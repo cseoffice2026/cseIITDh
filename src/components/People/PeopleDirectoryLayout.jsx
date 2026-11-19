@@ -43,7 +43,7 @@ export default function PeopleDirectoryLayout({
 								aria-current={isActive ? "page" : undefined}
 								className={`rounded-full px-5 py-2.5 text-sm font-semibold transition-colors ${
 									isActive
-										? "bg-[#19007B] text-white shadow-sm"
+										? "bg-[#19007b] text-white shadow-sm"
 										: "text-gray-600 hover:bg-white hover:text-brand-900"
 								}`}
 							>
