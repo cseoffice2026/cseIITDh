@@ -25,11 +25,14 @@ const fallback = <Loading className="py-8" />;
 // Academics Page
 const Academics = () => {
   return (
-    <div className="py-6 px-4 md:px-8">
+    <div className="py-6 px-4 md:px-8 bg-background">
       {/* Page Title */}
-      <div id="academics-top" className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Academics</h1>
-        <p className="text-gray-600">
+      <div
+        id="academics-top"
+        className="mb-10 border-b border-brand-200 pb-6"
+      >
+        <h1 className="text-3xl font-bold text-heading mb-2">Academics</h1>
+        <p className="text-muted">
           Learn about our academic programs, courses, and resources for computer
           science and engineering students.
         </p>
@@ -63,7 +66,7 @@ const Academics = () => {
               targetId="rules"
               viewText={"View Details"}
             />
-            
+
             <NavCard
               title="FAQs"
               icon={<i className="fas fa-question-circle"></i>}
@@ -94,7 +97,6 @@ const Academics = () => {
         <AcademicRules />
       </Suspense>
 
-      
       {/* FAQs Section */}
       <Suspense fallback={fallback}>
         <FAQs />

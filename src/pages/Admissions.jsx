@@ -81,7 +81,7 @@ const Admissions = () => {
           href="https://www.iitdh.ac.in/admissions"
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-block bg-[#19007B] text-white px-4 py-2 rounded-md hover:bg-[#140063] transition duration-300"
+          className="inline-block bg-brand-600 text-white px-4 py-2 rounded-md hover:bg-brand-700 transition duration-300"
         >
           Redirect to main website
         </a>

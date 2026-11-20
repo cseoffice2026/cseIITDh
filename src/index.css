@@ -2,17 +2,37 @@
 @import "flowbite";
 
 @theme {
-  --color-brand-50: #f4f2f8;
-  --color-brand-100: #e8e6f2;
-  --color-brand-200: #d1cce5;
-  --color-brand-300: #a399ca;
-  --color-brand-400: #7566b0;
-  --color-brand-500: #473395;
-  --color-brand-600: #19007b;
-  --color-brand-700: #140063;
-  --color-brand-800: #10004f;
-  --color-brand-900: #0c003b;
-  --color-brand-950: #08002a;
+  /* ---------- Core palette ---------- */
+  --color-primary: #7b3fbe;
+  --color-secondary: #b58ae8;
+  --color-background: #f4f2f8;
+  --color-surface: #ede5f8;
+  --color-muted: #6b7080;
+
+  /* Brand scale (600 = primary) */
+  --color-brand-50: #f6f0fc;
+  --color-brand-100: #ede5f8;
+  --color-brand-200: #dccbf1;
+  --color-brand-300: #c4a5e8;
+  --color-brand-400: #a66be0;
+  --color-brand-500: #8f50cf;
+  --color-brand-600: #7b3fbe;
+  --color-brand-700: #5e2a9e;
+  --color-brand-800: #43207a;
+  --color-brand-900: #2d1555;
+  --color-brand-950: #1a0b33;
+
+  /* Extras from the design */
+  --color-heading: #0f0f14;
+  --color-footer: #0d0b1a;
+
+  /* Highlight for dates, stats and the active nav link
+     (light lilac so it stays readable on purple) */
+  --color-accent: #e3cffa;
+}
+
+:root {
+  --color-paragraph: #6b7080;
 }
 
 * {
@@ -20,27 +40,33 @@
   font-family: Roboto, sans-serif;
 }
 
+body {
+  background-color: var(--color-background);
+  color: var(--color-paragraph);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--color-heading);
+}
+
+/* ---------- Main navigation ---------- */
 #main-navigation {
-  background-color: #19007b;
+  background-color: var(--color-brand-600);
 }
 
 #main-navigation > ul {
-  background-color: #19007b;
+  background-color: var(--color-brand-600);
 }
 
-#main-navigation .main-navigation-dropdown {
-  background-color: #19007b;
-  border: 1px solid #19007b;
-}
-
-#main-navigation .main-navigation-link-active {
-  position: relative;
-  background-color: #19007b;
-  color: white;
-}
-
+/* Base link: white text, hidden underline */
 #main-navigation .main-navigation-link {
   position: relative;
+  color: white;
 }
 
 #main-navigation .main-navigation-link::after {
@@ -55,69 +81,40 @@
   transition: transform 180ms ease;
 }
 
-#main-navigation .main-navigation-link:hover::after,
-#main-navigation .main-navigation-link-active::after {
-  transform: scaleX(1);
-}
-
-#main-navigation .main-navigation-link-active::after {
-  bottom: 0.4rem;
-}
-
-#main-navigation .main-navigation-dropdown-link {
+/* Hover: underline only, text stays white */
+#main-navigation .main-navigation-link:hover {
   color: white;
 }
 
-#main-navigation .main-navigation-dropdown-link:hover {
-  text-decoration: underline;
-  text-underline-offset: 0.25rem;
+#main-navigation .main-navigation-link:hover::after {
+  background-color: white;
+  transform: scaleX(1);
+}
+
+/* Active page: accent text + accent underline (also stays on hover) */
+#main-navigation .main-navigation-link-active,
+#main-navigation .main-navigation-link-active:hover {
+  position: relative;
+  background-color: var(--color-brand-600);
+  color: var(--color-accent);
+}
+
+#main-navigation .main-navigation-link-active::after,
+#main-navigation .main-navigation-link-active:hover::after {
+  background-color: var(--color-accent);
+  transform: scaleX(1);
 }
 
 @media (min-width: 1024px) {
   #main-navigation {
-    background-color: #19007b;
+    background-color: var(--color-brand-600);
     border-color: transparent;
   }
 
-  #main-navigation .main-navigation-link {
-    color: white;
-  }
-
-  #main-navigation .main-navigation-link:hover {
-    color: white;
-  }
-
-  #main-navigation .main-navigation-link-active {
-    background-color: #19007b;
-    color: white;
-  }
-
-  #main-navigation button {
-    color: white;
-  }
-
+  #main-navigation button,
   #main-navigation button:hover {
     color: white;
   }
-}
-
-.data-table tbody tr:nth-child(even) {
-  background-color: #19007b;
-  color: white;
-}
-
-.data-table tbody tr:nth-child(even) a {
-  color: white;
-  text-decoration: underline;
-}
-
-.data-table tbody tr:hover {
-  background-color: #19007b;
-  color: white;
-}
-
-.data-table tbody tr:hover a {
-  color: white;
 }
 
 @media (max-width: 1023px) {
@@ -132,6 +129,90 @@
   }
 }
 
+/* ---------- Home cards (News / Talks & Events) ---------- */
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-brand-200);
+}
+
+.view-all-pill {
+  border-radius: 9999px;
+  background-color: var(--color-brand-600);
+  padding: 0.375rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  transition: background-color 180ms ease;
+}
+
+.view-all-pill:hover {
+  background-color: var(--color-brand-700);
+}
+
+.info-card {
+  border: 1px solid var(--color-brand-200);
+  border-radius: 1rem;
+  background-color: var(--color-surface);
+  padding: 1.25rem;
+  box-shadow: 0 4px 10px rgba(123, 63, 190, 0.12);
+}
+
+.date-box {
+  border-radius: 0.75rem;
+  background-color: var(--color-brand-600);
+  padding: 0.75rem 1rem;
+}
+
+.date-box-label {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: white;
+}
+
+.date-box-value {
+  margin-top: 0.25rem;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+/* ---------- Tables ---------- */
+.data-table tbody tr:nth-child(even) {
+  background-color: var(--color-brand-600);
+  color: white;
+}
+
+.data-table tbody tr:nth-child(even) a {
+  color: white;
+  text-decoration: underline;
+}
+
+.data-table tbody tr:hover {
+  background-color: var(--color-brand-600);
+  color: white;
+}
+
+.data-table tbody tr:hover a {
+  color: white;
+}
+
+/* ---------- Gradient banner & footer ---------- */
+.gradient-banner {
+  background: linear-gradient(135deg, #a66be0 0%, #7b3fbe 50%, #5e2a9e 100%);
+}
+
+.gradient-banner h1,
+.gradient-banner h2,
+.gradient-banner h3 {
+  color: white;
+}
+
+/* ---------- Utilities ---------- */
 .hide-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -141,6 +222,70 @@
   display: none;
 }
 
+/* ---------- Infinite company marquee ---------- */
+.marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-left var(--marquee-duration, 40s) linear infinite;
+}
+
+.marquee-track.marquee-reverse {
+  animation-name: marquee-right;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-left {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ---------- Gallery swiper ---------- */
 .gallery-swiper .swiper-pagination {
   position: static;
   margin-top: 1.25rem;
@@ -149,7 +294,7 @@
 .gallery-swiper .swiper-pagination-bullet {
   width: 0.5rem;
   height: 0.5rem;
-  background-color: #19007b;
+  background-color: var(--color-brand-600);
   opacity: 0.35;
   transition: width 180ms ease, opacity 180ms ease;
 }
@@ -157,9 +302,11 @@
 .gallery-swiper .swiper-pagination-bullet-active {
   width: 1.5rem;
   border-radius: 9999px;
+  background-color: var(--color-secondary);
   opacity: 1;
 }
 
+/* ---------- Animations ---------- */
 .directory-step {
   animation: directory-step-enter 180ms ease-out;
 }
@@ -191,7 +338,7 @@
   }
 }
 
-/* PDF Viewer Styles */
+/* ---------- PDF viewer ---------- */
 .pdf-viewer {
   width: 100%;
   max-width: 100%;
@@ -200,36 +347,31 @@
   overflow: hidden;
 }
 
-/* Make the PDF viewer responsive */
 @media (max-width: 768px) {
   .pdf-viewer {
     padding: 0;
   }
 }
 
-/* Style for the Document component */
 .pdf-viewer .react-pdf__Document {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-/* Style for the Page component */
 .pdf-viewer .react-pdf__Page {
   margin: 0 auto;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 6px rgba(123, 63, 190, 0.15);
   border-radius: 0.25rem;
   overflow: hidden;
 }
 
-/* Style for page canvas */
 .pdf-viewer .react-pdf__Page__canvas {
   display: block;
   max-width: 100%;
   height: auto !important;
 }
 
-/* Hide text layer in mobile view to improve performance */
 @media (max-width: 640px) {
   .pdf-viewer .react-pdf__Page__textContent {
     display: none;

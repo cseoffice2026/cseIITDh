@@ -75,7 +75,7 @@ export default function CurriculumSection() {
     href="https://www.iitdh.ac.in/btech-curriculum"
     target="_blank"
     rel="noopener noreferrer"
-    className="inline-block px-4 py-2 bg-[#19007B] text-white text-sm font-medium rounded-lg shadow hover:bg-[#140063] transition"
+    className="inline-block px-4 py-2 bg-brand-600 text-white text-sm font-medium rounded-lg shadow hover:bg-brand-700 transition"
   >
     Check Curriculum 
   </a>

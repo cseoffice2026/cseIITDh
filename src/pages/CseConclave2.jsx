@@ -46,7 +46,6 @@ const CseConclave = () => {
     queryFn: getCseConclaveSchedule,
     staleTime: 5 * 60 * 1000,
   });
-console.log("Schedule:", schedule);
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-50 to-amber-50 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12">
 
@@ -278,7 +277,7 @@ console.log("Schedule:", schedule);
               <button
                 type="button"
                 onClick={() => refetchSchedule()}
-                className="mt-3 rounded-md bg-[#19007B] px-4 py-2 text-white hover:bg-[#140063]"
+                className="mt-3 rounded-md bg-brand-600 px-4 py-2 text-white hover:bg-brand-700"
               >
                 Try again
               </button>
@@ -300,7 +299,7 @@ console.log("Schedule:", schedule);
         <div className="text-center pt-4">
           <a
             href="https://docs.google.com/forms/d/e/1FAIpQLSeOFteVo1GLJ8zG0yIN-83w3pY-FxsZ4Cam8kRyWSrfhRtfAQ/viewform?usp=publish-editor"
-            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-[#19007B] text-white rounded-lg font-medium shadow-md hover:bg-[#140063] transition"
+            className="inline-block w-full sm:w-auto px-6 sm:px-8 py-3 bg-brand-600 text-white rounded-lg font-medium shadow-md hover:bg-brand-700 transition"
           >
             Register
         </a>

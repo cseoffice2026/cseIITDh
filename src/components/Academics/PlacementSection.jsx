@@ -24,11 +24,21 @@ const programStats = {
   },
 };
 
+// Theme colors (same values as the brand-* tokens in index.css).
+// ECharts needs real hex values, so they are repeated here.
+const themeColors = {
+  brand600: "#19007b",
+  brand500: "#473395",
+  brand400: "#7566b0",
+  brand300: "#a399ca",
+  muted: "#64748b",
+};
+
 const segmentColors = {
-  placed: "#10b981",
-  competitiveExams: "#19007B",
-  higherEducation: "#3b82f6",
-  remaining: "#f59e0b",
+  placed: themeColors.brand600,
+  competitiveExams: themeColors.brand500,
+  higherEducation: themeColors.brand400,
+  remaining: themeColors.brand300,
 };
 
 function CompanyCard({ name }) {
@@ -47,22 +57,22 @@ function CompanyCard({ name }) {
     <li className="group flex min-h-20 items-center justify-start py-3">
       <div className="flex w-full items-center justify-start gap-3 transition-transform duration-200 group-hover:scale-[1.02]">
         <span className="flex h-14 w-14 shrink-0 items-center justify-center">
-        {domain && logoToken && !logoUnavailable ? (
-          <img
-            src={`https://img.logo.dev/${encodeURIComponent(domain)}?token=${encodeURIComponent(logoToken)}&size=128`}
-            alt={`${name} logo`}
-            loading="lazy"
-            className="max-h-14 max-w-14 object-contain"
-            onError={() => setLogoUnavailable(true)}
-          />
-        ) : (
-          <span
-            className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-sm font-bold text-brand-800"
-            aria-hidden="true"
-          >
-            {monogram}
-          </span>
-        )}
+          {domain && logoToken && !logoUnavailable ? (
+            <img
+              src={`https://img.logo.dev/${encodeURIComponent(domain)}?token=${encodeURIComponent(logoToken)}&size=128`}
+              alt={`${name} logo`}
+              loading="lazy"
+              className="max-h-14 max-w-14 object-contain"
+              onError={() => setLogoUnavailable(true)}
+            />
+          ) : (
+            <span
+              className="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-50 text-sm font-bold text-brand-800"
+              aria-hidden="true"
+            >
+              {monogram}
+            </span>
+          )}
         </span>
         <span className="text-left text-sm font-semibold leading-snug text-slate-800 sm:text-base">
           {name}
@@ -88,7 +98,7 @@ function RecruitingCompanies() {
       <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h3 className="mt-1 text-2xl font-bold text-slate-900">
-            Our recruiting companies
+            OUR RECRUITING COMPANIES
           </h3>
         </div>
         {!isLoading && !isError && companies.length > 0 ? (
@@ -111,7 +121,7 @@ function RecruitingCompanies() {
           <button
             type="button"
             onClick={() => refetch()}
-            className="mt-3 rounded-lg bg-[#19007B] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#140063] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
+            className="mt-3 rounded-lg bg-brand-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-700"
           >
             Try again
           </button>
@@ -156,57 +166,43 @@ function PlacementDonutChart({ program, placed, segments }) {
     const chart = echarts.init(chartRef.current);
     const makeCenterGraphic = (value, label) => [
       {
-        id: "center-program",
-        type: "text",
-        left: "center",
-        top: "36%",
-        z: 10,
-        silent: true,
-        style: {
-          text: program,
-          fontSize: 16,
-          fontWeight: 600,
-          fill: "#64748b",
-        },
-      },
-      {
         id: "center-value",
         type: "text",
         left: "center",
-        top: "46%",
+        top: "38%",
         z: 10,
         silent: true,
         style: {
           text: String(value),
-          fontSize: 36,
+          fontSize: 30,
           fontWeight: 700,
-          fill: "#0f172a",
+          fill: themeColors.brand600,
         },
       },
       {
         id: "center-label",
         type: "text",
         left: "center",
-        top: "58%",
+        top: "56%",
         z: 10,
         silent: true,
         style: {
           text: label,
-          width: 112,
+          width: 80,
           overflow: "break",
-          lineHeight: 14,
-          fontSize: 12,
+          align: "center",
+          lineHeight: 13,
+          fontSize: 11,
           fontWeight: 500,
-          fill: "#64748b",
+          fill: themeColors.muted,
         },
       },
     ];
+
     const option = {
       animation: true,
       animationDuration: 500,
-      animationDurationUpdate: 500,
       animationEasing: "cubicOut",
-      animationEasingUpdate: "cubicOut",
       backgroundColor: "transparent",
       tooltip: {
         trigger: "item",
@@ -218,7 +214,7 @@ function PlacementDonutChart({ program, placed, segments }) {
       series: [
         {
           type: "pie",
-          radius: ["48%", "76%"],
+          radius: ["60%", "86%"],
           center: ["50%", "50%"],
           startAngle: 90,
           data: segments.map(({ label, value, color }) => ({
@@ -226,48 +222,21 @@ function PlacementDonutChart({ program, placed, segments }) {
             value,
             itemStyle: { color },
           })),
-          label: {
-            show: false,
-            position: "outside",
-            alignTo: "edge",
-            edgeDistance: 6,
-            formatter: (params) => `${params.name}\n${params.value} (${params.percent.toFixed(1)}%)`,
-            color: "#334155",
-            fontSize: 11,
-            fontWeight: 600,
-            lineHeight: 14,
-            width: 132,
-            overflow: "break",
-          },
-          labelLine: {
-            show: false,
-            length: 10,
-            length2: 6,
-            smooth: false,
-            lineStyle: {
-              color: "#1f2937",
-              width: 2,
-            },
-          },
+          label: { show: false },
+          labelLine: { show: false },
           emphasis: {
             focus: "self",
             scale: true,
-            scaleSize: 4,
-            label: {
-              show: true,
-              formatter: ({ name, value, percent }) =>
-                `${name}\n${value} (${percent.toFixed(1)}%)`,
-            },
-            labelLine: {
-              show: true,
-            },
+            scaleSize: 3,
+            label: { show: false },
             itemStyle: {
-              shadowBlur: 10,
-              shadowColor: "rgba(15, 23, 42, 0.16)",
+              shadowBlur: 8,
+              shadowColor: "rgba(25, 0, 123, 0.25)",
             },
           },
           itemStyle: {
-            borderWidth: 0,
+            borderColor: "#ffffff",
+            borderWidth: 2,
           },
         },
       ],
@@ -278,7 +247,6 @@ function PlacementDonutChart({ program, placed, segments }) {
       if (params.componentType !== "series" || params.seriesType !== "pie") {
         return;
       }
-
       chart.setOption({
         graphic: makeCenterGraphic(params.value, params.name),
       });
@@ -288,6 +256,7 @@ function PlacementDonutChart({ program, placed, segments }) {
         graphic: makeCenterGraphic(placed, "Placed"),
       });
     });
+
     const handleResize = () => chart.resize();
     window.addEventListener("resize", handleResize);
 
@@ -300,7 +269,7 @@ function PlacementDonutChart({ program, placed, segments }) {
   return (
     <div
       ref={chartRef}
-      className="h-[420px] w-full max-w-[440px] min-w-0"
+      className="h-[200px] w-[200px] shrink-0"
       role="img"
       aria-label={`${program} placement outcomes: ${segments.map(({ label, value }) => `${label} ${value}`).join(", ")}`}
     />
@@ -331,58 +300,71 @@ function PlacementOutcomeCard({ program, stats }) {
     { key: "remaining", label: "Other / remaining", value: remaining, color: segmentColors.remaining },
   ].filter(({ value }) => value > 0);
 
+  const statTiles = [
+    { label: "Placement rate", value: `${placementRate.toFixed(1)}%` },
+    { label: "Average CTC", value: `${stats.averageCtc} LPA` },
+    { label: "Median CTC", value: `${stats.medianCtc} LPA` },
+  ];
+
   return (
-    <article className="rounded-2xl border border-brand-200 bg-white p-4 shadow-sm sm:p-5">
-      <h3 className="text-xl font-bold text-amber-700 sm:text-2xl">
-        Registered Students: {registered}
-      </h3>
+    <article className="rounded-2xl border border-brand-100 bg-white p-4 shadow-sm sm:p-5">
+      {/* Header */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-lg font-bold text-brand-600 sm:text-xl">
+          Registered Students: {registered}
+        </h3>
+        <span className="rounded-full bg-brand-600 px-3 py-1 text-xs font-semibold text-accent">
+          {program}
+        </span>
+      </div>
 
-      <div className="mt-2 grid items-center gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(12rem,0.8fr)]">
-        <div className="flex justify-center">
-          <PlacementDonutChart program={program} placed={placed} segments={segments} />
-        </div>
+      {/* Chart + legend side by side */}
+      <div className="mt-3 flex flex-col items-center gap-5 sm:flex-row sm:gap-8">
+        <PlacementDonutChart program={program} placed={placed} segments={segments} />
 
-        <ul className="space-y-4">
-          {segments.map(({ key, label, value, color }) => (
-            <li
-              key={key}
-              className="flex items-start justify-between gap-4 text-base sm:text-lg"
-            >
-              <span className="flex items-start gap-3 font-medium leading-snug text-slate-700">
-                <span
-                  aria-hidden="true"
-                  className="mt-1.5 h-4 w-4 shrink-0 rounded-sm sm:h-5 sm:w-5"
-                  style={{ backgroundColor: color }}
-                />
-                {label}
-              </span>
-              <span className="text-lg font-bold tabular-nums text-slate-900 sm:text-2xl">
-                {value}
-              </span>
-            </li>
-          ))}
+        <ul className="w-full flex-1 space-y-3">
+          {segments.map(({ key, label, value, color }) => {
+            const share = (value / registered) * 100;
+            return (
+              <li key={key}>
+                <div className="flex items-center justify-between gap-3 text-sm sm:text-base">
+                  <span className="flex items-center gap-2 font-medium text-slate-700">
+                    <span
+                      aria-hidden="true"
+                      className="h-3 w-3 shrink-0 rounded-sm"
+                      style={{ backgroundColor: color }}
+                    />
+                    {label}
+                  </span>
+                  <span className="font-bold tabular-nums text-brand-600">
+                    {value}
+                    <span className="ml-1.5 text-xs font-medium text-slate-500">
+                      ({share.toFixed(1)}%)
+                    </span>
+                  </span>
+                </div>
+                <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-brand-50">
+                  <div
+                    className="h-full rounded-full"
+                    style={{ width: `${share}%`, backgroundColor: color }}
+                  />
+                </div>
+              </li>
+            );
+          })}
         </ul>
       </div>
 
-      <div className="mt-4 grid grid-cols-3 gap-3 border-t border-slate-200 pt-3">
-        <div>
-          <p className="text-sm font-medium text-slate-500">Placement rate</p>
-          <p className="mt-1 text-lg font-bold text-emerald-700">
-            {placementRate.toFixed(1)}%
-          </p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-slate-500">Average CTC</p>
-          <p className="mt-1 text-lg font-bold text-slate-900">
-            {stats.averageCtc} LPA
-          </p>
-        </div>
-        <div>
-          <p className="text-sm font-medium text-slate-500">Median CTC</p>
-          <p className="mt-1 text-lg font-bold text-slate-900">
-            {stats.medianCtc} LPA
-          </p>
-        </div>
+      {/* Stat tiles */}
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        {statTiles.map(({ label, value }) => (
+          <div key={label} className="rounded-xl bg-brand-50 px-3 py-2.5">
+            <p className="text-xs font-medium text-slate-500 sm:text-sm">{label}</p>
+            <p className="mt-0.5 text-base font-bold text-brand-600 sm:text-lg">
+              {value}
+            </p>
+          </div>
+        ))}
       </div>
     </article>
   );
@@ -393,8 +375,8 @@ export default function PlacementSection() {
   const tabs = ["Overview", ...Object.keys(programStats)];
 
   return (
-    <Section id="placements" title="Placements">
-      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+    <Section id="placements" title="PLACEMENTS">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-s">
         <div
           className="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-slate-50 p-3"
           role="tablist"

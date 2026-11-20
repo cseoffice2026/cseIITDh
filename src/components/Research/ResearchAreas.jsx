@@ -3,10 +3,10 @@ import useResearchAreas from "../../hooks/useResearchAreas";
 import Loading from "../Loading";
 
 const areaPalettes = [
-  { type: "ml", image: "/research_areas/artificial-intelligence.jpg", accent: "#0F766E" },
-  { type: "sys", image: "/research_areas/systems.jpg", accent: "#456D9D" },
-  { type: "net", image: "/research_areas/networks.jpg", accent: "#A65F76" },
-  { type: "theory", image: "/research_areas/theoretical_computer_science_wallpaper.png", accent: "#92783A" },
+  { type: "ml", image: "/research_areas/artificial-intelligence.jpg", accent: "#7b3fbe" },
+  { type: "sys", image: "/research_areas/systems.jpg", accent: "#5e2a9e" },
+  { type: "net", image: "/research_areas/networks.jpg", accent: "#43207a" },
+  { type: "theory", image: "/research_areas/theoretical_computer_science_wallpaper.png", accent: "#8f50cf" },
 ];
 
 const getArtType = (area, index) => {

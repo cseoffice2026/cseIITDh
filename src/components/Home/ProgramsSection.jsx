@@ -229,7 +229,7 @@ function ProgrammeBrochureSection({ programmeKey }) {
           <a
             href={brochure.fileUrl}
             download={brochure.fileName}
-            className="inline-flex items-center justify-center gap-2 rounded-md bg-[#19007B] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#140063]"
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
           >
             <i className="fas fa-download" aria-hidden="true" />
             Download PDF
@@ -618,7 +618,7 @@ function PhDOnHoldPage() {
       <div className="flex justify-center py-4">
         <a
           href="#programmes-top"
-          className="inline-flex items-center rounded-md bg-[#19007B] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#140063]"
+          className="inline-flex items-center rounded-md bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
         >
           Back to Top
         </a>

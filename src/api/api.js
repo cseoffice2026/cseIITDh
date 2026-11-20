@@ -22,16 +22,6 @@ export const getNews = async () => {
 				transformHeader: (header) => header.trim().toLowerCase(),
 
 				complete: (results) => {
-					if (
-						import.meta.env.DEV &&
-						results.data.length > 0
-					) {
-						console.log(
-							"Available News CSV columns:",
-							Object.keys(results.data[0]),
-						);
-					}
-
 					const transformedData = results.data
 						.filter((row) =>
 							Object.values(row).some(
@@ -200,16 +190,6 @@ export const getTalksAndEvents = async () => {
 					header.replace(/^\uFEFF/, "").trim().toLowerCase(),
 
 				complete: (results) => {
-					if (
-						import.meta.env.DEV &&
-						results.data.length > 0
-					) {
-						console.log(
-							"Available CSV columns:",
-							Object.keys(results.data[0]),
-						);
-					}
-
 					const transformedData = results.data
 						.filter((row) =>
 							Object.values(row).some(

@@ -65,7 +65,7 @@ export default function ContactUsForm() {
           <div className="md:col-span-2 text-right">
             <button
               type="submit"
-              className="px-4 py-2 bg-[#19007B] text-white rounded-md hover:bg-[#140063] transition duration-300"
+              className="px-4 py-2 bg-brand-600 text-white rounded-md hover:bg-brand-700 transition duration-300"
             >
               Send Message
             </button>

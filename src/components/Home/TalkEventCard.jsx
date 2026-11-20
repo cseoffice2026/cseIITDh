@@ -1,4 +1,3 @@
-
 export default function TalkEventCard({
   title,
   eventType,
@@ -47,16 +46,17 @@ export default function TalkEventCard({
         )}
       </div>
 
-      {/* Event title */}
+      {/* Event title: semibold */}
       <h3 className="mt-3 text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
-        {title}
+        Title: {title}
       </h3>
 
       {/* Speaker details */}
       {speaker && (
         <div className="mt-3">
-          <p className="text-base font-medium text-slate-800">
-            {speaker}
+          <p className="text-base text-slate-800">
+            <span className="font-semibold">Speaker:</span>{" "}
+            <span className="font-medium">{speaker}</span>
           </p>
 
           {designation && (
@@ -69,47 +69,48 @@ export default function TalkEventCard({
 
       {/* Event information */}
       {(time || venue) && (
-        <div className="mt-4 flex flex-wrap items-center gap-2">
-          {time && (
-            <span className="inline-flex items-center gap-2 rounded-lg bg-sky-50 px-3 py-2 text-sm font-medium text-sky-800">
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                className="h-4 w-4 shrink-0 text-sky-600"
-              >
-                <circle cx="12" cy="12" r="9" />
-                <path d="M12 7v5l3 2" />
-              </svg>
-              {time}
-            </span>
-          )}
+  <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+    {time && (
+      <span className="inline-flex items-center gap-2 text-sm font-medium text-brand-600">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          className="h-4 w-4 shrink-0"
+        >
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 7v5l3 2" />
+        </svg>
+        {time}
+      </span>
+    )}
 
-          {venue && (
-            <span className="inline-flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
-              <svg
-                aria-hidden="true"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.7"
-                className="h-4 w-4 shrink-0 text-emerald-600"
-              >
-                <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
-                <circle cx="12" cy="10" r="2.2" />
-              </svg>
-              {venue}
-            </span>
-          )}
-        </div>
-      )}
+    {venue && (
+      <span className="inline-flex items-center gap-2 rounded-lg bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-800">
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.7"
+          className="h-4 w-4 shrink-0 text-emerald-600"
+        >
+          <path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z" />
+          <circle cx="12" cy="10" r="2.2" />
+        </svg>
+        {venue}
+      </span>
+    )}
+  </div>
+)}
 
-      {/* Description */}
+      {/* Abstract */}
       {description && (
-        <div className="mt-4 border-t border-slate-100 pt-3">
-          <p className="text-base leading-relaxed text-slate-600">
+        <div className="mt-1 border-t border-slate-100 pt-3">
+            <p className=" text-sm leading-relaxed text-slate-500">
+            <span className="font-semibold text-slate-800">Abstract:</span>{" "}
             {description}
           </p>
         </div>

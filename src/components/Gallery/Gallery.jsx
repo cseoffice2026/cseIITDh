@@ -63,12 +63,11 @@ const Gallery = () => {
 
   return (
     <section className="py-8 sm:py-12">
-      <div className="mb-6 text-center sm:mb-8">
-        <h1 className="mb-2 font-semibold text-xl uppercase tracking-[0.15em] text-brand-700">
-          Moments from our community
-        </h1>
-        {/* <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">Gallery</h2> */}
-      </div>
+      <div className="mb-5 border-b border-brand-100 pb-3">
+  <h2 className="text-xl font-bold uppercase text-gray-900 sm:text-2xl">
+    Moments from our community
+  </h2>
+</div>
 
       {galleryImages && galleryImages.length > 0 ? (
         <div className="relative rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-brand-50 p-3 shadow-sm sm:p-5">

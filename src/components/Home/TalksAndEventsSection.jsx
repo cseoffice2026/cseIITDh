@@ -206,18 +206,16 @@ export default function TalksAndEventsSection() {
   return (
     <div>
       {/* Header and button */}
-      <div className="mb-6 flex items-center justify-between gap-3">
-        <h2 className="text-xl font-bold text-gray-800 sm:text-2xl">
-          Talks and Events
-        </h2>
-
-        <Link
-          to="/allTalksEvents"
-            className="shrink-0 text-sm font-semibold text-brand-600 hover:text-brand-700"
-        >
-          View All →
-        </Link>
-      </div>
+      <div className="mb-5 flex items-center justify-between gap-3 border-b border-brand-100 pb-3">
+  <h2 className="text-xl font-bold uppercase text-gray-900 sm:text-2s">
+Talks and events  </h2>
+  <Link
+    to="/allnews"
+    className="shrink-0 rounded-full bg-brand-600 px-4 py-1.5 text-xs font-semibold text-accent transition-colors duration-200 hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
+  >
+    View All →
+  </Link>
+</div>
 
       {/* Content */}
       <div className="space-y-4">

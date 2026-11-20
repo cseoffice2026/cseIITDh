@@ -187,27 +187,18 @@ function ProgrammeBrochureSection({ programmeKey }) {
   return (
     <section className="mb-8 rounded-xl border border-brand-100 bg-white p-5 shadow-sm sm:p-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-800">
-            <i
-              className="fas fa-file-pdf text-xl"
-              aria-hidden="true"
-            />
-          </span>
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-700">
+            Official Admission Document · {brochure.session}
+          </p>
 
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-brand-700">
-              Official Admission Document · {brochure.session}
-            </p>
+          <h2 className="mt-1 text-lg font-bold text-gray-900">
+            {brochure.title}
+          </h2>
 
-            <h2 className="mt-1 text-lg font-bold text-gray-900">
-              {brochure.title}
-            </h2>
-
-            <p className="mt-1 text-sm leading-6 text-gray-600">
-              {brochure.description}
-            </p>
-          </div>
+          <p className="mt-1 text-sm leading-6 text-gray-600">
+            {brochure.description}
+          </p>
         </div>
 
         <div className="flex shrink-0 flex-wrap gap-2 sm:justify-end">
@@ -224,7 +215,7 @@ function ProgrammeBrochureSection({ programmeKey }) {
           <a
             href={brochure.fileUrl}
             download={brochure.fileName}
-            className="inline-flex items-center justify-center gap-2 rounded-md bg-[#19007B] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#140063]"
+            className="inline-flex items-center justify-center gap-2 rounded-md bg-brand-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-700"
           >
             <i
               className="fas fa-download"
@@ -495,7 +486,7 @@ function PhDOnHoldPage() {
       <div className="flex justify-center py-4">
         <a
           href="#programmes-top"
-          className="inline-flex items-center rounded-md bg-[#19007B] px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#140063]"
+          className="inline-flex items-center rounded-md bg-brand-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-700"
         >
           Back to Top
         </a>

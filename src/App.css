@@ -1,3 +1,9 @@
-*{
-    box-sizing: border-box;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #2F024F;
+  --color-secondary: #D973D8;
+  --color-background: #F3F0F5;
+  --color-surface: #F4EEF9;
+  --color-muted: #B3B3B3;
 }

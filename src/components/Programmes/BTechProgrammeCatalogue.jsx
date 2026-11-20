@@ -46,7 +46,7 @@ function BTechProgrammeCatalogue() {
               <caption className="sr-only">
                 B.Tech batch and semester course catalogue links
               </caption>
-              <thead className="bg-[#19007B] text-white">
+              <thead className="bg-brand-600 text-white">
                 <tr>
                   <th scope="col" className="border border-brand-900 px-4 py-3 font-semibold">Batch</th>
                   {Array.from({ length: 8 }, (_, index) => (

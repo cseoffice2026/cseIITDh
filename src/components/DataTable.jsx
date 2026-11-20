@@ -55,7 +55,7 @@ export default function DataTable({
 						table.setPageIndex(0);
 					}}
 					placeholder={searchPlaceholder}
-					className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-[#19007B] focus:ring-2 focus:ring-brand-100 sm:max-w-xs"
+					className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-brand-600 focus:ring-2 focus:ring-brand-100 sm:max-w-xs"
 				/>
 				<p className="text-sm text-gray-600" aria-live="polite">
 					{filteredCount.toLocaleString()}{" "}
@@ -65,7 +65,7 @@ export default function DataTable({
 
 			<div className="overflow-x-auto">
 				<table className="min-w-full text-left text-sm text-gray-900">
-					<thead className="bg-[#19007B] text-xs uppercase tracking-wide text-white">
+					<thead className="bg-brand-600 text-xs uppercase tracking-wide text-white">
 						{table.getHeaderGroups().map((headerGroup) => (
 							<tr key={headerGroup.id}>
 								{headerGroup.headers.map((header) => (
@@ -144,7 +144,7 @@ export default function DataTable({
 								onChange={(event) =>
 									table.setPageSize(Number(event.target.value))
 								}
-								className="w-[4.5rem] appearance-none rounded-md border border-gray-300 bg-white py-1.5 pl-3 pr-7 text-sm text-gray-900 focus:border-[#19007B] focus:outline-none focus:ring-2 focus:ring-brand-100"
+								className="w-[4.5rem] appearance-none rounded-md border border-gray-300 bg-white py-1.5 pl-3 pr-7 text-sm text-gray-900 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-100"
 							>
 								{[10, 25, 50, 100].map((size) => (
 									<option key={size} value={size}>

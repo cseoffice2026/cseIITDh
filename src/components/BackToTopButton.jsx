@@ -19,7 +19,7 @@ export default function BackToTopButton({ to }) {
         type="button"
         onClick={handleBackToTop}
         aria-label="Back to top"
-        className="inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-[#19007B] text-2xl text-white shadow-md transition duration-300 hover:bg-[#140063]"
+        className="inline-flex h-12 w-12 cursor-pointer items-center justify-center rounded-full bg-brand-600 text-2xl text-white shadow-md transition duration-300 hover:bg-brand-700"
       >
         <span aria-hidden="true">↑</span>
       </button>

@@ -15,15 +15,16 @@ const fallback = <Loading className="py-8" />;
 
 const Home = () => {
   return (
-    <div className="py-6 px-4 md:px-8">
+    <div className="py-6 px-4 md:px-8 bg-background">
       {/* Carousel Section */}
       <div className="mb-10">
         <Suspense fallback={fallback}>
           <Carousel />
         </Suspense>
       </div>
+
       {/* News & Talks_events Section */}
-      <div className="border-t border-gray-200 pt-8">
+      <div className="border-t border-secondary/40 pt-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <Suspense fallback={fallback}>
             <NewsSection />
@@ -33,12 +34,16 @@ const Home = () => {
           </Suspense>
         </div>
       </div>
-      <div className="border-t border-gray-200 mt-8">
+
+      {/* Placement Section (soft tinted band) */}
+      <div className="border-t border-secondary/40 mt-8 bg-surface rounded-xl">
         <Suspense fallback={fallback}>
           <PlacementSection />
         </Suspense>
       </div>
-      <div className="border-t border-gray-200 mt-8">
+
+      {/* Gallery Section */}
+      <div className="border-t border-secondary/40 mt-8">
         <Suspense fallback={fallback}>
           <Gallery />
         </Suspense>
