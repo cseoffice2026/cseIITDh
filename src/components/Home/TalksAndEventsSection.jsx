@@ -210,7 +210,7 @@ export default function TalksAndEventsSection() {
   <h2 className="text-xl font-bold uppercase text-gray-900 sm:text-2s">
 Talks and events  </h2>
   <Link
-    to="/allnews"
+    to="/allTalksEvents "
     className="shrink-0 rounded-full bg-brand-600 px-4 py-1.5 text-xs font-semibold text-accent transition-colors duration-200 hover:bg-brand-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600"
   >
     View All →
