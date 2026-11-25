@@ -1,4 +1,5 @@
 import useAboutData from "../hooks/useAboutData";
+import DepartmentHeading from "../components/DepartmentHeading";
 import Loading from "../components/Loading";
 
 const AboutDescription = ({ description }) => {
@@ -66,9 +67,11 @@ const AboutData = () => {
     <div className="space-y-6">
       {aboutData.map((section) => (
         <section key={section.id} className="bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-2xl font-semibold text-gray-700 mb-4">
-            {section.Title}
-          </h2>
+          <DepartmentHeading
+            as="h2"
+            title={section.Title}
+            size="compact"
+          />
           <div className="space-y-4">
             <AboutDescription description={section?.Description} />
           </div>
@@ -81,7 +84,7 @@ const AboutData = () => {
 const About = () => {
   return (
     <div className="py-6 px-4 md:px-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">About Us</h1>
+      <DepartmentHeading as="h1" title="About Us" />
       <AboutData />
     </div>
   );

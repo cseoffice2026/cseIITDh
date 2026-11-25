@@ -156,8 +156,9 @@ const Footer = () => {
                 href="https://www.google.com/maps/search/?api=1&query=Indian+Institute+of+Technology+Dharwad"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`${linkClass} underline`}
+                className={`${linkClass} inline-flex items-center gap-1 underline`}
               >
+                <MapPinIcon className="h-4 w-4 text-accent" aria-hidden="true" />
                 Location
               </a>
               <a

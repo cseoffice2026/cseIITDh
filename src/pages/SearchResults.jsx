@@ -1,4 +1,5 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
+import DepartmentHeading from "../components/DepartmentHeading";
 import Loading from "../components/Loading";
 import slugMap from "../constant/searchRoutes";
 import useSearchResult from "../hooks/useSearchResult";
@@ -76,9 +77,11 @@ function SearchResults() {
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-semibold mb-6">
-        Search Results for: "{query}"
-      </h1>
+      <DepartmentHeading
+        as="h1"
+        size="compact"
+        title={`Search Results for: "${query}"`}
+      />
 
       {!results ? (
         <NoResultFound query={query} />

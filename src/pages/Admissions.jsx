@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import GlobalError from "../components/GlobalError";
 import Loading from "../components/Loading";
 import useAdmissionsInfo from "../hooks/useAdmissionsInfo";
+import DepartmentHeading from "../components/DepartmentHeading";
 
 // Lazy load components
 const BTechSection = lazy(() =>
@@ -67,7 +68,7 @@ const Admissions = () => {
     <div className="py-6 px-4 md:px-8">
       {/* Page Title */}
       <div id="admissions-top" className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Admissions</h1>
+        <DepartmentHeading as="h1" title="Admissions" className="mb-2" />
         <p className="text-gray-600">
           Learn about admission requirements, application procedures, and
           opportunities for prospective students.

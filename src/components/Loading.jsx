@@ -1,5 +1,4 @@
 import PropTypes from "prop-types";
-import { DotsRing } from "./loading-ui/dots-ring";
 
 export default function Loading({
   children,
@@ -12,7 +11,11 @@ export default function Loading({
       aria-live="polite"
       {...props}
     >
-      <DotsRing className="mb-3 size-10 [--duration:900ms]" />
+      <div className="dot-spinner mb-3" role="status" aria-label="Loading">
+        {Array.from({ length: 8 }, (_, index) => (
+          <div className="dot-spinner__dot" key={index} />
+        ))}
+      </div>
       <span className="text-gray-700 text-base font-medium">
         {children || "Loading..."}
       </span>

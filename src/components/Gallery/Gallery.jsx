@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import useGalleryImages from "../../hooks/useGalleryImages";
 import GlobalError from "../GlobalError";
+import DepartmentHeading from "../DepartmentHeading";
 import Loading from "../Loading";
 import {
   ChevronLeftIcon,
@@ -63,11 +64,11 @@ const Gallery = () => {
 
   return (
     <section className="py-8 sm:py-12">
-      <div className="mb-5 border-b border-brand-100 pb-3">
-  <h2 className="text-xl font-bold uppercase text-gray-900 sm:text-2xl">
-    Moments from our community
-  </h2>
-</div>
+      <DepartmentHeading
+        as="h2"
+        size="compact"
+        title="Moments from our community"
+      />
 
       {galleryImages && galleryImages.length > 0 ? (
         <div className="relative rounded-3xl border border-brand-100 bg-gradient-to-br from-brand-50 via-white to-brand-50 p-3 shadow-sm sm:p-5">

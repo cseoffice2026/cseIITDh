@@ -6,12 +6,12 @@ export default function FormerMemberSection({ formerFaculty, formerStaff }) {
     <Section id="former-members" title="Former Members">
       <div className="space-y-10">
         {/* Former Faculty */}
-        <div>
+        <div id="former-faculty" className="scroll-mt-[136px]">
           <h3 className="text-xl font-semibold text-gray-800 mb-5">
             Former Faculty
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {formerFaculty.length > 0 ? (
               formerFaculty.map((member) => (
                 <FormerMemberCard key={member?.id} {...member} />
@@ -25,12 +25,12 @@ export default function FormerMemberSection({ formerFaculty, formerStaff }) {
         </div>
 
         {/* Former Staff */}
-        <div>
+        <div id="former-staff" className="scroll-mt-[136px]">
           <h3 className="text-xl font-semibold text-gray-800 mb-5">
             Former Staff
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {formerStaff.length > 0 ? (
               formerStaff.map((member) => (
                 <FormerMemberCard key={member?.id} {...member} />

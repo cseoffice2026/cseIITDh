@@ -43,7 +43,7 @@ const NewsCard = ({ item }) => {
           )}
         </div>
         {dateDisplay && (
-          <p className="text-sm text-brand-600">{dateDisplay}</p>
+          <p className="text-sm font-medium text-red-600">{dateDisplay}</p>
         )}
       </div>
 
@@ -58,25 +58,25 @@ const NewsCard = ({ item }) => {
         </p>
       )}
 
-      {/* Application dates: navy boxes with yellow values */}
+      {/* Application dates */}
       {(applicationOpens || applicationDeadline) && (
         <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
           {applicationOpens && (
-            <div className="rounded-xl bg-brand-600 px-4 py-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-white">
+            <div className="rounded-xl border border-emerald-300/70 bg-gradient-to-br from-emerald-100/90 to-green-50/70 px-4 py-3 shadow-sm shadow-emerald-900/10 backdrop-blur-md">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-emerald-800">
                 Application opens
               </p>
-              <p className="mt-1 text-base font-bold text-accent">
+              <p className="mt-1 text-base font-bold text-emerald-950">
                 {applicationOpens}
               </p>
             </div>
           )}
           {applicationDeadline && (
-            <div className="rounded-xl bg-brand-600 px-4 py-3">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-white">
+            <div className="rounded-xl border border-rose-300/70 bg-gradient-to-br from-rose-100/90 to-red-50/70 px-4 py-3 shadow-sm shadow-rose-900/10 backdrop-blur-md">
+              <p className="text-[11px] font-semibold uppercase tracking-wide text-rose-800">
                 Application deadline
               </p>
-              <p className="mt-1 text-base font-bold text-accent">
+              <p className="mt-1 text-base font-bold text-rose-950">
                 {applicationDeadline}
               </p>
             </div>

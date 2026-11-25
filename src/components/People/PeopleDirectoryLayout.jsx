@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import DepartmentHeading from "../DepartmentHeading";
 
 const directoryLinks = [
 	{ to: "/people/students", label: "Students" },
@@ -22,7 +23,7 @@ export default function PeopleDirectoryLayout({
 				>
 					People
 				</Link>
-				<h1 className="mt-2 text-3xl font-bold text-gray-900">{title}</h1>
+				<DepartmentHeading as="h1" title={title} className="mt-2 mb-0" />
 				{description ? (
 					<p className="mt-2 text-gray-600">{description}</p>
 				) : null}

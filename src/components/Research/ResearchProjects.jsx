@@ -2,6 +2,7 @@ import useResearchProjectsData from "../../hooks/useResearchProjectsData";
 import GlobalError from "../GlobalError";
 import Loading from "../Loading";
 import DataTable from "../DataTable";
+import Section from "../Section";
 
 const getProjectColumns = (titleHeader) => [
 	{
@@ -55,12 +56,11 @@ function ResearchProjectsData() {
 
   return (
     <>
-      <div className="mb-4 text-center">
-        <div className="mx-auto max-w-3xl">
-          <h2 className="mt-6 text-2xl font-bold text-gray-800">
-            Sponsored Projects in the Past Five Years
-          </h2>
-        </div>
+      <div className="mb-4">
+        <h3 className="mt-6 text-xl font-bold text-gray-900 sm:text-2xl">
+          Sponsored Projects in the Past Five Years
+        </h3>
+        
       </div>
       <DataTable
         columns={getProjectColumns("Project Title")}
@@ -69,12 +69,12 @@ function ResearchProjectsData() {
         searchPlaceholder="Search sponsored projects..."
       />
 
-      <div className="mb-4 text-center">
-        <div className="mx-auto max-w-3xl">
-          <h2 className="mt-14 text-2xl font-bold text-gray-800">
-            Consultancy Projects in the past five years
-          </h2>
-        </div>
+      <div className="mb-4">
+        <h3 className="mt-14 text-xl font-bold text-gray-900 sm:text-2xl">
+          Consultancy Projects in the past five years
+        </h3>
+        
+        
       </div>
 
       <DataTable
@@ -89,14 +89,8 @@ function ResearchProjectsData() {
 
 export default function ResearchProjects() {
   return (
-    <section id="research-projects" title="Research-Projects">
-      <div className="mb-8">
-        <h3 className="text-xl font-bold text-gray-800 mb-4">
-          Research-Projects
-        </h3>
-
-        <ResearchProjectsData />
-      </div>
-    </section>
+    <Section id="research-projects" title="Research Projects">
+      <ResearchProjectsData />
+    </Section>
   );
 }

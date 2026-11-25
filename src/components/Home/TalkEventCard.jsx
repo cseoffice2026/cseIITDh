@@ -40,7 +40,7 @@ export default function TalkEventCard({
         </span>
 
         {formattedDate && (
-          <span className="text-sm text-brand-600">
+          <span className="text-sm font-medium text-red-600">
             {formattedDate}
           </span>
         )}
@@ -48,15 +48,14 @@ export default function TalkEventCard({
 
       {/* Event title: semibold */}
       <h3 className="mt-3 text-lg font-semibold leading-snug text-slate-900 sm:text-xl">
-        Title: {title}
+        {title}
       </h3>
 
       {/* Speaker details */}
       {speaker && (
         <div className="mt-3">
-          <p className="text-base text-slate-800">
-            <span className="font-semibold">Speaker:</span>{" "}
-            <span className="font-medium">{speaker}</span>
+          <p className="text-base font-medium text-slate-800">
+            {speaker}
           </p>
 
           {designation && (
@@ -109,8 +108,7 @@ export default function TalkEventCard({
       {/* Abstract */}
       {description && (
         <div className="mt-1 border-t border-slate-100 pt-3">
-            <p className=" text-sm leading-relaxed text-slate-500">
-            <span className="font-semibold text-slate-800">Abstract:</span>{" "}
+          <p className="text-sm leading-relaxed text-slate-500">
             {description}
           </p>
         </div>

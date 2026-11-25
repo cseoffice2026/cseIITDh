@@ -49,18 +49,53 @@ const sectionLinks = {
     {
       heading: "Department",
       items: [
-        { id: "faculty", label: "Faculty", description: "Meet our professors", icon: UserGroupIcon },
-        { id: "staff", label: "Staff", description: "Administrative and technical team", icon: IdentificationIcon },
-        { id: "students", label: "Students", to: "/people/students", description: "Current students", icon: UsersIcon },
-        { id: "alumni", label: "Alumni", to: "/people/alumni", description: "Where our graduates are now", icon: AcademicCapIcon },
-      ],
-    },
-    {
-      heading: "Scholars",
-      items: [
-        { id: "phd-scholars", label: "PhD Scholars", description: "Current doctoral researchers", icon: BeakerIcon },
-        { id: "graduated-scholars", label: "Graduated Scholars", description: "Our Ph.D. graduates", icon: TrophyIcon },
+        {
+          id: "faculty",
+          label: "Faculty",
+          description: "Meet our professors",
+          icon: UserGroupIcon,
+          children: [
+            { label: "Current", to: "/people#faculty" },
+            { label: "Former", to: "/people#former-faculty" },
+          ],
+        },
+        {
+          id: "staff",
+          label: "Staff",
+          description: "Administrative and technical team",
+          icon: IdentificationIcon,
+          children: [
+            { label: "Current", to: "/people#staff" },
+            { label: "Former", to: "/people#former-staff" },
+          ],
+        },
         { id: "former-members", label: "Former Members", description: "Past faculty and staff", icon: ArchiveBoxIcon },
+        {
+          id: "students",
+          label: "Students",
+          to: "/people/students",
+          description: "Current students",
+          icon: UsersIcon,
+          children: [
+            { label: "B.Tech", to: "/people/students?degree=B.Tech" },
+            { label: "M.Tech", to: "/people/students?degree=M.Tech" },
+            { label: "M.Tech by Research", to: "/people/students?degree=M.Tech%20by%20Research" },
+            { label: "PhD", to: "/people/students?degree=PhD" },
+          ],
+        },
+        {
+          id: "alumni",
+          label: "Alumni",
+          to: "/people/alumni",
+          description: "Where our graduates are now",
+          icon: AcademicCapIcon,
+          children: [
+            { label: "B.Tech", to: "/people/alumni?degree=B.Tech" },
+            { label: "M.Tech", to: "/people/alumni?degree=M.Tech" },
+            { label: "M.Tech by Research", to: "/people/alumni?degree=M.Tech%20by%20Research" },
+            { label: "PhD", to: "/people/alumni?degree=PhD" },
+          ],
+        },
       ],
     },
   ],
@@ -123,13 +158,52 @@ const isDesktopWidth = () =>
 
 function Navbar({ closeMenu, isMobileMenuOpen }) {
   const [openDropdown, setOpenDropdown] = useState(null);
+  const [hoveredSection, setHoveredSection] = useState(null);
+  const [isDesktopNavVisible, setIsDesktopNavVisible] = useState(true);
   const location = useLocation();
   const dropdownId = useId();
   const navRef = useRef(null);
 
+  useEffect(() => {
+    let previousScrollY = window.scrollY;
+    let previousDirection = 0;
+    let distanceInDirection = 0;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const scrollDifference = currentScrollY - previousScrollY;
+      previousScrollY = currentScrollY;
+
+      if (currentScrollY < 80) {
+        setIsDesktopNavVisible(true);
+        previousDirection = 0;
+        distanceInDirection = 0;
+        return;
+      }
+
+      const direction = Math.sign(scrollDifference);
+      if (direction === 0) return;
+
+      if (direction !== previousDirection) {
+        previousDirection = direction;
+        distanceInDirection = 0;
+      }
+
+      distanceInDirection += Math.abs(scrollDifference);
+      if (distanceInDirection >= 8) {
+        setIsDesktopNavVisible(direction < 0);
+        distanceInDirection = 0;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // Close dropdown on route / hash change
   useEffect(() => {
     setOpenDropdown(null);
+    setHoveredSection(null);
   }, [location.pathname, location.hash]);
 
   // Close dropdown on Escape or click outside
@@ -152,6 +226,11 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
       document.removeEventListener("keydown", closeOnEscape);
       document.removeEventListener("mousedown", closeOnOutsideClick);
     };
+  }, [openDropdown]);
+
+  // Reset the expanded row whenever the dropdown closes
+  useEffect(() => {
+    if (!openDropdown) setHoveredSection(null);
   }, [openDropdown]);
 
   const linkClass = (active) =>
@@ -189,7 +268,11 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
       ref={navRef}
       id="main-navigation"
       aria-label="Main navigation"
-      className={`main-navigation fixed left-0 right-0 top-[70px] z-[100] bg-brand-600 shadow-none max-lg:bottom-0 max-lg:w-72 max-lg:max-w-[85vw] max-lg:overflow-y-auto max-lg:overflow-x-hidden max-lg:shadow-xl max-lg:transition-all max-lg:duration-300 max-lg:ease-out lg:absolute lg:h-[54px] lg:w-full ${
+      className={`main-navigation fixed left-0 right-0 top-[70px] z-[100] bg-brand-600 shadow-none max-lg:bottom-0 max-lg:w-72 max-lg:max-w-[85vw] max-lg:overflow-y-auto max-lg:overflow-x-hidden max-lg:shadow-xl max-lg:transition-all max-lg:duration-300 max-lg:ease-out lg:h-[54px] lg:w-full lg:transition-[opacity,filter] lg:duration-500 lg:ease-in-out ${
+        isDesktopNavVisible
+          ? "lg:pointer-events-auto lg:opacity-100 lg:blur-0"
+          : "lg:pointer-events-none lg:opacity-0 lg:blur-sm"
+      } ${
         isMobileMenuOpen ? "mobile-nav-open" : "mobile-nav-closed"
       }`}
     >
@@ -256,7 +339,7 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                     display: openDropdown === item.label ? "block" : "none",
                   }}
                 >
-                  <div className="lg:flex lg:gap-4 lg:rounded-2xl lg:bg-white lg:p-3 lg:shadow-xl lg:ring-1 lg:ring-black/5">
+                  <div className="lg:flex lg:max-h-[calc(100vh-150px)] lg:gap-4 lg:overflow-y-auto lg:overflow-x-hidden lg:overscroll-contain lg:rounded-2xl lg:bg-white lg:p-3 lg:shadow-xl lg:ring-1 lg:ring-black/5 lg:[scrollbar-width:thin]">
                     {item.columns.map((column) => (
                       <div key={column.heading} className="lg:w-72">
                         {/* Column heading (desktop only) */}
@@ -267,31 +350,97 @@ function Navbar({ closeMenu, isMobileMenuOpen }) {
                         <div className="lg:space-y-1">
                           {column.items.map((section) => {
                             const Icon = section.icon;
+                            const isExpanded = hoveredSection === section.id;
                             return (
-                              <NavLink
+                              <div
                                 key={section.id}
-                                // Programmes items have their own page path (section.to);
-                                // the others still scroll to a #section on the same page.
-                                to={section.to ?? `${item.to}#${section.id}`}
-                                onClick={closeAll}
-                                className="group block px-9 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-brand-700 lg:flex lg:gap-3 lg:rounded-xl lg:p-3 lg:text-gray-900 lg:hover:translate-x-1 lg:hover:bg-brand-50 lg:hover:shadow-sm"
+                                className={`lg:relative lg:rounded-xl lg:transition-colors lg:duration-200 ${
+                                  section.children && isExpanded
+                                    ? "lg:bg-brand-50"
+                                    : ""
+                                }`}
+                                onPointerEnter={(event) => {
+                                  if (
+                                    section.children &&
+                                    event.pointerType === "mouse" &&
+                                    isDesktopWidth()
+                                  ) {
+                                    setHoveredSection(section.id);
+                                  }
+                                }}
+                                onPointerLeave={(event) => {
+                                  if (
+                                    section.children &&
+                                    event.pointerType === "mouse" &&
+                                    isDesktopWidth()
+                                  ) {
+                                    setHoveredSection(null);
+                                  }
+                                }}
+                                onFocus={() => {
+                                  if (section.children && isDesktopWidth()) {
+                                    setHoveredSection(section.id);
+                                  }
+                                }}
+                                onBlur={(event) => {
+                                  if (
+                                    section.children &&
+                                    !event.currentTarget.contains(
+                                      event.relatedTarget
+                                    )
+                                  ) {
+                                    setHoveredSection(null);
+                                  }
+                                }}
                               >
-                                {Icon && (
-                                  <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm transition-all duration-200 lg:flex lg:group-hover:scale-105 lg:group-hover:border-brand-600 lg:group-hover:bg-brand-600 lg:group-hover:text-accent">
-                                    <Icon className="h-5 w-5" aria-hidden="true" />
-                                  </span>
-                                )}
-                                <span className="block">
-                                  <span className="block whitespace-nowrap transition-colors duration-200 lg:text-base lg:font-semibold lg:text-gray-900 lg:group-hover:text-brand-600">
-                                    {section.label}
-                                  </span>
-                                  {section.description && (
-                                    <span className="mt-0.5 hidden text-sm font-normal leading-snug text-gray-600 lg:block">
-                                      {section.description}
+                                <NavLink
+                                  to={section.to ?? `${item.to}#${section.id}`}
+                                  onClick={closeAll}
+                                  className="group block px-9 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-brand-700 lg:flex lg:gap-3 lg:rounded-xl lg:p-3 lg:text-gray-900 lg:hover:translate-x-1 lg:hover:bg-brand-50 lg:hover:shadow-sm"
+                                >
+                                  {Icon && (
+                                    <span className="hidden h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm transition-all duration-200 lg:flex lg:group-hover:scale-105 lg:group-hover:border-brand-600 lg:group-hover:bg-brand-600 lg:group-hover:text-accent">
+                                      <Icon className="h-5 w-5" aria-hidden="true" />
                                     </span>
                                   )}
-                                </span>
-                              </NavLink>
+                                  <span className="block min-w-0 flex-1">
+                                    <span className="block whitespace-nowrap transition-colors duration-200 lg:text-base lg:font-semibold lg:text-gray-900 lg:group-hover:text-brand-600">
+                                      {section.label}
+                                    </span>
+                                    {section.description && (
+                                      <span className="mt-0.5 hidden text-sm font-normal leading-snug text-gray-600 lg:block">
+                                        {section.description}
+                                      </span>
+                                    )}
+                                  </span>
+                                </NavLink>
+
+                                {/* Degree chips: stacked list below lg, hover-reveal pills on lg+ */}
+                                {section.children && (
+                                  <div
+                                    className={`ml-12 border-l border-brand-200/60 py-1 lg:ml-0 lg:grid lg:border-0 lg:py-0 lg:transition-[grid-template-rows,opacity,visibility] lg:duration-200 lg:ease-out ${
+                                      isExpanded
+                                        ? "lg:visible lg:grid-rows-[1fr] lg:opacity-100"
+                                        : "lg:invisible lg:grid-rows-[0fr] lg:opacity-0"
+                                    }`}
+                                  >
+                                    <div className="lg:overflow-hidden">
+                                      <div className="lg:flex lg:flex-wrap lg:gap-1.5 lg:pb-3 lg:pl-16 lg:pr-3">
+                                        {section.children.map((child) => (
+                                          <NavLink
+                                            key={child.label}
+                                            to={child.to}
+                                            onClick={closeAll}
+                                            className="block px-4 py-2 text-sm font-medium text-brand-100 hover:text-white lg:inline-block lg:rounded-full lg:border lg:border-gray-200 lg:bg-white lg:px-3 lg:py-1 lg:text-xs lg:font-medium lg:text-gray-700 lg:transition-colors lg:hover:border-brand-600 lg:hover:bg-brand-600 lg:hover:text-white"
+                                          >
+                                            {child.label}
+                                          </NavLink>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
                             );
                           })}
                         </div>

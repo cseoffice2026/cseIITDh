@@ -1174,37 +1174,28 @@ export const getAlumni = async () => {
 	}
 
 	const rows = parsed.data;
-	const headers = new Set(Object.keys(rows[0] || {}));
-	const requiredHeaders = [
-		"roll no",
-		"alumni name",
-		"program",
-		"discipline",
-		"yog",
-		"gender",
-		"alumni email",
-	];
-	const missingHeaders = requiredHeaders.filter(
-		(header) => !headers.has(header),
-	);
-
-	if (missingHeaders.length > 0) {
-		throw new Error(
-			`Alumni roster is missing required columns: ${missingHeaders.join(", ")}`,
-		);
-	}
 
 	return rows
 		.map((row) => ({
-			rollNo: (row["roll no"] || "").trim(),
-			name: (row["alumni name"] || "").trim(),
-			program: (row.program || "").trim(),
-			discipline: (row.discipline || "").trim(),
-			yog: (row.yog || "").trim(),
-			gender: (row.gender || "").trim(),
-			email: (row["alumni email"] || "").trim(),
+			rollNo: String(row["roll no"] || "").trim(),
+			name: String(row["alumni name"] || "").trim(),
+			program: String(row.program || "").trim(),
+			discipline: String(row.discipline || "").trim(),
+			yog: String(row.yog || "").trim(),
+			gender: String(row.gender || "").trim(),
+			email: String(row["alumni email"] || "").trim(),
 		}))
-		.filter((alumnus) => alumnus.name && alumnus.yog);
+		.filter((alumnus) =>
+			[
+				alumnus.rollNo,
+				alumnus.name,
+				alumnus.program,
+				alumnus.discipline,
+				alumnus.yog,
+				alumnus.gender,
+				alumnus.email,
+			].some((value) => value),
+		);
 };
 
 /**
@@ -1228,40 +1219,33 @@ export const getStudents = async () => {
 		);
 	}
 
-	const headers = new Set(parsed.meta.fields || []);
-	const requiredHeaders = [
-		"roll no",
-		"student name",
-		"program",
-		"discipline",
-		"yoj",
-	];
-	const missingHeaders = requiredHeaders.filter(
-		(header) => !headers.has(header),
-	);
-
-	if (missingHeaders.length > 0) {
-		throw new Error(
-			`Student roster is missing required columns: ${missingHeaders.join(", ")}`,
-		);
-	}
-
 	return parsed.data
 		.map((row) => {
-			const yoj = (row.yoj || "").trim();
+			const yoj = String(row.yoj || "").trim();
+			const year = yoj.match(/\d{4}/)?.[0] || "Not specified";
 
 			return {
-				rollNo: (row["roll no"] || "").trim(),
-				name: (row["student name"] || "").trim(),
-				program: (row.program || "").trim(),
-				discipline: (row.discipline || "").trim(),
+				rollNo: String(row["roll no"] || "").trim(),
+				name: String(row["student name"] || "").trim(),
+				program: String(row.program || "").trim(),
+				discipline: String(row.discipline || "").trim(),
 				yoj,
-				year: yoj.match(/\d{4}/)?.[0] || "",
-				gender: (row.gender || "").trim(),
-				email: (row["student email"] || "").trim(),
+				year,
+				gender: String(row.gender || "").trim(),
+				email: String(row["student email"] || "").trim(),
 			};
 		})
-		.filter((student) => student.name && student.year);
+		.filter((student) =>
+			[
+				student.rollNo,
+				student.name,
+				student.program,
+				student.discipline,
+				student.yoj,
+				student.gender,
+				student.email,
+			].some((value) => value),
+		);
 };
 
 /**

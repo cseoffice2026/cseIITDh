@@ -1,5 +1,6 @@
 import { useTalksAndEvents } from "../hooks/useTalksAndEvents";
 import TalkEventCard from "../components/Home/TalkEventCard";
+import DepartmentHeading from "../components/DepartmentHeading";
 
 const TalksLoading = () => (
   <div className="space-y-6 animate-pulse">
@@ -23,9 +24,7 @@ export default function AllTalksEventsPage() {
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-8 md:px-16">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-800 mb-8">
-          All Talks and Events
-        </h1>
+        <DepartmentHeading as="h1" title="All Talks and Events" />
 
         {isLoading ? (
           <TalksLoading />

@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import Loading from "../components/Loading";
+import DepartmentHeading from "../components/DepartmentHeading";
 
 const AcademicRules = lazy(() =>
   import("../components/Academics/AcademicRules")
@@ -22,16 +23,25 @@ const BackToTopButton = lazy(() => import("../components/BackToTopButton"));
 
 const fallback = <Loading className="py-8" />;
 
+import {
+  BookOpenIcon,
+  ScaleIcon,
+  AcademicCapIcon,
+  CalendarDaysIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
 // Academics Page
+
+
 const Academics = () => {
   return (
     <div className="py-6 px-4 md:px-8 bg-background">
       {/* Page Title */}
       <div
         id="academics-top"
-        className="mb-10 border-b border-brand-200 pb-6"
+        className="mb-10 pb-2"
       >
-        <h1 className="text-3xl font-bold text-heading mb-2">Academics</h1>
+        <DepartmentHeading as="h1" title="Academics" className="mb-2" />
         <p className="text-muted">
           Learn about our academic programs, courses, and resources for computer
           science and engineering students.
@@ -41,35 +51,35 @@ const Academics = () => {
       {/* Navigation Cards */}
       <div className="mb-12">
         <Suspense fallback={fallback}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 md:gap-6">
             <NavCard
               title="Time Table"
-              icon={<i className="far fa-clock"></i>}
+              icon={<CalendarDaysIcon  className="h-6 w-6" />}
               targetId="timetable"
               viewText={"View Details"}
             />
             <NavCard
               title="Courses"
-              icon={<i className="fas fa-book"></i>}
+              icon={<BookOpenIcon className="h-6 w-6" />}
               targetId="courses"
               viewText={"View Details"}
             />
             <NavCard
               title="Curriculum"
-              icon={<i className="fas fa-graduation-cap"></i>}
+              icon={<AcademicCapIcon className="h-6 w-6" />}
               targetId="curriculum"
               viewText={"View Details"}
             />
             <NavCard
               title="Rules"
-              icon={<i className="fas fa-gavel"></i>}
+              icon={<ScaleIcon className="h-6 w-6" />}
               targetId="rules"
               viewText={"View Details"}
             />
 
             <NavCard
               title="FAQs"
-              icon={<i className="fas fa-question-circle"></i>}
+              icon={<QuestionMarkCircleIcon className="h-6 w-6" />}
               targetId="faq"
               viewText={"View Details"}
             />

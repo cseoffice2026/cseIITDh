@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import * as echarts from "echarts";
 import { constant } from "../../constant/constant";
 import usePlacementCompanies from "../../hooks/usePlacementCompanies";
+import DepartmentHeading from "../DepartmentHeading";
 import Loading from "../Loading";
 import Section from "../Section";
 
@@ -96,11 +97,12 @@ function RecruitingCompanies() {
   return (
     <section className="mt-8 overflow-hidden rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-10">
       <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h3 className="mt-1 text-2xl font-bold text-slate-900">
-            OUR RECRUITING COMPANIES
-          </h3>
-        </div>
+        <DepartmentHeading
+          as="h3"
+          size="compact"
+          title="Our Recruiting Companies"
+          className="mb-0"
+        />
         {!isLoading && !isError && companies.length > 0 ? (
           <span className="w-fit rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-brand-800">
             {companies.length} companies
@@ -214,7 +216,7 @@ function PlacementDonutChart({ program, placed, segments }) {
       series: [
         {
           type: "pie",
-          radius: ["60%", "86%"],
+          radius: ["55%", "86%"],
           center: ["50%", "50%"],
           startAngle: 90,
           data: segments.map(({ label, value, color }) => ({
@@ -371,11 +373,11 @@ function PlacementOutcomeCard({ program, stats }) {
 }
 
 export default function PlacementSection() {
-  const [selectedProgram, setSelectedProgram] = useState("Overview");
-  const tabs = ["Overview", ...Object.keys(programStats)];
+  const [selectedProgram, setSelectedProgram] = useState("Placements Overview");
+  const tabs = ["Placements Overview", ...Object.keys(programStats)];
 
   return (
-    <Section id="placements" title="PLACEMENTS">
+    <>
       <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-s">
         <div
           className="flex flex-wrap items-center gap-2 border-b border-slate-200 bg-slate-50 p-3"
@@ -407,7 +409,7 @@ export default function PlacementSection() {
           role="tabpanel"
           aria-labelledby={`placement-tab-${selectedProgram.replace(".", "").toLowerCase()}`}
         >
-          {selectedProgram === "Overview" ? (
+          {selectedProgram === "Placements Overview" ? (
             <div className="mx-auto w-full max-w-[1100px] overflow-hidden rounded-2xl border border-slate-200 bg-white">
               <img
                 src="/placement_stats.png"
@@ -424,6 +426,6 @@ export default function PlacementSection() {
         </div>
       </div>
       <RecruitingCompanies />
-    </Section>
+    </>
   );
 }

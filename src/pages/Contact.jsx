@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import Loading from "../components/Loading";
+import DepartmentHeading from "../components/DepartmentHeading";
 
 const ContactPoints = lazy(() =>
   import("../components/ContactUs/ContactPoints")
@@ -25,7 +26,7 @@ const Contact = () => {
     <div className="py-6 px-4 md:px-8">
       {/* Page Title */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">Contact Us</h1>
+        <DepartmentHeading as="h1" title="Contact Us" className="mb-0" />
         <p className="text-gray-600 mt-2">
           Get in touch with the Department of Computer Science and Engineering
           at IIT DHARWAD

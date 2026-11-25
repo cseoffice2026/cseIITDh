@@ -1,5 +1,6 @@
 import { useNews } from "../hooks/useNews";
 import NewsCard from "../components/Home/NewsCard";
+import DepartmentHeading from "../components/DepartmentHeading";
 
 const NewsLoading = () => (
   <div className="space-y-6 animate-pulse">
@@ -16,9 +17,7 @@ export default function NewsPage() {
     <main className="min-h-screen bg-gray-50 px-4 py-10 sm:px-8 md:px-16">
       <div className="mx-auto max-w-5xl">
         <header className="mb-8">          
-          <h1 className="mt-1 text-3xl font-bold text-gray-800">
-            All News and Announcements
-          </h1>          
+          <DepartmentHeading as="h1" title="All News and Announcements" className="mb-0" />
         </header>
 
         {newsLoading ? (

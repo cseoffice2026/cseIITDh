@@ -1,5 +1,15 @@
 import { lazy, Suspense, useMemo } from "react";
 import { Link } from "react-router-dom";
+import DepartmentHeading from "../components/DepartmentHeading";
+import {
+  AcademicCapIcon,
+  ArchiveBoxIcon,
+  BeakerIcon,
+  IdentificationIcon,
+  TrophyIcon,
+  UserGroupIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
 
 import GlobalError from "../components/GlobalError";
 import Loading from "../components/Loading";
@@ -38,7 +48,7 @@ function QuickNavigation() {
       {/* Faculty */}
       <NavCard
         title="Faculty"
-        icon={<i className="fas fa-chalkboard-teacher"></i>}
+        icon={<UserGroupIcon className="h-7 w-7" aria-hidden="true" />}
         targetId="faculty"
         viewText={"View Members"}
       />
@@ -46,7 +56,7 @@ function QuickNavigation() {
       {/* Staff */}
       <NavCard
       title="Staff"
-      icon={<i className="fas fa-users"></i>}
+      icon={<IdentificationIcon className="h-7 w-7" aria-hidden="true" />}
       targetId="staff"
       viewText={"View Members"}
       />
@@ -54,7 +64,7 @@ function QuickNavigation() {
       {/* Former Members */}
       <NavCard
         title="Former Members"
-        icon={<i className="fas fa-user-friends"></i>}
+        icon={<ArchiveBoxIcon className="h-7 w-7" aria-hidden="true" />}
         targetId="former-members"
         viewText={"View Members"}
       />
@@ -62,7 +72,7 @@ function QuickNavigation() {
       {/* PhD Scholars */}
       <NavCard
         title="PhD Scholars"
-        icon={<i className="fas fa-user-graduate"></i>}
+        icon={<BeakerIcon className="h-7 w-7" aria-hidden="true" />}
         targetId="phd-scholars"
         viewText={"View Members"}
       />
@@ -70,16 +80,16 @@ function QuickNavigation() {
       {/* Graduated Scholars */}
       <NavCard
         title="Graduated Scholars"
-        icon={<i className="fas fa-history"></i>}
+        icon={<TrophyIcon className="h-7 w-7" aria-hidden="true" />}
         targetId="graduated-scholars"
         viewText={"View Members"}
       />
 
       <Link to="/people/students" className="cursor-pointer">
         <div className="flex h-full flex-col items-center justify-center rounded-lg bg-white p-5 text-center shadow-md transition hover:bg-brand-50 hover:shadow-lg">
-          <div className="mb-3 text-3xl text-brand-800">
-            <i className="fas fa-user-graduate" aria-hidden="true"></i>
-          </div>
+          <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-brand-100 bg-brand-50 text-brand-700 shadow-sm">
+            <UsersIcon className="h-7 w-7" aria-hidden="true" />
+          </span>
           <h3 className="text-lg font-semibold text-gray-800">Students</h3>
           <p className="mt-2 text-sm text-gray-600">View student directory</p>
         </div>
@@ -87,9 +97,9 @@ function QuickNavigation() {
 
       <Link to="/people/alumni" className="cursor-pointer">
         <div className="flex h-full flex-col items-center justify-center rounded-lg bg-white p-5 text-center shadow-md transition hover:bg-brand-50 hover:shadow-lg">
-          <div className="mb-3 text-3xl text-brand-800">
-            <i className="fas fa-user-graduate" aria-hidden="true"></i>
-          </div>
+          <span className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl border border-brand-100 bg-brand-50 text-brand-700 shadow-sm">
+            <AcademicCapIcon className="h-7 w-7" aria-hidden="true" />
+          </span>
           <h3 className="text-lg font-semibold text-gray-800">Alumni</h3>
           <p className="mt-2 text-sm text-gray-600">View alumni directory</p>
         </div>
@@ -172,17 +182,18 @@ const People = () => {
 
   const formerStaff = filterByRole("Former Members");
 
-  const phdScholars = filterByRole("PHD");
+  const phdScholars = [
+    ...filterByRole("PHD"),
+    ...filterByRole("PhD Scholars"),
+  ];
 
-  const GraduatedScholars = filterByRole("Graduated Scholars");
+  const graduatedScholars = filterByRole("Graduated Scholars");
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Page Title */}
       <div id="people-top" className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          People
-        </h1>
+        <DepartmentHeading as="h1" title="People" className="mb-2" />
 
         <p className="text-gray-600">
           Meet the faculty, staff, and former members of the Department
@@ -211,8 +222,6 @@ const People = () => {
         />
       </Suspense>
 
-
-
       {/* PhD Scholars Section */}
       <Suspense fallback={fallback}>
         <PhDScholarSection phdScholars={phdScholars} />
@@ -221,10 +230,9 @@ const People = () => {
       {/* Graduated Scholars Section */}
       <Suspense fallback={fallback}>
         <GraduatedScholarSection
-          GraduatedScholars={GraduatedScholars}
+          GraduatedScholars={graduatedScholars}
         />
       </Suspense>
-
       {/* Back to Top Button */}
       <Suspense fallback={null}>
         <BackToTopButton to={"people-top"} />

@@ -1,4 +1,5 @@
 import useJoinAsFacultyData from "../hooks/useJoinAsFacultyData";
+import DepartmentHeading from "../components/DepartmentHeading";
 import GlobalError from "../components/GlobalError";
 import Loading from "../components/Loading";
 
@@ -59,7 +60,7 @@ const JoinAsFacultyData = () => {
 const JoinAsFaculty = () => {
   return (
     <div className="py-6 px-4 md:px-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Join as Faculty</h1>
+      <DepartmentHeading as="h1" title="Join as Faculty" />
       <p className="text-gray-600 mb-8">
         Build your academic career at IIT DHARWAD's Department of Computer
         Science and Engineering

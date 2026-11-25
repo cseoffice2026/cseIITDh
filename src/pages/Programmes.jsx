@@ -6,6 +6,7 @@ import CourseTable from "../components/Programmes/CourseTable";
 import BTechProgrammeCatalogue from "../components/Programmes/BTechProgrammeCatalogue";
 import MTechCurriculum from "../components/Programmes/MTechCurriculum";
 import DataTable from "../components/DataTable";
+import DepartmentHeading from "../components/DepartmentHeading";
 import Loading from "../components/Loading";
 import useAcademicPrograms from "../hooks/useAcademicPrograms";
 import useCourses from "../hooks/useCourses";
@@ -264,19 +265,17 @@ function ProgrammeHero({
       id="programmes-top"
       className="mb-8 w-full rounded-lg border border-gray-200 border-l-4 border-l-brand-800 bg-white px-6 py-7 md:px-8"
     >
-      <p className="text-sm font-medium text-brand-800">
-        {programme.eyebrow || "Academic Programme"}
-      </p>
-
-      <h1 className="mt-1 text-3xl font-bold leading-tight text-gray-900 md:text-4xl">
-        {programme.title}
-
-        {programme.subtitle ? (
-          <span className="mt-1 block text-lg font-medium text-brand-800 md:text-xl">
-            {programme.subtitle}
-          </span>
-        ) : null}
-      </h1>
+      <DepartmentHeading
+        as="h1"
+        title={programme.title}
+        eyebrow={programme.eyebrow || "Academic Programme"}
+        className="mb-0"
+      />
+      {programme.subtitle ? (
+        <p className="mt-3 text-lg font-medium text-brand-800 md:text-xl">
+          {programme.subtitle}
+        </p>
+      ) : null}
 
       {programme.description ? (
         <p className="mt-4 w-full max-w-4xl whitespace-pre-line text-base leading-7 text-gray-700">

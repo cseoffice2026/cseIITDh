@@ -1,4 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import {
+	AcademicCapIcon,
+	CalendarDaysIcon,
+	UserGroupIcon,
+} from "@heroicons/react/24/outline";
 import { useStudentsData } from "../../hooks/useStudentsData";
 import DataTable from "../DataTable";
 import DirectoryBreadcrumb from "./DirectoryBreadcrumb";
@@ -11,10 +17,14 @@ const studentColumns = [
 	{ accessorKey: "program", header: "Program" },
 	{ accessorKey: "discipline", header: "Discipline" },
 	{ accessorKey: "yoj", header: "YOJ" },
+	{ accessorKey: "gender", header: "Gender" },
+	{ accessorKey: "email", header: "Student Email" },
 ];
 
 const getDegreeName = (program) => {
-	const value = program.trim();
+	const value = String(program || "").trim();
+	if (!value) return "Not specified";
+
 	const normalized = value.toLowerCase().replace(/[^a-z0-9]/g, "");
 
 	if (/^(mtechbyresearch|mtechresearch|mtr)$/.test(normalized)) {
@@ -22,6 +32,7 @@ const getDegreeName = (program) => {
 	}
 	if (/^(btech|bacheloroftechnology)$/.test(normalized)) return "B.Tech";
 	if (/^(mtech|masteroftechnology)$/.test(normalized)) return "M.Tech";
+	if (/^(phd|doctorofphilosophy)$/.test(normalized)) return "PhD";
 
 	return value;
 };
@@ -29,6 +40,7 @@ const getDegreeName = (program) => {
 export default function StudentsSection({ onTitleChange }) {
 	const [activeDegree, setActiveDegree] = useState(null);
 	const [activeBatch, setActiveBatch] = useState(null);
+	const [searchParams] = useSearchParams();
 	const {
 		data: students = [],
 		isLoading,
@@ -55,6 +67,14 @@ export default function StudentsSection({ onTitleChange }) {
 	const degrees = [...new Set(batches.map((batch) => batch.degree))].sort(
 		(first, second) => first.localeCompare(second),
 	);
+	const requestedDegree = searchParams.get("degree");
+	useEffect(() => {
+		if (!requestedDegree || activeDegree) return;
+		if (degrees.includes(requestedDegree)) {
+			setActiveDegree(requestedDegree);
+			onTitleChange(`Students ${requestedDegree}`);
+		}
+	}, [activeDegree, degrees, onTitleChange, requestedDegree, searchParams]);
 	const degreeBatches = batches
 		.filter((batch) => batch.degree === activeDegree)
 		.sort((first, second) => Number(second.year) - Number(first.year));
@@ -104,27 +124,42 @@ export default function StudentsSection({ onTitleChange }) {
 				<>
 					{!activeDegree ? (
 					<div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
-						<div className="rounded-xl border border-brand-100 bg-white p-5 shadow-sm">
-							<p className="text-sm font-medium text-gray-500">
-								Students in recent batches
-							</p>
-							<p className="mt-2 text-3xl font-bold text-brand-900">
-								{students.length.toLocaleString()}
-							</p>
+						<div className="flex items-center justify-between rounded-xl border border-brand-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md">
+							<div>
+								<p className="text-sm font-medium text-gray-500">
+									Students in recent batches
+								</p>
+								<p className="mt-2 text-3xl font-bold text-brand-900">
+									{students.length.toLocaleString()}
+								</p>
+							</div>
+							<span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+								<UserGroupIcon className="h-7 w-7" aria-hidden="true" />
+							</span>
 						</div>
-						<div className="rounded-xl border border-brand-100 bg-white p-5 shadow-sm">
-							<p className="text-sm font-medium text-gray-500">
-								Current batches
-							</p>
-							<p className="mt-2 text-3xl font-bold text-brand-900">
-								{batches.length.toLocaleString()}
-							</p>
+						<div className="flex items-center justify-between rounded-xl border border-brand-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md">
+							<div>
+								<p className="text-sm font-medium text-gray-500">
+									Current batches
+								</p>
+								<p className="mt-2 text-3xl font-bold text-brand-900">
+									{batches.length.toLocaleString()}
+								</p>
+							</div>
+							<span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+								<CalendarDaysIcon className="h-7 w-7" aria-hidden="true" />
+							</span>
 						</div>
-						<div className="rounded-xl border border-brand-100 bg-white p-5 shadow-sm">
-							<p className="text-sm font-medium text-gray-500">Programmes</p>
-							<p className="mt-2 text-3xl font-bold text-brand-900">
-								{degrees.length.toLocaleString()}
-							</p>
+						<div className="flex items-center justify-between rounded-xl border border-brand-100 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-brand-300 hover:shadow-md">
+							<div>
+								<p className="text-sm font-medium text-gray-500">Programmes</p>
+								<p className="mt-2 text-3xl font-bold text-brand-900">
+									{degrees.length.toLocaleString()}
+								</p>
+							</div>
+							<span className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+								<AcademicCapIcon className="h-7 w-7" aria-hidden="true" />
+							</span>
 						</div>
 					</div>
 					) : null}

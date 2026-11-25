@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import Loading from "../components/Loading";
+import DepartmentHeading from "../components/DepartmentHeading";
 
 const BackToTopButton = lazy(() => import("../components/BackToTopButton"));
 
@@ -11,24 +12,41 @@ const ResearchProjects = lazy(() =>
   import("../components/Research/ResearchProjects")
 );
 
+import {
+  AcademicCapIcon,
+  ArchiveBoxIcon,
+  BeakerIcon,
+  BookOpenIcon,
+  BuildingLibraryIcon,
+  CalendarDaysIcon,
+  CpuChipIcon,
+  FolderOpenIcon,
+  IdentificationIcon,
+  QuestionMarkCircleIcon,
+  ScaleIcon,
+  TrophyIcon,
+  UserGroupIcon,
+  UsersIcon,
+} from "@heroicons/react/24/outline";
+
 function QuickNavigation() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12">
       <NavCard
         title="Research Areas"
-        icon={<i className="fas fa-flask"></i>}
+         icon={<CpuChipIcon className="w-6 h-6" />}
         to="/research/research-areas"
         viewText={"View Details"}
       />
       <NavCard
         title="Research Labs"
-        icon={<i className="fas fa-flask"></i>}
+        icon={<BeakerIcon className="w-6 h-6" />}
         targetId="labs"
         viewText={"View Details"}
       />
       <NavCard
         title="Research-Projects"
-        icon={<i className="fas fa-flask"></i>}
+        icon={<FolderOpenIcon className="w-6 h-6" />}
         targetId="research-projects"
         viewText={"View Details"}
       />
@@ -44,7 +62,7 @@ const Research = () => {
     <div className="py-6 px-4 md:px-8">
       {/* Page Title */}
       <div id="research-top" className="mb-10">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">Research</h1>
+        <DepartmentHeading as="h1" title="Research" className="mb-2" />
         <p className="text-gray-600">
           Explore research activities, publications, patents, and laboratories
           of the Department of Computer Science and Engineering.

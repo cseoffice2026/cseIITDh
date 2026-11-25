@@ -14,7 +14,7 @@ import Home from "./pages/Home"; // Import Home eagerly
 
 // Lazy load all other page components
 const Academics = lazy(() => import("./pages/Academics"));
-const Programmes = lazy(() => import("./pages/Programmes")); // NEW
+const Programmes = lazy(() => import("./pages/Programmes")); 
 const JoinAsFaculty = lazy(() => import("./pages/JoinAsFaculty"));
 const Contact = lazy(() => import("./pages/Contact"));
 const People = lazy(() => import("./pages/People"));
